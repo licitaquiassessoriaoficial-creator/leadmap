@@ -19,17 +19,17 @@ export default async function LoginPage() {
               LeadMap CRM
             </p>
             <h1 className="max-w-md text-4xl font-semibold leading-tight">
-              Mapeie liderancas, acompanhe potencial e enxergue o territorio em
-              um painel unico.
+              Mapeie lideranças, acompanhe potencial e enxergue o território em
+              um painel único.
             </h1>
             <p className="max-w-lg text-sm text-brand-100">
-              Plataforma administrativa para cadastro, ranking e analise
-              geografica de liderancas politicas ou comunitarias.
+              Plataforma administrativa para cadastro, ranking e análise
+              geográfica de lideranças políticas ou comunitárias.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-sm text-brand-100">Visao executiva</p>
+              <p className="text-sm text-brand-100">Visão executiva</p>
               <p className="mt-2 text-2xl font-semibold">Dashboard em tempo real</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">

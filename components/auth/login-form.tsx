@@ -32,7 +32,7 @@ export function LoginForm() {
     });
 
     if (!result || result.error) {
-      setServerError("Credenciais invalidas. Tente novamente.");
+      setServerError("Credenciais inválidas. Tente novamente.");
       return;
     }
 
