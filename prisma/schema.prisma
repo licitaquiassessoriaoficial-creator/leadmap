@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+enum LeadershipStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum PotentialLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum LocationStatus {
+  FOUND
+  PENDING
+}
+
+model User {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  role         Role         @default(OPERATOR)
+  leaderships  Leadership[] @relation("LeadershipCreatedBy")
+  auditLogs    AuditLog[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([role])
+}
+
+model Leadership {
+  id                      String           @id @default(cuid())
+  nome                    String
+  telefone                String
+  email                   String?
+  cpf                     String?
+  cidade                  String
+  estado                  String
+  bairro                  String?
+  endereco                String?
+  latitude                Float?
+  longitude               Float?
+  locationStatus          LocationStatus   @default(PENDING)
+  potencialVotosEstimado  Int
+  faixaPotencial          PotentialLevel
+  status                  LeadershipStatus @default(ACTIVE)
+  observacoes             String?
+  quantidadeIndicacoes    Int              @default(0)
+  cadastradoPorId         String
+  cadastradoPor           User             @relation("LeadershipCreatedBy", fields: [cadastradoPorId], references: [id], onDelete: Restrict)
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+
+  @@index([cidade])
+  @@index([estado])
+  @@index([faixaPotencial])
+  @@index([status])
+  @@index([locationStatus])
+  @@index([cadastradoPorId])
+  @@index([createdAt])
+  @@index([quantidadeIndicacoes])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  entidade  String
+  entidadeId String
+  acao      String
+  usuarioId String
+  usuario   User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  descricao String
+  createdAt DateTime @default(now())
+
+  @@index([entidade, entidadeId])
+  @@index([usuarioId])
+  @@index([createdAt])
+}
