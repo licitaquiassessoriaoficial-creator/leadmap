@@ -135,7 +135,7 @@ export function LeadershipMap({
       <MapContainer center={[-14.235, -51.9253]} zoom={4} scrollWheelZoom>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ClusterLayer points={points} />
       </MapContainer>

@@ -131,6 +131,41 @@ npm run dev
 
 Abra `http://localhost:3000`.
 
+## Deploy com Railway + Netlify
+
+### Railway
+
+1. Crie um projeto no Railway.
+2. Adicione um banco PostgreSQL.
+3. Copie a string de conexão publica do banco para usar fora do Railway.
+4. Rode as migrations contra esse banco:
+
+```bash
+DATABASE_URL="SUA_URL_DO_RAILWAY" npm run db:deploy
+DATABASE_URL="SUA_URL_DO_RAILWAY" npm run db:seed
+```
+
+### Netlify
+
+1. Importe este repositório no Netlify.
+2. O projeto já possui [netlify.toml](./netlify.toml) com `npm run build` e publish em `.next`.
+3. Cadastre as variáveis de ambiente no painel do Netlify.
+
+Variáveis recomendadas:
+
+- `DATABASE_URL`
+- `NEXTAUTH_URL`
+- `NEXTAUTH_SECRET`
+- `NETLIFY_NEXT_SKEW_PROTECTION=true`
+
+Sugestão prática:
+
+- `NEXTAUTH_URL`: use a URL final do site no Netlify, por exemplo `https://seu-site.netlify.app`
+- `NEXTAUTH_SECRET`: gere uma chave longa e aleatória
+- em produção, configure as variáveis com escopo de build e functions
+
+Se você usar domínio customizado, atualize `NEXTAUTH_URL` para esse domínio e faça novo deploy.
+
 ## Scripts úteis
 
 ```bash
