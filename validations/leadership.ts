@@ -10,15 +10,15 @@ const optionalStringField = z
   .transform((value) => (value && value.length > 0 ? value : undefined));
 
 export const leadershipCreateSchema = z.object({
-  nome: z.string().trim().min(3, "Informe o nome da lideranca"),
-  telefone: z.string().trim().min(8, "Informe um telefone valido"),
+  nome: z.string().trim().min(3, "Informe o nome da liderança"),
+  telefone: z.string().trim().min(8, "Informe um telefone válido"),
   email: optionalStringField.refine(
     (value) => !value || z.string().email().safeParse(value).success,
-    "Informe um email valido"
+    "Informe um email válido"
   ),
   cpf: optionalStringField.refine(
     (value) => !value || /^\d{11}$/.test(value.replace(/\D/g, "")),
-    "CPF deve ter 11 digitos"
+    "CPF deve ter 11 dígitos"
   ),
   cidade: z.string().trim().min(2, "Informe a cidade"),
   estado: z.string().trim().min(2, "Informe o estado"),
@@ -32,7 +32,7 @@ export const leadershipCreateSchema = z.object({
   quantidadeIndicacoes: z.coerce
     .number()
     .int()
-    .min(0, "Indicacoes nao podem ser negativas")
+    .min(0, "Indicações não podem ser negativas")
     .default(0),
   status: z.nativeEnum(LeadershipStatus).optional()
 });

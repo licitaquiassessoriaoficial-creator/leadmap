@@ -33,9 +33,9 @@ export default async function LeadershipListPage({
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Liderancas"
-        description="Listagem com filtros, paginação e acesso rapido ao detalhe."
-        action="Nova lideranca"
+        title="Lideranças"
+        description="Listagem com filtros, paginação e acesso rápido ao detalhe."
+        action="Nova liderança"
         actionHref="/liderancas/nova"
       />
       <FeedbackBanner message={feedback} />
@@ -62,7 +62,7 @@ export default async function LeadershipListPage({
           </p>
         </div>
         <p className="text-sm text-slate-500">
-          Pagina atual com {formatInteger(listData.items.length)} liderancas.
+          Página atual com {formatInteger(listData.items.length)} lideranças.
         </p>
       </Card>
       <LeadershipTable data={listData.items} />

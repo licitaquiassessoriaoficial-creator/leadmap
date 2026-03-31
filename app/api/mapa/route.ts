@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   const url = new URL(request.url);

@@ -9,7 +9,7 @@ import { Providers } from "@/components/shared/providers";
 
 export const metadata: Metadata = {
   title: "LeadMap CRM",
-  description: "CRM de liderancas com dashboard, ranking, mapa e auditoria"
+  description: "CRM de lideranças com dashboard, ranking, mapa e auditoria"
 };
 
 export default function RootLayout({

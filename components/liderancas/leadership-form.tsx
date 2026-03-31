@@ -68,15 +68,15 @@ export function LeadershipForm({
     };
 
     if (!response.ok) {
-      setServerError(payload.error ?? "Nao foi possivel salvar a lideranca.");
+      setServerError(payload.error ?? "Não foi possível salvar a liderança.");
       return;
     }
 
     const targetId = payload.data?.id ?? initialData?.id;
     const feedback =
       mode === "create"
-        ? "Lideranca criada com sucesso."
-        : "Lideranca atualizada com sucesso.";
+        ? "Liderança criada com sucesso."
+        : "Liderança atualizada com sucesso.";
 
     router.push(
       `/liderancas/${targetId}?feedback=${encodeURIComponent(feedback)}`
@@ -100,7 +100,7 @@ export function LeadershipForm({
           <Input {...form.register("email")} type="email" placeholder="Email" />
         </Field>
         <Field label="CPF" error={form.formState.errors.cpf?.message}>
-          <Input {...form.register("cpf")} placeholder="Somente numeros" />
+          <Input {...form.register("cpf")} placeholder="Somente números" />
         </Field>
         <Field label="Cidade" error={form.formState.errors.cidade?.message}>
           <Input {...form.register("cidade")} placeholder="Cidade" />
@@ -111,8 +111,8 @@ export function LeadershipForm({
         <Field label="Bairro" error={form.formState.errors.bairro?.message}>
           <Input {...form.register("bairro")} placeholder="Bairro" />
         </Field>
-        <Field label="Endereco" error={form.formState.errors.endereco?.message}>
-          <Input {...form.register("endereco")} placeholder="Endereco" />
+        <Field label="Endereço" error={form.formState.errors.endereco?.message}>
+          <Input {...form.register("endereco")} placeholder="Endereço" />
         </Field>
         <Field
           label="Potencial de votos"
@@ -125,7 +125,7 @@ export function LeadershipForm({
           />
         </Field>
         <Field
-          label="Quantidade de indicacoes"
+          label="Quantidade de indicações"
           error={form.formState.errors.quantidadeIndicacoes?.message}
         >
           <Input
@@ -143,12 +143,12 @@ export function LeadershipForm({
         </Field>
       </div>
       <Field
-        label="Observacoes"
+        label="Observações"
         error={form.formState.errors.observacoes?.message}
       >
         <Textarea
           {...form.register("observacoes")}
-          placeholder="Observacoes adicionais"
+          placeholder="Observações adicionais"
         />
       </Field>
       {serverError ? (
@@ -161,8 +161,8 @@ export function LeadershipForm({
           {form.formState.isSubmitting
             ? "Salvando..."
             : mode === "create"
-              ? "Cadastrar lideranca"
-              : "Salvar alteracoes"}
+              ? "Cadastrar liderança"
+              : "Salvar alterações"}
         </Button>
         <Button
           type="button"

@@ -9,7 +9,7 @@ export async function GET() {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   if (!canManageUsers(session.user.role)) {

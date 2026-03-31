@@ -23,7 +23,7 @@ export function PaginationControls({
   return (
     <div className="flex items-center justify-between gap-3">
       <p className="text-sm text-slate-500">
-        Pagina {page} de {totalPages}
+        Página {page} de {totalPages}
       </p>
       <div className="flex gap-2">
         <Button
@@ -38,7 +38,7 @@ export function PaginationControls({
           onClick={() => updatePage(page + 1)}
           disabled={page >= totalPages}
         >
-          Proxima
+          Próxima
         </Button>
       </div>
     </div>

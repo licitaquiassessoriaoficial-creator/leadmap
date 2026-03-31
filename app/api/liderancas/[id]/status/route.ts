@@ -18,7 +18,7 @@ export async function PATCH(request: Request, context: Context) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   try {

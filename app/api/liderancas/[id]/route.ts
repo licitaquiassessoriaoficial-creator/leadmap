@@ -17,14 +17,14 @@ export async function GET(_: Request, context: Context) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   const { id } = await context.params;
   const leadership = await getLeadershipById(id);
 
   if (!leadership) {
-    return jsonError("Lideranca nao encontrada", 404);
+    return jsonError("Liderança não encontrada", 404);
   }
 
   return NextResponse.json({ data: leadership });
@@ -34,7 +34,7 @@ export async function PUT(request: Request, context: Context) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   try {
@@ -45,7 +45,7 @@ export async function PUT(request: Request, context: Context) {
     return NextResponse.json({ data: leadership });
   } catch (error) {
     return jsonError(
-      error instanceof Error ? error.message : "Falha ao atualizar lideranca"
+      error instanceof Error ? error.message : "Falha ao atualizar liderança"
     );
   }
 }
@@ -54,11 +54,11 @@ export async function DELETE(_: Request, context: Context) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   if (!canDeleteLeadership(session.user.role)) {
-    return jsonError("Apenas administradores podem excluir liderancas", 403);
+    return jsonError("Apenas administradores podem excluir lideranças", 403);
   }
 
   try {
@@ -68,7 +68,7 @@ export async function DELETE(_: Request, context: Context) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     return jsonError(
-      error instanceof Error ? error.message : "Falha ao excluir lideranca"
+      error instanceof Error ? error.message : "Falha ao excluir liderança"
     );
   }
 }

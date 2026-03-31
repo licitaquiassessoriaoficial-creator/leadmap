@@ -17,17 +17,17 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <PageHeader
         title="Dashboard"
-        description="Acompanhe volume, distribuicao geografica e desempenho das liderancas."
-        action="Nova lideranca"
+        description="Acompanhe volume, distribuição geográfica e desempenho das lideranças."
+        action="Nova liderança"
         actionHref="/liderancas/nova"
       />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <StatCard label="Total de liderancas" value={formatInteger(data.summary.total)} />
+        <StatCard label="Total de lideranças" value={formatInteger(data.summary.total)} />
         <StatCard label="Ativas" value={formatInteger(data.summary.active)} />
         <StatCard label="Inativas" value={formatInteger(data.summary.inactive)} />
         <StatCard label="Pendentes" value={formatInteger(data.summary.pending)} />
         <StatCard
-          label="Localizacao pendente"
+          label="Localização pendente"
           value={formatInteger(data.summary.pendingLocations)}
         />
       </div>
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
                 Ranking resumido
               </h3>
               <p className="text-sm text-slate-500">
-                Liderancas com maior quantidade de indicacoes.
+                Lideranças com maior quantidade de indicações.
               </p>
             </div>
             <Link href="/ranking">
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
                   <PotentialBadge level={leadership.faixaPotencial} />
                   <LeadershipStatusBadge status={leadership.status} />
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                    {leadership.quantidadeIndicacoes} indicacoes
+                    {leadership.quantidadeIndicacoes} indicações
                   </span>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
         <Card>
           <h3 className="text-lg font-semibold text-slate-900">Estados</h3>
           <p className="mt-1 text-sm text-slate-500">
-            Distribuicao consolidada por estado.
+            Distribuição consolidada por estado.
           </p>
           <div className="mt-4 space-y-3">
             {data.stateTotals.slice(0, 8).map((state) => (

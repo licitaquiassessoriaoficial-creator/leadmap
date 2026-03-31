@@ -23,7 +23,7 @@ export default async function MapPage({
     <div className="space-y-6">
       <PageHeader
         title="Mapa"
-        description="Pins por lideranca com cor baseada na faixa de potencial e agrupamento automatico."
+        description="Pins por liderança com cor baseada na faixa de potencial e agrupamento automático."
       />
       <LeadershipFilters
         cities={filterOptions.cities}
@@ -44,7 +44,7 @@ export default async function MapPage({
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Legenda</h3>
             <p className="text-sm text-slate-500">
-              {mapData.points.length} pins visiveis de {mapData.total} liderancas filtradas.
+              {mapData.points.length} pins visíveis de {mapData.total} lideranças filtradas.
             </p>
           </div>
           <div className="space-y-3">
@@ -53,7 +53,7 @@ export default async function MapPage({
               <PotentialBadge level="HIGH" />
             </div>
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
-              <span className="text-sm text-slate-600">Potencial medio</span>
+              <span className="text-sm text-slate-600">Potencial médio</span>
               <PotentialBadge level="MEDIUM" />
             </div>
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">

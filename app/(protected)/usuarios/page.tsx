@@ -19,12 +19,12 @@ export default async function UsersPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          title="Usuarios"
-          description="Apenas administradores podem visualizar a gestao de usuarios."
+          title="Usuários"
+          description="Apenas administradores podem visualizar a gestão de usuários."
         />
         <Card>
           <p className="text-sm text-slate-600">
-            Seu perfil atual nao possui permissao para acessar esta pagina.
+            Seu perfil atual não possui permissão para acessar esta página.
           </p>
         </Card>
       </div>
@@ -36,11 +36,11 @@ export default async function UsersPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Usuarios"
-        description="Visao administrativa dos acessos cadastrados no sistema."
+        title="Usuários"
+        description="Visão administrativa dos acessos cadastrados no sistema."
       />
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Total de usuarios" value={users.length} />
+        <StatCard label="Total de usuários" value={users.length} />
         <StatCard
           label="Administradores"
           value={users.filter((user) => user.role === "ADMIN").length}

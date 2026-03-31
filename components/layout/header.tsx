@@ -8,11 +8,11 @@ import type { Session } from "next-auth";
 
 const routeTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/liderancas": "Liderancas",
+  "/liderancas": "Lideranças",
   "/ranking": "Ranking",
   "/mapa": "Mapa",
-  "/usuarios": "Usuarios",
-  "/configuracoes": "Configuracoes"
+  "/usuarios": "Usuários",
+  "/configuracoes": "Configurações"
 };
 
 export function Header({

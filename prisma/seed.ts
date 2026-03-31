@@ -51,7 +51,7 @@ async function main() {
         potencialVotosEstimado: 820,
         faixaPotencial: PotentialLevel.HIGH,
         status: LeadershipStatus.ACTIVE,
-        observacoes: "Atua em associacoes de bairro e eventos comunitarios.",
+        observacoes: "Atua em associações de bairro e eventos comunitários.",
         quantidadeIndicacoes: 54,
         cadastradoPorId: admin.id
       }
@@ -71,7 +71,7 @@ async function main() {
         potencialVotosEstimado: 460,
         faixaPotencial: PotentialLevel.MEDIUM,
         status: LeadershipStatus.ACTIVE,
-        observacoes: "Base forte em mobilizacao de juventude.",
+        observacoes: "Base forte em mobilização de juventude.",
         quantidadeIndicacoes: 28,
         cadastradoPorId: operator.id
       }
@@ -91,7 +91,7 @@ async function main() {
         potencialVotosEstimado: 610,
         faixaPotencial: PotentialLevel.HIGH,
         status: LeadershipStatus.ACTIVE,
-        observacoes: "Bom relacionamento com liderancas religiosas.",
+        observacoes: "Bom relacionamento com lideranças religiosas.",
         quantidadeIndicacoes: 41,
         cadastradoPorId: admin.id
       }
@@ -109,7 +109,7 @@ async function main() {
         potencialVotosEstimado: 340,
         faixaPotencial: PotentialLevel.MEDIUM,
         status: LeadershipStatus.INACTIVE,
-        observacoes: "Em pausa temporaria por reestruturacao local.",
+        observacoes: "Em pausa temporária por reestruturação local.",
         quantidadeIndicacoes: 15,
         cadastradoPorId: operator.id
       }
@@ -145,7 +145,7 @@ async function main() {
         potencialVotosEstimado: 120,
         faixaPotencial: PotentialLevel.MEDIUM,
         status: LeadershipStatus.PENDING,
-        observacoes: "Cadastro em validacao final de equipe territorial.",
+        observacoes: "Cadastro em validação final de equipe territorial.",
         quantidadeIndicacoes: 11,
         cadastradoPorId: operator.id
       }
@@ -269,16 +269,16 @@ async function main() {
               entidadeId: leadership.id,
               acao: "UPDATE",
               usuarioId: leadership.cadastradoPorId,
-              descricao: `Lideranca ${leadership.nome} revisada na carga inicial`
+              descricao: `Liderança ${leadership.nome} revisada na carga inicial`
             }
           ]
         : [])
     ])
   });
 
-  console.log("Seed concluido:");
-  console.log(`- Usuarios: 2`);
-  console.log(`- Liderancas: ${leaderships.length}`);
+  console.log("Seed concluído:");
+  console.log(`- Usuários: 2`);
+  console.log(`- Lideranças: ${leaderships.length}`);
 }
 
 main()

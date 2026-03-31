@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   const url = new URL(request.url);
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   const session = await auth();
 
   if (!session) {
-    return jsonError("Nao autenticado", 401);
+    return jsonError("Não autenticado", 401);
   }
 
   try {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ data: leadership }, { status: 201 });
   } catch (error) {
     return jsonError(
-      error instanceof Error ? error.message : "Falha ao criar lideranca"
+      error instanceof Error ? error.message : "Falha ao criar liderança"
     );
   }
 }

@@ -5,8 +5,8 @@ export default function NewLeadershipPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Nova lideranca"
-        description="Cadastre uma nova lideranca com geocodificacao automatica por cidade e estado."
+        title="Nova liderança"
+        description="Cadastre uma nova liderança com geocodificação automática por cidade e estado."
       />
       <LeadershipForm mode="create" />
     </div>

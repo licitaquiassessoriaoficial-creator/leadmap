@@ -152,7 +152,7 @@ export function LeadershipFilters({
           </Select>
         </Field>
         {showResponsible ? (
-          <Field label="Responsavel">
+          <Field label="Responsável">
             <Select
               value={values.responsavelId}
               onChange={(event) =>
@@ -178,7 +178,7 @@ export function LeadershipFilters({
           </Field>
         ) : null}
         {showPeriod ? (
-          <Field label="Cadastro ate">
+          <Field label="Cadastro até">
             <Input
               type="date"
               value={values.endDate}

@@ -8,11 +8,11 @@ import type { Session } from "next-auth";
 
 const navigation = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/liderancas", label: "Liderancas" },
+  { href: "/liderancas", label: "Lideranças" },
   { href: "/ranking", label: "Ranking" },
   { href: "/mapa", label: "Mapa" },
-  { href: "/usuarios", label: "Usuarios" },
-  { href: "/configuracoes", label: "Configuracoes" }
+  { href: "/usuarios", label: "Usuários" },
+  { href: "/configuracoes", label: "Configurações" }
 ];
 
 export function Sidebar({
@@ -65,9 +65,9 @@ export function Sidebar({
         })}
       </nav>
       <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-        <p className="text-sm font-medium text-white">Territorio monitorado</p>
+        <p className="text-sm font-medium text-white">Território monitorado</p>
         <p className="mt-2 text-xs text-slate-400">
-          Cadastro, filtros, ranking e mapa em uma unica operacao.
+          Cadastro, filtros, ranking e mapa em uma única operação.
         </p>
       </div>
     </aside>

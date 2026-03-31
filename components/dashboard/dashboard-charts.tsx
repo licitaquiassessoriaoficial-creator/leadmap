@@ -41,10 +41,10 @@ export function DashboardCharts({
       <Card>
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-900">
-            Distribuicao por faixa de potencial
+            Distribuição por faixa de potencial
           </h3>
           <p className="text-sm text-slate-500">
-            Panorama rapido das liderancas por potencial estimado.
+            Panorama rápido das lideranças por potencial estimado.
           </p>
         </div>
         <div className="h-80">
@@ -65,10 +65,10 @@ export function DashboardCharts({
       <Card>
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-900">
-            Situacao operacional
+            Situação operacional
           </h3>
           <p className="text-sm text-slate-500">
-            Ativas, inativas e pendentes em um unico grafico.
+            Ativas, inativas e pendentes em um único gráfico.
           </p>
         </div>
         <div className="h-80">
@@ -95,7 +95,7 @@ export function DashboardCharts({
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-900">Top cidades</h3>
           <p className="text-sm text-slate-500">
-            Concentracao de liderancas por cidade.
+            Concentração de lideranças por cidade.
           </p>
         </div>
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">

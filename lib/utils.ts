@@ -28,7 +28,7 @@ export function formatInteger(value: number) {
 
 export function formatCoordinate(value?: number | null) {
   if (value == null) {
-    return "Nao definida";
+    return "Não definida";
   }
 
   return value.toFixed(5);

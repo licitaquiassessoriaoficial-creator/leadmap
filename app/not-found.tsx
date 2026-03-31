@@ -10,10 +10,10 @@ export default function NotFoundPage() {
           LeadMap CRM
         </p>
         <h1 className="text-3xl font-semibold text-slate-900">
-          Conteudo nao encontrado
+          Conteúdo não encontrado
         </h1>
         <p className="text-sm text-slate-500">
-          A pagina solicitada nao existe ou foi removida.
+          A página solicitada não existe ou foi removida.
         </p>
         <Link href="/dashboard">
           <Button>Voltar ao dashboard</Button>

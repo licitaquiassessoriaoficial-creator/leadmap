@@ -25,7 +25,7 @@ export function LeadershipActions({
     const actionLabel =
       nextStatus === LeadershipStatus.ACTIVE ? "reativar" : "inativar";
 
-    if (!window.confirm(`Deseja ${actionLabel} esta lideranca?`)) {
+    if (!window.confirm(`Deseja ${actionLabel} esta liderança?`)) {
       return;
     }
 
@@ -42,7 +42,7 @@ export function LeadershipActions({
     setLoadingAction(null);
 
     if (!response.ok) {
-      window.alert("Nao foi possivel alterar o status.");
+      window.alert("Não foi possível alterar o status.");
       return;
     }
 
@@ -50,7 +50,7 @@ export function LeadershipActions({
   }
 
   async function removeLeadership() {
-    if (!window.confirm("Deseja excluir definitivamente esta lideranca?")) {
+    if (!window.confirm("Deseja excluir definitivamente esta liderança?")) {
       return;
     }
 
@@ -63,11 +63,11 @@ export function LeadershipActions({
     setLoadingAction(null);
 
     if (!response.ok) {
-      window.alert("Nao foi possivel excluir a lideranca.");
+      window.alert("Não foi possível excluir a liderança.");
       return;
     }
 
-    router.push("/liderancas?feedback=Lideranca%20excluida%20com%20sucesso.");
+    router.push("/liderancas?feedback=Lideran%C3%A7a%20exclu%C3%ADda%20com%20sucesso.");
     router.refresh();
   }
 

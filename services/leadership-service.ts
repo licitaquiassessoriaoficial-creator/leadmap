@@ -140,7 +140,7 @@ export async function createLeadershipRecord(
     entidadeId: leadership.id,
     acao: "CREATE",
     usuarioId: userId,
-    descricao: `Lideranca ${leadership.nome} criada`
+    descricao: `Liderança ${leadership.nome} criada`
   });
 
   return leadership;
@@ -154,7 +154,7 @@ export async function updateLeadershipRecord(
   const existing = await findLeadershipById(id);
 
   if (!existing) {
-    throw new Error("Lideranca nao encontrada");
+    throw new Error("Liderança não encontrada");
   }
 
   const input = leadershipUpdateSchema.parse(rawInput);
@@ -203,7 +203,7 @@ export async function updateLeadershipRecord(
     entidadeId: leadership.id,
     acao: "UPDATE",
     usuarioId: userId,
-    descricao: `Lideranca ${leadership.nome} atualizada`
+    descricao: `Liderança ${leadership.nome} atualizada`
   });
 
   return leadership;
@@ -217,7 +217,7 @@ export async function setLeadershipStatus(
   const existing = await findLeadershipById(id);
 
   if (!existing) {
-    throw new Error("Lideranca nao encontrada");
+    throw new Error("Liderança não encontrada");
   }
 
   const leadership = await updateLeadership(id, {
@@ -231,8 +231,8 @@ export async function setLeadershipStatus(
     usuarioId: userId,
     descricao:
       status === LeadershipStatus.ACTIVE
-        ? `Lideranca ${leadership.nome} reativada`
-        : `Lideranca ${leadership.nome} inativada`
+        ? `Liderança ${leadership.nome} reativada`
+        : `Liderança ${leadership.nome} inativada`
   });
 
   return leadership;
@@ -242,7 +242,7 @@ export async function deleteLeadershipRecord(id: string, userId: string) {
   const existing = await findLeadershipById(id);
 
   if (!existing) {
-    throw new Error("Lideranca nao encontrada");
+    throw new Error("Liderança não encontrada");
   }
 
   await deleteLeadership(id);
@@ -252,6 +252,6 @@ export async function deleteLeadershipRecord(id: string, userId: string) {
     entidadeId: id,
     acao: "DELETE",
     usuarioId: userId,
-    descricao: `Lideranca ${existing.nome} excluida`
+    descricao: `Liderança ${existing.nome} excluída`
   });
 }

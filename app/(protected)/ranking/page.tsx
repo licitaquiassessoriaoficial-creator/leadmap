@@ -23,12 +23,12 @@ export default async function RankingPage({
     <div className="space-y-6">
       <PageHeader
         title="Ranking"
-        description="Ordenacao principal por quantidade de indicacoes, com filtros por territorio e periodo."
+        description="Ordenação principal por quantidade de indicações, com filtros por território e período."
       />
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Liderancas ranqueadas" value={ranking.total} />
-        <StatCard label="Pagina atual" value={ranking.page} />
-        <StatCard label="Itens por pagina" value={ranking.pageSize} />
+        <StatCard label="Lideranças ranqueadas" value={ranking.total} />
+        <StatCard label="Página atual" value={ranking.page} />
+        <StatCard label="Itens por página" value={ranking.pageSize} />
       </div>
       <LeadershipFilters
         cities={filterOptions.cities}

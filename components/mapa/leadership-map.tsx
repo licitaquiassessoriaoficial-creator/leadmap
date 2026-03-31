@@ -76,7 +76,7 @@ function ClusterLayer({ points }: { points: LeadershipWithRelations[] }) {
             <div style="margin-top: 8px; color: #475569;">
               <div>${escapeHtml(point.cidade)} / ${escapeHtml(point.estado)}</div>
               <div>Potencial: ${point.potencialVotosEstimado}</div>
-              <div>Indicacoes: ${point.quantidadeIndicacoes}</div>
+              <div>Indicações: ${point.quantidadeIndicacoes}</div>
               <div>Status: ${escapeHtml(point.status)}</div>
             </div>
           </div>
@@ -120,10 +120,10 @@ export function LeadershipMap({
     return (
       <Card className="text-center">
         <h3 className="text-lg font-semibold text-slate-900">
-          Nenhum pin disponivel
+          Nenhum pin disponível
         </h3>
         <p className="mt-2 text-sm text-slate-500">
-          Ajuste os filtros ou conclua a geocodificacao das liderancas sem
+          Ajuste os filtros ou conclua a geocodificação das lideranças sem
           coordenadas.
         </p>
       </Card>
