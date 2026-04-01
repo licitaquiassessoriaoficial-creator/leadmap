@@ -71,12 +71,6 @@ export function LoginForm() {
           {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
         </Button>
       </form>
-      <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-500">
-        <p className="font-medium text-slate-700">Credenciais de seed</p>
-        <p className="mt-1">global@leadmap.local / Global123!</p>
-        <p className="mt-1">admin@leadmap.local / Admin123!</p>
-        <p>operador@leadmap.local / Operador123!</p>
-      </div>
     </div>
   );
 }
