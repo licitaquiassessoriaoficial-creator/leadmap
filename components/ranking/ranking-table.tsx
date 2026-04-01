@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable
 } from "@tanstack/react-table";
+import Link from "next/link";
 import { useMemo } from "react";
 
 import { PotentialBadge } from "@/components/shared/potential-badge";
@@ -34,12 +35,12 @@ export function RankingTable({
       {
         header: "Nome",
         cell: ({ row }) => (
-          <div>
+          <Link href={`/liderancas/${row.original.id}`} className="block">
             <p className="font-medium text-slate-900">{row.original.nome}</p>
             <p className="text-xs text-slate-500">
               {row.original.cidade} / {row.original.estado}
             </p>
-          </div>
+          </Link>
         )
       },
       {
@@ -97,7 +98,7 @@ export function RankingTable({
           <tbody className="divide-y divide-slate-100 bg-white">
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
+                <tr key={row.id} className="transition hover:bg-brand-50">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-4 py-4 text-sm text-slate-600">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

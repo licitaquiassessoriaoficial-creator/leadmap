@@ -33,9 +33,24 @@ export default async function RankingPage({
         description="Ordenação principal por quantidade de indicações, com filtros por território e período."
       />
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Lideranças ranqueadas" value={ranking.total} />
-        <StatCard label="Página atual" value={ranking.page} />
-        <StatCard label="Itens por página" value={ranking.pageSize} />
+        <StatCard
+          label="Lideranças ranqueadas"
+          value={ranking.total}
+          helper="Abrir ranking completo"
+          href="/ranking"
+        />
+        <StatCard
+          label="Página atual"
+          value={ranking.page}
+          helper="Recarregar esta página"
+          href={`/ranking?page=${ranking.page}`}
+        />
+        <StatCard
+          label="Itens por página"
+          value={ranking.pageSize}
+          helper="Ajustar com filtros"
+          href="/ranking"
+        />
       </div>
       <LeadershipFilters
         cities={filterOptions.cities}

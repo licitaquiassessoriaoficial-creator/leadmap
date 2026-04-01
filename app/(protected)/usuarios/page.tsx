@@ -40,14 +40,23 @@ export default async function UsersPage() {
         description="Visão administrativa dos acessos cadastrados no sistema."
       />
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Total de usuários" value={users.length} />
+        <StatCard
+          label="Total de usuários"
+          value={users.length}
+          helper="Abrir painel de acessos"
+          href="/admin-global"
+        />
         <StatCard
           label="Administradores"
           value={users.filter((user) => user.role === "ADMIN").length}
+          helper="Revisar perfis administrativos"
+          href="/admin-global"
         />
         <StatCard
           label="Operadores"
           value={users.filter((user) => user.role === "OPERATOR").length}
+          helper="Revisar equipe operacional"
+          href="/admin-global"
         />
       </div>
       <UsersTable users={users} />

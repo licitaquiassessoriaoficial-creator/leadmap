@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { LoginForm } from "@/components/auth/login-form";
@@ -28,14 +29,26 @@ export default async function LoginPage() {
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <Link
+              href="#login-access"
+              className="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+            >
               <p className="text-sm text-brand-100">Visão executiva</p>
               <p className="mt-2 text-2xl font-semibold">Dashboard em tempo real</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-brand-100">
+                Acessar formulário
+              </p>
+            </Link>
+            <Link
+              href="#login-access"
+              className="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+            >
               <p className="text-sm text-brand-100">Cobertura territorial</p>
               <p className="mt-2 text-2xl font-semibold">Mapa com pins por cidade</p>
-            </div>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-brand-100">
+                Entrar no sistema
+              </p>
+            </Link>
           </div>
         </section>
         <section className="flex items-center justify-center p-6 md:p-10">

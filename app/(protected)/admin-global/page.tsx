@@ -44,13 +44,28 @@ export default async function AdminGlobalPage() {
         description="Pré-configuração da campanha, escopo territorial e liberação de acessos."
       />
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Usuários liberados" value={data.users.length} />
-        <StatCard label="Admins globais" value={globalAdminCount} />
+        <StatCard
+          label="Usuários liberados"
+          value={data.users.length}
+          helper="Ir para gestão de acessos"
+          href="/admin-global#usuarios"
+          actionLabel="Gerenciar"
+        />
+        <StatCard
+          label="Admins globais"
+          value={globalAdminCount}
+          helper="Revisar responsáveis mestre"
+          href="/admin-global#usuarios"
+          actionLabel="Revisar"
+        />
         <StatCard
           label="Estado travado"
           value={data.settings.restringirAoEstadoPadrao
             ? data.settings.estadoPadrao ?? "Configurar"
             : "Livre"}
+          helper="Abrir regras da campanha"
+          href="/admin-global#configuracoes"
+          actionLabel="Configurar"
         />
       </div>
       <AdminGlobalPanel

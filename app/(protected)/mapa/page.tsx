@@ -1,9 +1,12 @@
+import Link from "next/link";
+
 import { LeadershipFilters } from "@/components/liderancas/leadership-filters";
 import { MapPanel } from "@/components/mapa/map-panel";
 import { PageHeader } from "@/components/shared/page-header";
 import { PotentialBadge } from "@/components/shared/potential-badge";
 import { Card } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { buildSearchParams } from "@/lib/utils";
 import { getLeadershipFilters } from "@/services/leadership-service";
 import { getMapData } from "@/services/map-service";
 
@@ -56,18 +59,42 @@ export default async function MapPage({
             </p>
           </div>
           <div className="space-y-3">
-            <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            <Link
+              href={`/mapa?${buildSearchParams({
+                cidade: mapData.filters.cidade,
+                estado: mapData.filters.estado,
+                faixaPotencial: "HIGH",
+                status: mapData.filters.status
+              })}`}
+              className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            >
               <span className="text-sm text-slate-600">Potencial alto</span>
               <PotentialBadge level="HIGH" />
-            </div>
-            <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            </Link>
+            <Link
+              href={`/mapa?${buildSearchParams({
+                cidade: mapData.filters.cidade,
+                estado: mapData.filters.estado,
+                faixaPotencial: "MEDIUM",
+                status: mapData.filters.status
+              })}`}
+              className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            >
               <span className="text-sm text-slate-600">Potencial médio</span>
               <PotentialBadge level="MEDIUM" />
-            </div>
-            <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            </Link>
+            <Link
+              href={`/mapa?${buildSearchParams({
+                cidade: mapData.filters.cidade,
+                estado: mapData.filters.estado,
+                faixaPotencial: "LOW",
+                status: mapData.filters.status
+              })}`}
+              className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            >
               <span className="text-sm text-slate-600">Potencial baixo</span>
               <PotentialBadge level="LOW" />
-            </div>
+            </Link>
           </div>
         </Card>
       </div>

@@ -225,7 +225,7 @@ export function AdminGlobalPanel({
       ) : null}
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
-        <Card>
+        <Card id="configuracoes">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-slate-900">
               Escopo da campanha
@@ -362,7 +362,7 @@ export function AdminGlobalPanel({
         </Card>
       </div>
 
-      <Card className="overflow-hidden p-0">
+      <Card id="usuarios" className="overflow-hidden p-0">
         <div className="border-b border-slate-200 px-6 py-5">
           <h3 className="text-lg font-semibold text-slate-900">
             Acessos liberados

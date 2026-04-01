@@ -8,7 +8,7 @@ import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
-import { formatInteger } from "@/lib/utils";
+import { buildSearchParams, formatInteger } from "@/lib/utils";
 import { getDashboardData } from "@/services/dashboard-service";
 
 export default async function DashboardPage() {
@@ -29,19 +29,42 @@ export default async function DashboardPage() {
         actionHref="/liderancas/nova"
       />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <StatCard label="Total de lideranças" value={formatInteger(data.summary.total)} />
-        <StatCard label="Ativas" value={formatInteger(data.summary.active)} />
-        <StatCard label="Inativas" value={formatInteger(data.summary.inactive)} />
-        <StatCard label="Pendentes" value={formatInteger(data.summary.pending)} />
+        <StatCard
+          label="Total de lideranças"
+          value={formatInteger(data.summary.total)}
+          helper="Abrir listagem completa"
+          href="/liderancas"
+        />
+        <StatCard
+          label="Ativas"
+          value={formatInteger(data.summary.active)}
+          helper="Filtrar por status ativo"
+          href={`/liderancas?${buildSearchParams({ status: "ACTIVE" })}`}
+        />
+        <StatCard
+          label="Inativas"
+          value={formatInteger(data.summary.inactive)}
+          helper="Filtrar por status inativo"
+          href={`/liderancas?${buildSearchParams({ status: "INACTIVE" })}`}
+        />
+        <StatCard
+          label="Pendentes"
+          value={formatInteger(data.summary.pending)}
+          helper="Filtrar por status pendente"
+          href={`/liderancas?${buildSearchParams({ status: "PENDING" })}`}
+        />
         <StatCard
           label="Localização pendente"
           value={formatInteger(data.summary.pendingLocations)}
+          helper="Revisar visualmente no mapa"
+          href="/mapa"
         />
       </div>
       <DashboardCharts
         potentialTotals={data.potentialTotals}
         statusTotals={data.statusTotals}
         cityTotals={data.cityTotals}
+        enforcedState={data.enforcedState}
       />
       <div className="grid gap-6 xl:grid-cols-[1fr,320px]">
         <Card>
@@ -60,9 +83,10 @@ export default async function DashboardPage() {
           </div>
           <div className="space-y-3">
             {data.topLeaderships.map((leadership, index) => (
-              <div
+              <Link
                 key={leadership.id}
-                className="flex flex-col gap-3 rounded-2xl border border-slate-200 px-4 py-4 md:flex-row md:items-center md:justify-between"
+                href={`/liderancas/${leadership.id}`}
+                className="flex flex-col gap-3 rounded-2xl border border-slate-200 px-4 py-4 transition hover:border-brand-200 hover:bg-brand-50 md:flex-row md:items-center md:justify-between"
               >
                 <div className="flex items-start gap-4">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 font-semibold text-brand-700">
@@ -82,7 +106,7 @@ export default async function DashboardPage() {
                     {leadership.quantidadeIndicacoes} indicações
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </Card>
@@ -93,9 +117,10 @@ export default async function DashboardPage() {
           </p>
           <div className="mt-4 space-y-3">
             {data.stateTotals.slice(0, 8).map((state) => (
-              <div
+              <Link
                 key={state.name}
-                className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3"
+                href={`/liderancas?${buildSearchParams({ estado: state.name })}`}
+                className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 transition hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               >
                 <span className="text-sm font-medium text-slate-700">
                   {state.name}
@@ -103,7 +128,7 @@ export default async function DashboardPage() {
                 <span className="text-sm font-semibold text-slate-900">
                   {state.total}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </Card>
