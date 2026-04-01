@@ -1,6 +1,19 @@
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
+
+export const safeUserSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  createdAt: true,
+  updatedAt: true
+} satisfies Prisma.UserSelect;
+
+export type SafeUser = Prisma.UserGetPayload<{
+  select: typeof safeUserSelect;
+}>;
 
 export function findUserByEmail(email: string) {
   return prisma.user.findUnique({
@@ -17,7 +30,8 @@ export function findUserById(id: string) {
 export function listUsers(role?: Role) {
   return prisma.user.findMany({
     where: role ? { role } : undefined,
-    orderBy: { name: "asc" }
+    orderBy: { name: "asc" },
+    select: safeUserSelect
   });
 }
 
@@ -34,7 +48,8 @@ export function createUser(data: {
   role: Role;
 }) {
   return prisma.user.create({
-    data
+    data,
+    select: safeUserSelect
   });
 }
 
@@ -49,6 +64,7 @@ export function updateUser(
 ) {
   return prisma.user.update({
     where: { id },
-    data
+    data,
+    select: safeUserSelect
   });
 }

@@ -3,8 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CampaignSettings,
-  Role,
-  User
+  Role
 } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -17,6 +16,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { BRAZILIAN_STATES } from "@/lib/constants/brazil-states";
+import type { SafeUser } from "@/repositories/user-repository";
 import { formatDate } from "@/lib/utils";
 import {
   campaignSettingsSchema,
@@ -51,7 +51,7 @@ export function AdminGlobalPanel({
   bootstrapMode
 }: {
   settings: CampaignSettings;
-  users: User[];
+  users: SafeUser[];
   currentUserId: string;
   bootstrapMode: boolean;
 }) {

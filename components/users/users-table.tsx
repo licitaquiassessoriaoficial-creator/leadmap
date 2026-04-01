@@ -1,10 +1,9 @@
-import { User } from "@prisma/client";
-
 import { RoleBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
+import type { SafeUser } from "@/repositories/user-repository";
 
-export function UsersTable({ users }: { users: User[] }) {
+export function UsersTable({ users }: { users: SafeUser[] }) {
   return (
     <Card className="overflow-hidden p-0">
       <div className="overflow-x-auto">

@@ -96,7 +96,11 @@ export async function updateManagedUser(
     throw new Error("Usuário não encontrado");
   }
 
-  if (targetUser.role === Role.GLOBAL_ADMIN && input.role && input.role !== Role.GLOBAL_ADMIN) {
+  if (
+    targetUser.role === Role.GLOBAL_ADMIN &&
+    input.role &&
+    input.role !== Role.GLOBAL_ADMIN
+  ) {
     const globalAdminCount = await getUserCountByRole(Role.GLOBAL_ADMIN);
 
     if (globalAdminCount <= 1) {
