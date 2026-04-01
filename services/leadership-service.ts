@@ -1,7 +1,8 @@
 import {
   LeadershipStatus,
   LocationStatus,
-  Prisma
+  Prisma,
+  Role
 } from "@prisma/client";
 
 import { classifyPotentialLevel } from "@/lib/constants/potential";
@@ -23,13 +24,32 @@ import {
   leadershipQuerySchema,
   leadershipUpdateSchema
 } from "@/validations/leadership";
+import { getCampaignScope } from "@/services/campaign-settings-service";
 
-export async function getLeadershipFilters() {
-  const [cities, states] = await Promise.all([listCities(), listStates()]);
+function normalizeState(value?: string) {
+  return value?.trim().toUpperCase();
+}
+
+async function resolveScopedState(role?: Role | null) {
+  if (!role) {
+    return undefined;
+  }
+
+  const scope = await getCampaignScope(role);
+  return scope.enforcedState;
+}
+
+export async function getLeadershipFilters(role?: Role | null) {
+  const enforcedState = await resolveScopedState(role);
+  const [cities, states] = await Promise.all([
+    listCities(enforcedState),
+    listStates(enforcedState)
+  ]);
 
   return {
     cities: cities.map((item) => item.cidade),
-    states: states.map((item) => item.estado)
+    states: states.map((item) => item.estado),
+    enforcedState
   };
 }
 
@@ -40,13 +60,17 @@ function parseDateRange(startDate?: string, endDate?: string) {
   };
 }
 
-export async function getLeadershipList(rawQuery: Record<string, string | string[] | undefined>) {
+export async function getLeadershipList(
+  rawQuery: Record<string, string | string[] | undefined>,
+  role?: Role | null
+) {
+  const enforcedState = await resolveScopedState(role);
   const query = leadershipQuerySchema.parse({
     page: rawQuery.page,
     pageSize: rawQuery.pageSize,
     search: rawQuery.search,
     cidade: rawQuery.cidade,
-    estado: rawQuery.estado,
+    estado: enforcedState ?? rawQuery.estado,
     faixaPotencial: rawQuery.faixaPotencial,
     status: rawQuery.status,
     responsavelId: rawQuery.responsavelId,
@@ -57,7 +81,7 @@ export async function getLeadershipList(rawQuery: Record<string, string | string
   const filters = {
     search: query.search,
     cidade: query.cidade,
-    estado: query.estado,
+    estado: normalizeState(enforcedState ?? query.estado),
     faixaPotencial: query.faixaPotencial,
     status: query.status,
     responsavelId: query.responsavelId,
@@ -75,12 +99,16 @@ export async function getLeadershipList(rawQuery: Record<string, string | string
     page: query.page,
     pageSize: query.pageSize,
     totalPages: Math.max(1, Math.ceil(total / query.pageSize)),
-    filters: query
+    filters: {
+      ...query,
+      estado: normalizeState(enforcedState ?? query.estado)
+    }
   };
 }
 
-export async function getLeadershipById(id: string) {
-  return findLeadershipById(id);
+export async function getLeadershipById(id: string, role?: Role | null) {
+  const enforcedState = await resolveScopedState(role);
+  return findLeadershipById(id, enforcedState);
 }
 
 async function resolveCoordinates(cidade: string, estado: string) {
@@ -103,6 +131,7 @@ async function resolveCoordinates(cidade: string, estado: string) {
 
 function buildCreatePayload(input: ReturnType<typeof leadershipCreateSchema.parse>, userId: string) {
   const faixaPotencial = classifyPotentialLevel(input.potencialVotosEstimado);
+  const estado = normalizeState(input.estado) ?? input.estado.trim();
 
   return {
     nome: input.nome.trim(),
@@ -110,7 +139,7 @@ function buildCreatePayload(input: ReturnType<typeof leadershipCreateSchema.pars
     email: optionalText(input.email),
     cpf: optionalText(input.cpf),
     cidade: input.cidade.trim(),
-    estado: input.estado.trim(),
+    estado,
     bairro: optionalText(input.bairro),
     endereco: optionalText(input.endereco),
     observacoes: optionalText(input.observacoes),
@@ -124,10 +153,18 @@ function buildCreatePayload(input: ReturnType<typeof leadershipCreateSchema.pars
 
 export async function createLeadershipRecord(
   rawInput: unknown,
-  userId: string
+  userId: string,
+  role?: Role | null
 ) {
   const input = leadershipCreateSchema.parse(rawInput);
-  const payload = buildCreatePayload(input, userId);
+  const enforcedState = await resolveScopedState(role);
+  const payload = buildCreatePayload(
+    {
+      ...input,
+      estado: enforcedState ?? input.estado
+    },
+    userId
+  );
   const coordinates = await resolveCoordinates(payload.cidade, payload.estado);
 
   const leadership = await createLeadership({
@@ -149,9 +186,11 @@ export async function createLeadershipRecord(
 export async function updateLeadershipRecord(
   id: string,
   rawInput: unknown,
-  userId: string
+  userId: string,
+  role?: Role | null
 ) {
-  const existing = await findLeadershipById(id);
+  const enforcedState = await resolveScopedState(role);
+  const existing = await findLeadershipById(id, enforcedState);
 
   if (!existing) {
     throw new Error("Liderança não encontrada");
@@ -160,7 +199,7 @@ export async function updateLeadershipRecord(
   const input = leadershipUpdateSchema.parse(rawInput);
 
   const cidade = input.cidade?.trim() ?? existing.cidade;
-  const estado = input.estado?.trim() ?? existing.estado;
+  const estado = normalizeState(enforcedState ?? input.estado) ?? existing.estado;
   const shouldRefreshCoordinates =
     cidade !== existing.cidade || estado !== existing.estado;
 
@@ -212,9 +251,11 @@ export async function updateLeadershipRecord(
 export async function setLeadershipStatus(
   id: string,
   status: "ACTIVE" | "INACTIVE",
-  userId: string
+  userId: string,
+  role?: Role | null
 ) {
-  const existing = await findLeadershipById(id);
+  const enforcedState = await resolveScopedState(role);
+  const existing = await findLeadershipById(id, enforcedState);
 
   if (!existing) {
     throw new Error("Liderança não encontrada");
@@ -238,8 +279,13 @@ export async function setLeadershipStatus(
   return leadership;
 }
 
-export async function deleteLeadershipRecord(id: string, userId: string) {
-  const existing = await findLeadershipById(id);
+export async function deleteLeadershipRecord(
+  id: string,
+  userId: string,
+  role?: Role | null
+) {
+  const enforcedState = await resolveScopedState(role);
+  const existing = await findLeadershipById(id, enforcedState);
 
   if (!existing) {
     throw new Error("Liderança não encontrada");

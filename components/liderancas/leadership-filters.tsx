@@ -27,6 +27,7 @@ type FiltersProps = {
   showSearch?: boolean;
   showResponsible?: boolean;
   showPeriod?: boolean;
+  lockedState?: string;
 };
 
 export function LeadershipFilters({
@@ -36,14 +37,15 @@ export function LeadershipFilters({
   initialValues,
   showSearch = true,
   showResponsible = true,
-  showPeriod = true
+  showPeriod = true,
+  lockedState
 }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [values, setValues] = useState({
     search: initialValues.search ?? "",
     cidade: initialValues.cidade ?? "",
-    estado: initialValues.estado ?? "",
+    estado: lockedState ?? initialValues.estado ?? "",
     faixaPotencial: initialValues.faixaPotencial ?? "",
     status: initialValues.status ?? "",
     responsavelId: initialValues.responsavelId ?? "",
@@ -77,7 +79,7 @@ export function LeadershipFilters({
     setValues({
       search: "",
       cidade: "",
-      estado: "",
+      estado: lockedState ?? "",
       faixaPotencial: "",
       status: "",
       responsavelId: "",
@@ -112,13 +114,17 @@ export function LeadershipFilters({
             ))}
           </Select>
         </Field>
-        <Field label="Estado">
+        <Field
+          label="Estado"
+          hint={lockedState ? "Definido pelo admin global" : undefined}
+        >
           <Select
             value={values.estado}
+            disabled={Boolean(lockedState)}
             onChange={(event) => handleChange("estado", event.target.value)}
           >
-            <option value="">Todos</option>
-            {sortedStates.map((state) => (
+            {!lockedState ? <option value="">Todos</option> : null}
+            {(lockedState ? [lockedState] : sortedStates).map((state) => (
               <option key={state} value={state}>
                 {state}
               </option>

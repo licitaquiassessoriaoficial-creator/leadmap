@@ -2,18 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Role } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
-
-const navigation = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/liderancas", label: "Lideranças" },
-  { href: "/ranking", label: "Ranking" },
-  { href: "/mapa", label: "Mapa" },
-  { href: "/usuarios", label: "Usuários" },
-  { href: "/configuracoes", label: "Configurações" }
-];
 
 export function Sidebar({
   user,
@@ -25,6 +17,17 @@ export function Sidebar({
   onNavigate: () => void;
 }) {
   const pathname = usePathname();
+  const navigation = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/liderancas", label: "Lideranças" },
+    { href: "/ranking", label: "Ranking" },
+    { href: "/mapa", label: "Mapa" },
+    { href: "/usuarios", label: "Usuários" },
+    { href: "/configuracoes", label: "Configurações" },
+    ...(user.role === Role.GLOBAL_ADMIN
+      ? [{ href: "/admin-global", label: "Admin Global" }]
+      : [])
+  ];
 
   return (
     <aside
@@ -39,7 +42,11 @@ export function Sidebar({
         </p>
         <h1 className="text-2xl font-semibold text-white">Painel territorial</h1>
         <p className="text-sm text-slate-400">
-          {user.role === "ADMIN" ? "Perfil administrador" : "Perfil operador"}
+          {user.role === Role.GLOBAL_ADMIN
+            ? "Perfil admin global"
+            : user.role === Role.ADMIN
+              ? "Perfil administrador"
+              : "Perfil operador"}
         </p>
       </div>
       <nav className="mt-6 flex flex-1 flex-col gap-2">

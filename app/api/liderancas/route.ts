@@ -15,7 +15,10 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const data = await getLeadershipList(getQueryObject(url.searchParams));
+  const data = await getLeadershipList(
+    getQueryObject(url.searchParams),
+    session.user.role
+  );
 
   return NextResponse.json({ data });
 }
@@ -29,7 +32,11 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const leadership = await createLeadershipRecord(body, session.user.id);
+    const leadership = await createLeadershipRecord(
+      body,
+      session.user.id,
+      session.user.role
+    );
 
     return NextResponse.json({ data: leadership }, { status: 201 });
   } catch (error) {

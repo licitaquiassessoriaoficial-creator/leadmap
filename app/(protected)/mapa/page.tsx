@@ -3,6 +3,7 @@ import { MapPanel } from "@/components/mapa/map-panel";
 import { PageHeader } from "@/components/shared/page-header";
 import { PotentialBadge } from "@/components/shared/potential-badge";
 import { Card } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
 import { getLeadershipFilters } from "@/services/leadership-service";
 import { getMapData } from "@/services/map-service";
 
@@ -14,9 +15,15 @@ export default async function MapPage({
   searchParams: SearchParams;
 }) {
   const resolvedSearchParams = await searchParams;
+  const session = await auth();
+
+  if (!session) {
+    return null;
+  }
+
   const [mapData, filterOptions] = await Promise.all([
-    getMapData(resolvedSearchParams),
-    getLeadershipFilters()
+    getMapData(resolvedSearchParams, session.user.role),
+    getLeadershipFilters(session.user.role)
   ]);
 
   return (
@@ -37,6 +44,7 @@ export default async function MapPage({
         showSearch={false}
         showResponsible={false}
         showPeriod={false}
+        lockedState={filterOptions.enforcedState}
       />
       <div className="grid gap-6 xl:grid-cols-[1fr,260px]">
         <MapPanel points={mapData.points} />

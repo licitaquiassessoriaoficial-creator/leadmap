@@ -5,7 +5,7 @@ import { StatCard } from "@/components/shared/stat-card";
 import { Card } from "@/components/ui/card";
 import { UsersTable } from "@/components/users/users-table";
 import { auth } from "@/lib/auth";
-import { canManageUsers } from "@/lib/permissions";
+import { canViewUsers } from "@/lib/permissions";
 import { getUsers } from "@/services/user-service";
 
 export default async function UsersPage() {
@@ -15,7 +15,7 @@ export default async function UsersPage() {
     redirect("/login");
   }
 
-  if (!canManageUsers(session.user.role)) {
+  if (!canViewUsers(session.user.role)) {
     return (
       <div className="space-y-6">
         <PageHeader

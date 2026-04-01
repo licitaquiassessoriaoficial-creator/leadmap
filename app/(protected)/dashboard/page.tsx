@@ -7,11 +7,18 @@ import { PotentialBadge } from "@/components/shared/potential-badge";
 import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import { formatInteger } from "@/lib/utils";
 import { getDashboardData } from "@/services/dashboard-service";
 
 export default async function DashboardPage() {
-  const data = await getDashboardData();
+  const session = await auth();
+
+  if (!session) {
+    return null;
+  }
+
+  const data = await getDashboardData(session.user.role);
 
   return (
     <div className="space-y-6">

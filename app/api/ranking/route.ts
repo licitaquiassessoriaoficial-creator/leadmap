@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const data = await getRankingData(getQueryObject(url.searchParams));
+  const data = await getRankingData(getQueryObject(url.searchParams), session.user.role);
 
   return NextResponse.json({ data });
 }

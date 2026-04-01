@@ -20,11 +20,13 @@ import {
 type LeadershipFormProps = {
   mode: "create" | "edit";
   initialData?: LeadershipWithRelations;
+  lockedState?: string;
 };
 
 export function LeadershipForm({
   mode,
-  initialData
+  initialData,
+  lockedState
 }: LeadershipFormProps) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function LeadershipForm({
       email: initialData?.email ?? "",
       cpf: initialData?.cpf ?? "",
       cidade: initialData?.cidade ?? "",
-      estado: initialData?.estado ?? "",
+      estado: initialData?.estado ?? lockedState ?? "",
       bairro: initialData?.bairro ?? "",
       endereco: initialData?.endereco ?? "",
       observacoes: initialData?.observacoes ?? "",
@@ -49,6 +51,11 @@ export function LeadershipForm({
   async function handleSubmit(values: LeadershipCreateInput) {
     setServerError(null);
 
+    const requestPayload = {
+      ...values,
+      estado: lockedState ?? values.estado
+    };
+
     const endpoint =
       mode === "create"
         ? "/api/liderancas"
@@ -59,20 +66,22 @@ export function LeadershipForm({
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(values)
+      body: JSON.stringify(requestPayload)
     });
 
-    const payload = (await response.json().catch(() => ({}))) as {
+    const responsePayload = (await response.json().catch(() => ({}))) as {
       error?: string;
       data?: { id: string };
     };
 
     if (!response.ok) {
-      setServerError(payload.error ?? "Não foi possível salvar a liderança.");
+      setServerError(
+        responsePayload.error ?? "Não foi possível salvar a liderança."
+      );
       return;
     }
 
-    const targetId = payload.data?.id ?? initialData?.id;
+    const targetId = responsePayload.data?.id ?? initialData?.id;
     const feedback =
       mode === "create"
         ? "Liderança criada com sucesso."
@@ -105,8 +114,16 @@ export function LeadershipForm({
         <Field label="Cidade" error={form.formState.errors.cidade?.message}>
           <Input {...form.register("cidade")} placeholder="Cidade" />
         </Field>
-        <Field label="Estado" error={form.formState.errors.estado?.message}>
-          <Input {...form.register("estado")} placeholder="Estado" />
+        <Field
+          label="Estado"
+          hint={lockedState ? "Definido pelo admin global" : undefined}
+          error={form.formState.errors.estado?.message}
+        >
+          <Input
+            {...form.register("estado")}
+            placeholder="Estado"
+            readOnly={Boolean(lockedState)}
+          />
         </Field>
         <Field label="Bairro" error={form.formState.errors.bairro?.message}>
           <Input {...form.register("bairro")} placeholder="Bairro" />

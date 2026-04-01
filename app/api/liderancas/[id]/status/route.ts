@@ -27,7 +27,8 @@ export async function PATCH(request: Request, context: Context) {
     const leadership = await setLeadershipStatus(
       id,
       body.status,
-      session.user.id
+      session.user.id,
+      session.user.role
     );
 
     return NextResponse.json({ data: leadership });

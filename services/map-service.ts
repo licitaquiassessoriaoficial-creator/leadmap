@@ -1,4 +1,7 @@
+import { Role } from "@prisma/client";
+
 import { countLeaderships, listMapLeaderships } from "@/repositories/leadership-repository";
+import { getCampaignScope } from "@/services/campaign-settings-service";
 import { leadershipQuerySchema } from "@/validations/leadership";
 
 function parseDateRange(startDate?: string, endDate?: string) {
@@ -8,10 +11,15 @@ function parseDateRange(startDate?: string, endDate?: string) {
   };
 }
 
-export async function getMapData(rawQuery: Record<string, string | string[] | undefined>) {
+export async function getMapData(
+  rawQuery: Record<string, string | string[] | undefined>,
+  role?: Role | null
+) {
+  const scope = role ? await getCampaignScope(role) : undefined;
+  const enforcedState = scope?.enforcedState;
   const query = leadershipQuerySchema.parse({
     cidade: rawQuery.cidade,
-    estado: rawQuery.estado,
+    estado: enforcedState ?? rawQuery.estado,
     faixaPotencial: rawQuery.faixaPotencial,
     status: rawQuery.status,
     search: rawQuery.search,
@@ -23,7 +31,7 @@ export async function getMapData(rawQuery: Record<string, string | string[] | un
   const filters = {
     search: query.search,
     cidade: query.cidade,
-    estado: query.estado,
+    estado: enforcedState ?? query.estado,
     faixaPotencial: query.faixaPotencial,
     status: query.status,
     responsavelId: query.responsavelId,
@@ -37,7 +45,10 @@ export async function getMapData(rawQuery: Record<string, string | string[] | un
 
   return {
     points,
-    filters: query,
+    filters: {
+      ...query,
+      estado: enforcedState ?? query.estado
+    },
     total
   };
 }

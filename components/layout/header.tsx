@@ -12,7 +12,8 @@ const routeTitles: Record<string, string> = {
   "/ranking": "Ranking",
   "/mapa": "Mapa",
   "/usuarios": "Usuários",
-  "/configuracoes": "Configurações"
+  "/configuracoes": "Configurações",
+  "/admin-global": "Admin Global"
 };
 
 export function Header({

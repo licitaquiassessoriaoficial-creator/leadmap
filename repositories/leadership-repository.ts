@@ -81,9 +81,17 @@ export function countLeaderships(filters: LeadershipFilters) {
   });
 }
 
-export function findLeadershipById(id: string) {
-  return prisma.leadership.findUnique({
-    where: { id },
+export function findLeadershipById(id: string, estado?: string) {
+  return prisma.leadership.findFirst({
+    where: {
+      id,
+      estado: estado
+        ? {
+            equals: estado,
+            mode: "insensitive"
+          }
+        : undefined
+    },
     include: leadershipInclude
   });
 }
@@ -144,27 +152,46 @@ export function listMapLeaderships(filters: LeadershipFilters) {
   });
 }
 
-export function listCities() {
+export function listCities(estado?: string) {
   return prisma.leadership.findMany({
+    where: estado
+      ? {
+          estado: {
+            equals: estado,
+            mode: "insensitive"
+          }
+        }
+      : undefined,
     select: { cidade: true },
     distinct: ["cidade"],
     orderBy: { cidade: "asc" }
   });
 }
 
-export function listStates() {
+export function listStates(estado?: string) {
   return prisma.leadership.findMany({
+    where: estado
+      ? {
+          estado: {
+            equals: estado,
+            mode: "insensitive"
+          }
+        }
+      : undefined,
     select: { estado: true },
     distinct: ["estado"],
     orderBy: { estado: "asc" }
   });
 }
 
-export async function getDashboardAggregates() {
+export async function getDashboardAggregates(filters: LeadershipFilters = {}) {
+  const where = buildWhere(filters);
+
   const [total, groupedByCity, groupedByState, groupedByPotential, groupedByStatus, topLeaderships, pendingLocations] =
     await Promise.all([
-      prisma.leadership.count(),
+      prisma.leadership.count({ where }),
       prisma.leadership.groupBy({
+        where,
         by: ["cidade"],
         _count: {
           cidade: true
@@ -176,6 +203,7 @@ export async function getDashboardAggregates() {
         }
       }),
       prisma.leadership.groupBy({
+        where,
         by: ["estado"],
         _count: {
           estado: true
@@ -187,24 +215,28 @@ export async function getDashboardAggregates() {
         }
       }),
       prisma.leadership.groupBy({
+        where,
         by: ["faixaPotencial"],
         _count: {
           faixaPotencial: true
         }
       }),
       prisma.leadership.groupBy({
+        where,
         by: ["status"],
         _count: {
           status: true
         }
       }),
       prisma.leadership.findMany({
+        where,
         include: leadershipInclude,
         orderBy: [{ quantidadeIndicacoes: "desc" }, { potencialVotosEstimado: "desc" }],
         take: 5
       }),
       prisma.leadership.count({
         where: {
+          ...where,
           locationStatus: LocationStatus.PENDING
         }
       })

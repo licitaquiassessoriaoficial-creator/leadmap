@@ -10,12 +10,23 @@ import {
 const prisma = new PrismaClient();
 
 async function main() {
+  const globalAdminPasswordHash = await bcrypt.hash("Global123!", 10);
   const adminPasswordHash = await bcrypt.hash("Admin123!", 10);
   const operatorPasswordHash = await bcrypt.hash("Operador123!", 10);
 
   await prisma.auditLog.deleteMany();
   await prisma.leadership.deleteMany();
+  await prisma.campaignSettings.deleteMany();
   await prisma.user.deleteMany();
+
+  const globalAdmin = await prisma.user.create({
+    data: {
+      name: "Isabela Nascimento",
+      email: "global@leadmap.local",
+      passwordHash: globalAdminPasswordHash,
+      role: Role.GLOBAL_ADMIN
+    }
+  });
 
   const admin = await prisma.user.create({
     data: {
@@ -32,6 +43,15 @@ async function main() {
       email: "operador@leadmap.local",
       passwordHash: operatorPasswordHash,
       role: Role.OPERATOR
+    }
+  });
+
+  await prisma.campaignSettings.create({
+    data: {
+      id: "default",
+      nomeCampanha: "Operação estadual SP",
+      estadoPadrao: "SP",
+      restringirAoEstadoPadrao: false
     }
   });
 
@@ -53,7 +73,7 @@ async function main() {
         status: LeadershipStatus.ACTIVE,
         observacoes: "Atua em associações de bairro e eventos comunitários.",
         quantidadeIndicacoes: 54,
-        cadastradoPorId: admin.id
+        cadastradoPorId: globalAdmin.id
       }
     }),
     prisma.leadership.create({
@@ -260,7 +280,7 @@ async function main() {
         entidadeId: leadership.id,
         acao: "CREATE",
         usuarioId: leadership.cadastradoPorId,
-        descricao: `Lideranca ${leadership.nome} criada via seed`
+        descricao: `Liderança ${leadership.nome} criada via seed`
       },
       ...(index % 3 === 0
         ? [
@@ -277,7 +297,7 @@ async function main() {
   });
 
   console.log("Seed concluído:");
-  console.log(`- Usuários: 2`);
+  console.log(`- Usuários: 3`);
   console.log(`- Lideranças: ${leaderships.length}`);
 }
 

@@ -1,4 +1,7 @@
+import { Role } from "@prisma/client";
+
 import { countLeaderships, listRanking } from "@/repositories/leadership-repository";
+import { getCampaignScope } from "@/services/campaign-settings-service";
 import { rankingQuerySchema } from "@/validations/leadership";
 
 function parseDateRange(startDate?: string, endDate?: string) {
@@ -8,13 +11,18 @@ function parseDateRange(startDate?: string, endDate?: string) {
   };
 }
 
-export async function getRankingData(rawQuery: Record<string, string | string[] | undefined>) {
+export async function getRankingData(
+  rawQuery: Record<string, string | string[] | undefined>,
+  role?: Role | null
+) {
+  const scope = role ? await getCampaignScope(role) : undefined;
+  const enforcedState = scope?.enforcedState;
   const query = rankingQuerySchema.parse({
     page: rawQuery.page,
     pageSize: rawQuery.pageSize,
     search: rawQuery.search,
     cidade: rawQuery.cidade,
-    estado: rawQuery.estado,
+    estado: enforcedState ?? rawQuery.estado,
     faixaPotencial: rawQuery.faixaPotencial,
     status: rawQuery.status,
     responsavelId: rawQuery.responsavelId,
@@ -25,7 +33,7 @@ export async function getRankingData(rawQuery: Record<string, string | string[] 
   const filters = {
     search: query.search,
     cidade: query.cidade,
-    estado: query.estado,
+    estado: enforcedState ?? query.estado,
     faixaPotencial: query.faixaPotencial,
     status: query.status,
     responsavelId: query.responsavelId,
@@ -43,6 +51,9 @@ export async function getRankingData(rawQuery: Record<string, string | string[] 
     page: query.page,
     pageSize: query.pageSize,
     totalPages: Math.max(1, Math.ceil(total / query.pageSize)),
-    filters: query
+    filters: {
+      ...query,
+      estado: enforcedState ?? query.estado
+    }
   };
 }

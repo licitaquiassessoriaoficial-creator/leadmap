@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 import { jsonError } from "@/lib/api";
-import { canManageUsers } from "@/lib/permissions";
+import { canViewUsers } from "@/lib/permissions";
 import { getUsers } from "@/services/user-service";
 
 export async function GET() {
@@ -12,7 +12,7 @@ export async function GET() {
     return jsonError("Não autenticado", 401);
   }
 
-  if (!canManageUsers(session.user.role)) {
+  if (!canViewUsers(session.user.role)) {
     return jsonError("Acesso restrito a administradores", 403);
   }
 

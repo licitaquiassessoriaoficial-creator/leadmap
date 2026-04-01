@@ -3,6 +3,7 @@ import { RankingTable } from "@/components/ranking/ranking-table";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationControls } from "@/components/shared/pagination-controls";
 import { StatCard } from "@/components/shared/stat-card";
+import { auth } from "@/lib/auth";
 import { getLeadershipFilters } from "@/services/leadership-service";
 import { getRankingData } from "@/services/ranking-service";
 
@@ -14,9 +15,15 @@ export default async function RankingPage({
   searchParams: SearchParams;
 }) {
   const resolvedSearchParams = await searchParams;
+  const session = await auth();
+
+  if (!session) {
+    return null;
+  }
+
   const [ranking, filterOptions] = await Promise.all([
-    getRankingData(resolvedSearchParams),
-    getLeadershipFilters()
+    getRankingData(resolvedSearchParams, session.user.role),
+    getLeadershipFilters(session.user.role)
   ]);
 
   return (
@@ -44,6 +51,7 @@ export default async function RankingPage({
         showSearch={false}
         showResponsible={false}
         showPeriod
+        lockedState={filterOptions.enforcedState}
       />
       <RankingTable
         data={ranking.items}

@@ -21,7 +21,7 @@ export async function GET(_: Request, context: Context) {
   }
 
   const { id } = await context.params;
-  const leadership = await getLeadershipById(id);
+  const leadership = await getLeadershipById(id, session.user.role);
 
   if (!leadership) {
     return jsonError("Liderança não encontrada", 404);
@@ -40,7 +40,12 @@ export async function PUT(request: Request, context: Context) {
   try {
     const { id } = await context.params;
     const body = await request.json();
-    const leadership = await updateLeadershipRecord(id, body, session.user.id);
+    const leadership = await updateLeadershipRecord(
+      id,
+      body,
+      session.user.id,
+      session.user.role
+    );
 
     return NextResponse.json({ data: leadership });
   } catch (error) {
@@ -63,7 +68,7 @@ export async function DELETE(_: Request, context: Context) {
 
   try {
     const { id } = await context.params;
-    await deleteLeadershipRecord(id, session.user.id);
+    await deleteLeadershipRecord(id, session.user.id, session.user.role);
 
     return NextResponse.json({ ok: true });
   } catch (error) {

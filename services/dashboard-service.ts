@@ -1,10 +1,14 @@
-import { LeadershipStatus, PotentialLevel } from "@prisma/client";
+import { LeadershipStatus, PotentialLevel, Role } from "@prisma/client";
 
 import { POTENTIAL_METADATA } from "@/lib/constants/potential";
 import { getDashboardAggregates } from "@/repositories/leadership-repository";
+import { getCampaignScope } from "@/services/campaign-settings-service";
 
-export async function getDashboardData() {
-  const data = await getDashboardAggregates();
+export async function getDashboardData(role?: Role | null) {
+  const scope = role ? await getCampaignScope(role) : undefined;
+  const data = await getDashboardAggregates({
+    estado: scope?.enforcedState
+  });
 
   const statusCounts = {
     active:
@@ -48,6 +52,7 @@ export async function getDashboardData() {
       { label: "Inativas", total: statusCounts.inactive, color: "#b91c1c" },
       { label: "Pendentes", total: statusCounts.pending, color: "#d97706" }
     ],
-    topLeaderships: data.topLeaderships
+    topLeaderships: data.topLeaderships,
+    enforcedState: scope?.enforcedState
   };
 }

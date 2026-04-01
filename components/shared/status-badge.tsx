@@ -9,6 +9,8 @@ const leadershipStyles: Record<LeadershipStatus, string> = {
 };
 
 const roleStyles: Record<Role, string> = {
+  GLOBAL_ADMIN:
+    "bg-violet-100 text-violet-700 ring-1 ring-inset ring-violet-200",
   ADMIN: "bg-brand-100 text-brand-700 ring-1 ring-inset ring-brand-200",
   OPERATOR: "bg-slate-100 text-slate-700 ring-1 ring-inset ring-slate-200"
 };
@@ -25,5 +27,12 @@ export function LeadershipStatusBadge({ status }: { status: LeadershipStatus }) 
 }
 
 export function RoleBadge({ role }: { role: Role }) {
-  return <Badge className={roleStyles[role]}>{role === Role.ADMIN ? "Admin" : "Operador"}</Badge>;
+  const label =
+    role === Role.GLOBAL_ADMIN
+      ? "Admin global"
+      : role === Role.ADMIN
+        ? "Admin"
+        : "Operador";
+
+  return <Badge className={roleStyles[role]}>{label}</Badge>;
 }
