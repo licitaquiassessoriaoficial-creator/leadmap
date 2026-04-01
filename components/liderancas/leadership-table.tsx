@@ -10,8 +10,11 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import { PotentialBadge } from "@/components/shared/potential-badge";
+import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge, RoleBadge } from "@/components/shared/status-badge";
 import type { LeadershipWithRelations } from "@/types/app";
+import { calculateCostPerVote } from "@/lib/domain/leadership";
+import { formatCurrency, formatInteger } from "@/lib/utils";
 
 export function LeadershipTable({
   data
@@ -21,21 +24,32 @@ export function LeadershipTable({
   const columns = useMemo<ColumnDef<LeadershipWithRelations>[]>(
     () => [
       {
-        header: "Liderança",
+        header: "Lideranca",
         accessorKey: "nome",
         cell: ({ row }) => (
-          <div>
-            <p className="font-medium text-slate-900">{row.original.nome}</p>
-            <p className="text-xs text-slate-500">{row.original.telefone}</p>
+          <div className="flex items-center gap-3">
+            <ProfileAvatar
+              name={row.original.nome}
+              imageUrl={row.original.fotoPerfilUrl}
+            />
+            <div>
+              <p className="font-medium text-slate-900">{row.original.nome}</p>
+              <p className="text-xs text-slate-500">{row.original.telefone}</p>
+            </div>
           </div>
         )
       },
       {
         header: "Cidade / Estado",
         cell: ({ row }) => (
-          <span className="text-sm text-slate-600">
-            {row.original.cidade} / {row.original.estado}
-          </span>
+          <div>
+            <p className="text-sm text-slate-700">
+              {row.original.cidade} / {row.original.estado}
+            </p>
+            <p className="text-xs text-slate-500">
+              {row.original.cidadesResponsaveis.length} cidades sob responsabilidade
+            </p>
+          </div>
         )
       },
       {
@@ -43,22 +57,32 @@ export function LeadershipTable({
         cell: ({ row }) => (
           <div className="space-y-2">
             <p className="text-sm font-medium text-slate-900">
-              {row.original.potencialVotosEstimado}
+              {formatInteger(row.original.potencialVotosEstimado)}
             </p>
             <PotentialBadge level={row.original.faixaPotencial} />
           </div>
         )
       },
       {
-        header: "Indicações",
-        accessorKey: "quantidadeIndicacoes"
+        header: "Indicacoes",
+        cell: ({ row }) => formatInteger(row.original.quantidadeIndicacoes)
+      },
+      {
+        header: "Custo por voto",
+        cell: ({ row }) =>
+          formatCurrency(
+            calculateCostPerVote(
+              row.original.custoTotal,
+              row.original.potencialVotosEstimado
+            )
+          )
       },
       {
         header: "Status",
         cell: ({ row }) => <LeadershipStatusBadge status={row.original.status} />
       },
       {
-        header: "Responsável",
+        header: "Responsavel",
         cell: ({ row }) => (
           <div className="space-y-1">
             <p className="text-sm font-medium text-slate-900">
@@ -69,7 +93,7 @@ export function LeadershipTable({
         )
       },
       {
-        header: "Ações",
+        header: "Acoes",
         cell: ({ row }) => (
           <div className="flex gap-2">
             <Link
@@ -137,7 +161,7 @@ export function LeadershipTable({
                   colSpan={columns.length}
                   className="px-4 py-8 text-center text-sm text-slate-500"
                 >
-                  Nenhuma liderança encontrada para os filtros aplicados.
+                  Nenhuma lideranca encontrada para os filtros aplicados.
                 </td>
               </tr>
             )}

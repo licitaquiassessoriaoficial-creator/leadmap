@@ -2,10 +2,12 @@ import {
   LeadershipStatus,
   LocationStatus,
   PotentialLevel,
-  Prisma
+  Prisma,
+  PrismaClient
 } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
+import { leadershipDetailInclude, leadershipListInclude } from "@/types/app";
 
 export type LeadershipFilters = {
   search?: string;
@@ -18,6 +20,12 @@ export type LeadershipFilters = {
   startDate?: Date;
   endDate?: Date;
 };
+
+type DbClient = PrismaClient | Prisma.TransactionClient;
+
+function getDb(db?: DbClient) {
+  return db ?? prisma;
+}
 
 function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
   const search = filters.search?.trim();
@@ -86,7 +94,8 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
         { nome: { contains: search, mode: "insensitive" } },
         { telefone: { contains: search, mode: "insensitive" } },
         { email: { contains: search, mode: "insensitive" } },
-        { cidade: { contains: search, mode: "insensitive" } }
+        { cidade: { contains: search, mode: "insensitive" } },
+        { bairro: { contains: search, mode: "insensitive" } }
       ]
     });
   }
@@ -100,10 +109,6 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
   };
 }
 
-const leadershipInclude = {
-  cadastradoPor: true
-} satisfies Prisma.LeadershipInclude;
-
 export function listLeaderships(
   filters: LeadershipFilters,
   page: number,
@@ -111,7 +116,7 @@ export function listLeaderships(
 ) {
   return prisma.leadership.findMany({
     where: buildWhere(filters),
-    include: leadershipInclude,
+    include: leadershipListInclude,
     orderBy: [{ updatedAt: "desc" }, { nome: "asc" }],
     skip: (page - 1) * pageSize,
     take: pageSize
@@ -143,40 +148,108 @@ export function findLeadershipById(
           }
         : undefined
     },
-    include: leadershipInclude
+    include: leadershipDetailInclude
+  });
+}
+
+export function findLeadershipDetailsById(id: string, db?: DbClient) {
+  return getDb(db).leadership.findUnique({
+    where: { id },
+    include: leadershipDetailInclude
+  });
+}
+
+export function findLeadershipSummaryById(id: string, db?: DbClient) {
+  return getDb(db).leadership.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      nome: true,
+      cidadeId: true,
+      indicadoPorId: true
+    }
   });
 }
 
 export function createLeadership(
-  data: Prisma.LeadershipUncheckedCreateInput
+  data: Prisma.LeadershipUncheckedCreateInput,
+  db?: DbClient
 ) {
-  return prisma.leadership.create({
+  return getDb(db).leadership.create({
     data,
-    include: leadershipInclude
+    include: leadershipDetailInclude
   });
 }
 
 export function updateLeadership(
   id: string,
-  data: Prisma.LeadershipUncheckedUpdateInput
+  data: Prisma.LeadershipUncheckedUpdateInput,
+  db?: DbClient
 ) {
-  return prisma.leadership.update({
+  return getDb(db).leadership.update({
     where: { id },
     data,
-    include: leadershipInclude
+    include: leadershipDetailInclude
   });
 }
 
-export function deleteLeadership(id: string) {
-  return prisma.leadership.delete({
+export function deleteLeadership(id: string, db?: DbClient) {
+  return getDb(db).leadership.delete({
     where: { id }
+  });
+}
+
+export async function replaceLeadershipResponsibleCities(
+  leadershipId: string,
+  cityIds: string[],
+  db?: DbClient
+) {
+  const uniqueCityIds = Array.from(new Set(cityIds));
+  const database = getDb(db);
+
+  await database.leadershipCity.deleteMany({
+    where: { leadershipId }
+  });
+
+  if (!uniqueCityIds.length) {
+    return;
+  }
+
+  await database.leadershipCity.createMany({
+    data: uniqueCityIds.map((cityId) => ({
+      leadershipId,
+      cityId
+    })),
+    skipDuplicates: true
+  });
+}
+
+export function incrementLeadershipIndications(id: string, db?: DbClient) {
+  return getDb(db).leadership.update({
+    where: { id },
+    data: {
+      quantidadeIndicacoes: {
+        increment: 1
+      }
+    }
+  });
+}
+
+export function decrementLeadershipIndications(id: string, db?: DbClient) {
+  return getDb(db).leadership.update({
+    where: { id },
+    data: {
+      quantidadeIndicacoes: {
+        decrement: 1
+      }
+    }
   });
 }
 
 export function listRanking(filters: LeadershipFilters, page: number, pageSize: number) {
   return prisma.leadership.findMany({
     where: buildWhere(filters),
-    include: leadershipInclude,
+    include: leadershipListInclude,
     orderBy: [
       { quantidadeIndicacoes: "desc" },
       { potencialVotosEstimado: "desc" },
@@ -198,94 +271,77 @@ export function listMapLeaderships(filters: LeadershipFilters) {
         not: null
       }
     },
-    include: leadershipInclude,
-    orderBy: [{ estado: "asc" }, { cidade: "asc" }, { nome: "asc" }]
-  });
-}
-
-export function listCities(filters: LeadershipFilters = {}) {
-  return prisma.leadership.findMany({
-    where: buildWhere(filters),
-    select: { cidade: true },
-    distinct: ["cidade"],
-    orderBy: { cidade: "asc" }
-  });
-}
-
-export function listStates(filters: LeadershipFilters = {}) {
-  return prisma.leadership.findMany({
-    where: buildWhere(filters),
-    select: { estado: true },
-    distinct: ["estado"],
-    orderBy: { estado: "asc" }
+    include: leadershipListInclude,
+    orderBy: [{ cidade: "asc" }, { nome: "asc" }]
   });
 }
 
 export async function getDashboardAggregates(filters: LeadershipFilters = {}) {
   const where = buildWhere(filters);
 
-  const [total, groupedByCity, groupedByState, groupedByPotential, groupedByStatus, topLeaderships, pendingLocations] =
-    await Promise.all([
-      prisma.leadership.count({ where }),
-      prisma.leadership.groupBy({
-        where,
-        by: ["cidade"],
+  const [
+    total,
+    groupedByCity,
+    groupedByPotential,
+    groupedByStatus,
+    topLeaderships,
+    pendingLocations,
+    estimatedVotes
+  ] = await Promise.all([
+    prisma.leadership.count({ where }),
+    prisma.leadership.groupBy({
+      where,
+      by: ["cidade"],
+      _count: {
+        cidade: true
+      },
+      orderBy: {
         _count: {
-          cidade: true
-        },
-        orderBy: {
-          _count: {
-            cidade: "desc"
-          }
+          cidade: "desc"
         }
-      }),
-      prisma.leadership.groupBy({
-        where,
-        by: ["estado"],
-        _count: {
-          estado: true
-        },
-        orderBy: {
-          _count: {
-            estado: "desc"
-          }
-        }
-      }),
-      prisma.leadership.groupBy({
-        where,
-        by: ["faixaPotencial"],
-        _count: {
-          faixaPotencial: true
-        }
-      }),
-      prisma.leadership.groupBy({
-        where,
-        by: ["status"],
-        _count: {
-          status: true
-        }
-      }),
-      prisma.leadership.findMany({
-        where,
-        include: leadershipInclude,
-        orderBy: [{ quantidadeIndicacoes: "desc" }, { potencialVotosEstimado: "desc" }],
-        take: 5
-      }),
-      prisma.leadership.count({
-        where: {
-          ...where,
-          locationStatus: LocationStatus.PENDING
-        }
-      })
-    ]);
+      }
+    }),
+    prisma.leadership.groupBy({
+      where,
+      by: ["faixaPotencial"],
+      _count: {
+        faixaPotencial: true
+      }
+    }),
+    prisma.leadership.groupBy({
+      where,
+      by: ["status"],
+      _count: {
+        status: true
+      }
+    }),
+    prisma.leadership.findMany({
+      where,
+      include: leadershipListInclude,
+      orderBy: [{ quantidadeIndicacoes: "desc" }, { potencialVotosEstimado: "desc" }],
+      take: 5
+    }),
+    prisma.leadership.count({
+      where: {
+        ...where,
+        locationStatus: LocationStatus.PENDING
+      }
+    }),
+    prisma.leadership.aggregate({
+      where,
+      _sum: {
+        potencialVotosEstimado: true
+      }
+    })
+  ]);
 
   return {
     total,
     groupedByCity,
-    groupedByState,
     groupedByPotential,
     groupedByStatus,
     topLeaderships,
-    pendingLocations
+    pendingLocations,
+    estimatedVotes: estimatedVotes._sum.potencialVotosEstimado ?? 0
   };
 }

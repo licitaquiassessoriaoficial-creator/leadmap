@@ -10,8 +10,10 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import { PotentialBadge } from "@/components/shared/potential-badge";
-import { LeadershipStatusBadge } from "@/components/shared/status-badge";
+import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import type { LeadershipWithRelations } from "@/types/app";
+import { calculateCostPerVote } from "@/lib/domain/leadership";
+import { formatCurrency, formatInteger } from "@/lib/utils";
 
 export function RankingTable({
   data,
@@ -25,7 +27,7 @@ export function RankingTable({
   const columns = useMemo<ColumnDef<LeadershipWithRelations>[]>(
     () => [
       {
-        header: "Posição",
+        header: "Posicao",
         cell: ({ row }) => (
           <span className="font-semibold text-slate-900">
             {(page - 1) * pageSize + row.index + 1}
@@ -33,34 +35,47 @@ export function RankingTable({
         )
       },
       {
-        header: "Nome",
+        header: "Lideranca",
         cell: ({ row }) => (
-          <Link href={`/liderancas/${row.original.id}`} className="block">
-            <p className="font-medium text-slate-900">{row.original.nome}</p>
-            <p className="text-xs text-slate-500">
-              {row.original.cidade} / {row.original.estado}
-            </p>
+          <Link href={`/liderancas/${row.original.id}`} className="flex items-center gap-3">
+            <ProfileAvatar
+              name={row.original.nome}
+              imageUrl={row.original.fotoPerfilUrl}
+              className="h-11 w-11"
+            />
+            <div>
+              <p className="font-medium text-slate-900">{row.original.nome}</p>
+              <p className="text-xs text-slate-500">
+                {row.original.cidade} / {row.original.estado}
+              </p>
+            </div>
           </Link>
         )
       },
       {
-        header: "Indicações",
-        accessorKey: "quantidadeIndicacoes"
+        header: "Indicacoes",
+        cell: ({ row }) => formatInteger(row.original.quantidadeIndicacoes)
       },
       {
-        header: "Potencial",
+        header: "Votos estimados",
         cell: ({ row }) => (
           <div className="space-y-2">
             <p className="font-medium text-slate-900">
-              {row.original.potencialVotosEstimado}
+              {formatInteger(row.original.potencialVotosEstimado)}
             </p>
             <PotentialBadge level={row.original.faixaPotencial} />
           </div>
         )
       },
       {
-        header: "Status",
-        cell: ({ row }) => <LeadershipStatusBadge status={row.original.status} />
+        header: "Custo por voto",
+        cell: ({ row }) =>
+          formatCurrency(
+            calculateCostPerVote(
+              row.original.custoTotal,
+              row.original.potencialVotosEstimado
+            )
+          )
       }
     ],
     [page, pageSize]
@@ -112,7 +127,7 @@ export function RankingTable({
                   colSpan={columns.length}
                   className="px-4 py-8 text-center text-sm text-slate-500"
                 >
-                  Nenhuma liderança encontrada para o ranking atual.
+                  Nenhuma lideranca encontrada para o ranking atual.
                 </td>
               </tr>
             )}

@@ -5,6 +5,30 @@ import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import type { LeadershipWithRelations } from "@/types/app";
 
+type CityPoint = {
+  id: string;
+  nome: string;
+  estado: string;
+  totalEleitores: number;
+  latitude: number | null;
+  longitude: number | null;
+  totalResponsaveis: number;
+  votosCaptados: number;
+  votosRestantes: number;
+  progresso: number;
+  indicacoes: number;
+  liderancas: LeadershipWithRelations[];
+};
+
+type CoverageRow = {
+  id: string;
+  nome: string;
+  cidade: string;
+  estado: string;
+  fotoPerfilUrl: string | null;
+  totalCidades: number;
+};
+
 const LeadershipMap = dynamic(
   () => import("@/components/mapa/leadership-map").then((mod) => mod.LeadershipMap),
   {
@@ -13,6 +37,20 @@ const LeadershipMap = dynamic(
   }
 );
 
-export function MapPanel({ points }: { points: LeadershipWithRelations[] }) {
-  return <LeadershipMap points={points} />;
+export function MapPanel({
+  points,
+  cityPoints,
+  leadershipCoverage
+}: {
+  points: LeadershipWithRelations[];
+  cityPoints: CityPoint[];
+  leadershipCoverage: CoverageRow[];
+}) {
+  return (
+    <LeadershipMap
+      points={points}
+      cityPoints={cityPoints}
+      leadershipCoverage={leadershipCoverage}
+    />
+  );
 }

@@ -2,7 +2,8 @@ import { PotentialLevel } from "@prisma/client";
 
 export const POTENTIAL_THRESHOLDS = {
   LOW_MAX: 100,
-  MEDIUM_MAX: 500
+  MEDIUM_MAX: 499,
+  HIGH_MIN: 500
 } as const;
 
 export function classifyPotentialLevel(value: number): PotentialLevel {
@@ -10,7 +11,7 @@ export function classifyPotentialLevel(value: number): PotentialLevel {
     return PotentialLevel.LOW;
   }
 
-  if (value <= POTENTIAL_THRESHOLDS.MEDIUM_MAX) {
+  if (value < POTENTIAL_THRESHOLDS.HIGH_MIN) {
     return PotentialLevel.MEDIUM;
   }
 
@@ -34,7 +35,7 @@ export const POTENTIAL_METADATA: Record<
     chartColor: "#f97316"
   },
   [PotentialLevel.MEDIUM]: {
-    label: "Médio",
+    label: "Medio",
     badgeClassName:
       "bg-sky-100 text-sky-700 ring-1 ring-inset ring-sky-200",
     markerClassName: "bg-sky-500",
@@ -43,8 +44,8 @@ export const POTENTIAL_METADATA: Record<
   [PotentialLevel.HIGH]: {
     label: "Alto",
     badgeClassName:
-      "bg-amber-100 text-amber-700 ring-1 ring-inset ring-amber-200",
-    markerClassName: "bg-amber-100 border-amber-500 text-amber-700",
+      "bg-yellow-100 text-yellow-700 ring-1 ring-inset ring-yellow-200",
+    markerClassName: "bg-yellow-300 border-yellow-500 text-yellow-800",
     chartColor: "#facc15"
   }
 };

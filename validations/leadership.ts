@@ -9,35 +9,58 @@ const optionalStringField = z
   .optional()
   .transform((value) => (value && value.length > 0 ? value : undefined));
 
+const optionalNumberField = z
+  .union([z.coerce.number(), z.literal(""), z.null(), z.undefined()])
+  .transform((value) => {
+    if (value === "" || value == null) {
+      return undefined;
+    }
+
+    return Number(value);
+  })
+  .refine((value) => value === undefined || value >= 0, {
+    message: "Informe um valor maior ou igual a zero"
+  });
+
+const optionalImageUrlField = optionalStringField.refine(
+  (value) =>
+    !value ||
+    value.startsWith("/") ||
+    z.string().url().safeParse(value).success,
+  "Informe uma URL de imagem valida"
+);
+
 export const leadershipCreateSchema = z.object({
-  nome: z.string().trim().min(3, "Informe o nome da liderança"),
-  telefone: z.string().trim().min(8, "Informe um telefone válido"),
+  nome: z.string().trim().min(3, "Informe o nome da lideranca"),
+  telefone: z.string().trim().min(8, "Informe um telefone valido"),
   email: optionalStringField.refine(
     (value) => !value || z.string().email().safeParse(value).success,
-    "Informe um email válido"
+    "Informe um email valido"
   ),
   cpf: optionalStringField.refine(
     (value) => !value || /^\d{11}$/.test(value.replace(/\D/g, "")),
-    "CPF deve ter 11 dígitos"
+    "CPF deve ter 11 digitos"
   ),
-  cidade: z.string().trim().min(2, "Informe a cidade"),
-  estado: z.string().trim().min(2, "Informe o estado"),
+  cidadeId: z.string().trim().min(1, "Selecione a cidade"),
+  estado: z.string().trim().min(2, "Informe o estado").default("SP"),
   bairro: optionalStringField,
   endereco: optionalStringField,
   observacoes: optionalStringField,
+  fotoPerfilUrl: optionalImageUrlField,
   potencialVotosEstimado: z.coerce
     .number()
     .int()
     .min(0, "Potencial deve ser maior ou igual a zero"),
-  quantidadeIndicacoes: z.coerce
-    .number()
-    .int()
-    .min(0, "Indicações não podem ser negativas")
-    .default(0),
+  custoTotal: optionalNumberField,
+  cidadesResponsaveisIds: z.array(z.string().trim().min(1)).default([]),
   status: z.nativeEnum(LeadershipStatus).optional()
 });
 
 export const leadershipUpdateSchema = leadershipCreateSchema.partial();
+
+export const publicLeadershipCreateSchema = leadershipCreateSchema.extend({
+  indicadoPorId: optionalStringField
+});
 
 export const leadershipQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
@@ -64,5 +87,8 @@ export const potentialSelectOptions = POTENTIAL_OPTIONS;
 
 export type LeadershipCreateInput = z.infer<typeof leadershipCreateSchema>;
 export type LeadershipUpdateInput = z.infer<typeof leadershipUpdateSchema>;
+export type PublicLeadershipCreateInput = z.infer<
+  typeof publicLeadershipCreateSchema
+>;
 export type LeadershipQueryInput = z.infer<typeof leadershipQuerySchema>;
 export type RankingQueryInput = z.infer<typeof rankingQuerySchema>;

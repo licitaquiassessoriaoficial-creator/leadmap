@@ -28,6 +28,18 @@ export function findUserById(id: string) {
   });
 }
 
+export function findDefaultLeadershipOwner() {
+  return prisma.user.findFirst({
+    where: {
+      role: {
+        in: [Role.GLOBAL_ADMIN, Role.ADMIN]
+      }
+    },
+    orderBy: [{ role: "asc" }, { createdAt: "asc" }],
+    select: safeUserSelect
+  });
+}
+
 export function findSafeUserById(id: string) {
   return prisma.user.findUnique({
     where: { id },

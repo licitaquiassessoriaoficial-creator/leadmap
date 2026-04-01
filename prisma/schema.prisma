@@ -49,56 +49,93 @@ model User {
 }
 
 model CampaignSettings {
-  id                         String   @id @default("default")
-  nomeCampanha               String?
-  estadoPadrao               String?
-  restringirAoEstadoPadrao   Boolean  @default(false)
-  createdAt                  DateTime @default(now())
-  updatedAt                  DateTime @updatedAt
+  id                       String   @id @default("default")
+  nomeCampanha             String?
+  estadoPadrao             String?
+  restringirAoEstadoPadrao Boolean  @default(false)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model City {
+  id              String           @id @default(cuid())
+  nome            String
+  estado          String           @default("SP")
+  totalEleitores  Int
+  latitude        Float?
+  longitude       Float?
+  leaderships     Leadership[]     @relation("LeadershipBaseCity")
+  responsaveis    LeadershipCity[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([nome, estado])
+  @@index([estado, nome])
 }
 
 model Leadership {
-  id                      String           @id @default(cuid())
-  nome                    String
-  telefone                String
-  email                   String?
-  cpf                     String?
-  cidade                  String
-  estado                  String
-  bairro                  String?
-  endereco                String?
-  latitude                Float?
-  longitude               Float?
-  locationStatus          LocationStatus   @default(PENDING)
-  potencialVotosEstimado  Int
-  faixaPotencial          PotentialLevel
-  status                  LeadershipStatus @default(ACTIVE)
-  observacoes             String?
-  quantidadeIndicacoes    Int              @default(0)
-  cadastradoPorId         String
-  cadastradoPor           User             @relation("LeadershipCreatedBy", fields: [cadastradoPorId], references: [id], onDelete: Restrict)
-  createdAt               DateTime         @default(now())
-  updatedAt               DateTime         @updatedAt
+  id                     String           @id @default(cuid())
+  nome                   String
+  telefone               String
+  email                  String?
+  cpf                    String?
+  fotoPerfilUrl          String?
+  cidade                 String
+  estado                 String           @default("SP")
+  cidadeId               String
+  city                   City             @relation("LeadershipBaseCity", fields: [cidadeId], references: [id], onDelete: Restrict)
+  bairro                 String?
+  endereco               String?
+  latitude               Float?
+  longitude              Float?
+  locationStatus         LocationStatus   @default(PENDING)
+  potencialVotosEstimado Int
+  custoTotal             Float?
+  faixaPotencial         PotentialLevel
+  status                 LeadershipStatus @default(ACTIVE)
+  observacoes            String?
+  quantidadeIndicacoes   Int              @default(0)
+  indicadoPorId          String?
+  indicadoPor            Leadership?      @relation("LeadershipReferral", fields: [indicadoPorId], references: [id], onDelete: SetNull)
+  indicados              Leadership[]     @relation("LeadershipReferral")
+  cidadesResponsaveis    LeadershipCity[]
+  cadastradoPorId        String
+  cadastradoPor          User             @relation("LeadershipCreatedBy", fields: [cadastradoPorId], references: [id], onDelete: Restrict)
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
 
   @@index([cidade])
   @@index([estado])
+  @@index([cidadeId])
   @@index([faixaPotencial])
   @@index([status])
   @@index([locationStatus])
   @@index([cadastradoPorId])
   @@index([createdAt])
   @@index([quantidadeIndicacoes])
+  @@index([indicadoPorId])
+}
+
+model LeadershipCity {
+  leadershipId String
+  cityId       String
+  leadership   Leadership @relation(fields: [leadershipId], references: [id], onDelete: Cascade)
+  city         City       @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@id([leadershipId, cityId])
+  @@index([cityId])
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  entidade  String
+  id         String   @id @default(cuid())
+  entidade   String
   entidadeId String
-  acao      String
-  usuarioId String
-  usuario   User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  descricao String
-  createdAt DateTime @default(now())
+  acao       String
+  usuarioId  String
+  usuario    User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  descricao  String
+  createdAt  DateTime @default(now())
 
   @@index([entidade, entidadeId])
   @@index([usuarioId])

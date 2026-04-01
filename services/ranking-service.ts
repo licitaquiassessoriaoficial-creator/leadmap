@@ -18,7 +18,7 @@ export async function getRankingData(
   userId?: string
 ) {
   const scope = role ? await getCampaignScope(role) : undefined;
-  const enforcedState = scope?.enforcedState;
+  const enforcedState = scope?.enforcedState ?? "SP";
   const responsavelIds = await getScopedLeadershipUserIds(userId, role);
   const query = rankingQuerySchema.parse({
     page: rawQuery.page,

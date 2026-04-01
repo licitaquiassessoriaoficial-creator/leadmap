@@ -56,6 +56,7 @@ export default async function RankingPage({
         cities={filterOptions.cities}
         states={filterOptions.states}
         initialValues={{
+          search: ranking.filters.search,
           cidade: ranking.filters.cidade,
           estado: ranking.filters.estado,
           faixaPotencial: ranking.filters.faixaPotencial,
@@ -63,7 +64,6 @@ export default async function RankingPage({
           startDate: ranking.filters.startDate,
           endDate: ranking.filters.endDate
         }}
-        showSearch={false}
         showResponsible={false}
         showPeriod
         lockedState={filterOptions.enforcedState}

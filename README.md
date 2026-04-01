@@ -1,52 +1,50 @@
 # LeadMap CRM
 
-CRM de liderancas politicas ou comunitarias com autenticação, dashboard, CRUD completo, ranking, mapa interativo com Leaflet/OpenStreetMap, auditoria básica e interface administrativa responsiva.
+CRM web de liderancas com Next.js App Router, TypeScript, Tailwind, PostgreSQL, Prisma, NextAuth, Leaflet/OpenStreetMap, Zod e React Hook Form.
 
-## Stack
+O sistema foi implementado para rodar localmente com:
+
+- autenticacao com sessao
+- perfis `ADMIN` e `OPERATOR` (mais `GLOBAL_ADMIN` para administracao global)
+- dashboard com graficos e metas
+- CRUD completo de liderancas
+- upload local de foto de perfil
+- link de indicacao publico em `/cadastro?ref=ID`
+- ranking por indicacoes
+- mapa interativo focado em SP
+- cobertura de cidades e detalhe por cidade
+- custo por voto, meta de votos e WhatsApp
+- auditoria de criacao, edicao, exclusao e status
+
+## Stack obrigatoria
 
 - Next.js 15 com App Router
 - React 19
-- TypeScript estrito
+- TypeScript
 - Tailwind CSS
 - PostgreSQL
 - Prisma ORM
 - NextAuth
-- Leaflet + OpenStreetMap
+- Leaflet
+- OpenStreetMap
 - Zod
 - React Hook Form
-- TanStack Table
-- Recharts
-- Vitest
 
-## Funcionalidades
+## Funcionalidades entregues
 
-- Login com sessão e perfis `ADMIN` e `OPERATOR`
-- Dashboard com cards, gráficos e ranking resumido
-- CRUD de lideranças com validação no frontend e backend
-- Filtros por texto, cidade, estado, faixa, status, período e responsável
-- Ranking ordenado por quantidade de indicações
-- Mapa com pins coloridos por potencial e cluster automático
-- Geocodificação desacoplada via Nominatim/OpenStreetMap
-- Auditoria básica para criação, edição, exclusão, inativação e reativação
-- Página de usuários e página de configurações
-- Seed com dados realistas
-- Testes unitários e de serviços
+- Login com sessao e middleware de protecao
+- Dashboard com total de liderancas, cobertura de cidades, votos captados vs meta, top 5 por indicacoes e distribuicao por potencial
+- Cadastro de liderancas com foto, custo total, cidade base, cidades sob responsabilidade e geocodificacao
+- Calculo centralizado de faixa de potencial e custo por voto
+- Link unico de indicacao por lideranca
+- Cadastro publico vinculado por referencia
+- Ranking com posicao, cidade, indicacoes, votos estimados e custo por voto
+- Mapa de SP com pins coloridos por potencial, popup com foto e botao de WhatsApp
+- Visualizacao e detalhe de cidades com progresso de meta
+- Seed com 49 cidades de SP e 16 liderancas distribuidas
+- Testes unitarios para potencial, custo por voto, validacao e criacao de lideranca
 
-## Arquitetura
-
-O projeto foi organizado em camadas coesas:
-
-- `app`: páginas, layouts e rotas API do App Router
-- `components`: UI reutilizável e componentes por domínio
-- `lib`: autenticação, Prisma, utilitários, permissões e constantes
-- `services`: regras de negócio e orquestração
-- `repositories`: acesso ao Prisma e consultas
-- `prisma`: schema, migrations e seed
-- `types`: tipos compartilhados e declarações
-- `validations`: schemas Zod para entradas e filtros
-- `tests`: testes de regra de negócio e validação
-
-## Estrutura principal
+## Estrutura do projeto
 
 ```text
 .
@@ -56,8 +54,8 @@ O projeto foi organizado em camadas coesas:
 |   |-- (protected)/liderancas
 |   |-- (protected)/ranking
 |   |-- (protected)/mapa
-|   |-- (protected)/usuarios
-|   |-- (protected)/configuracoes
+|   |-- (protected)/cidades
+|   |-- cadastro
 |   `-- api
 |-- components
 |   |-- auth
@@ -67,9 +65,11 @@ O projeto foi organizado em camadas coesas:
 |   |-- mapa
 |   |-- ranking
 |   |-- shared
-|   |-- ui
-|   `-- users
+|   `-- ui
 |-- lib
+|   |-- constants
+|   |-- data
+|   `-- domain
 |-- prisma
 |   |-- migrations
 |   |-- schema.prisma
@@ -78,22 +78,62 @@ O projeto foi organizado em camadas coesas:
 |-- services
 |-- tests
 |-- types
-|-- validations
-|-- docker-compose.yml
-`-- README.md
+`-- validations
 ```
 
-## Como rodar
+## Arquitetura
 
-### 1. Instale dependências
+O projeto segue uma separacao simples e coesa:
+
+- `app`: paginas, layouts e rotas API do App Router
+- `components`: interface e componentes reutilizaveis
+- `repositories`: consultas Prisma e acesso a dados
+- `services`: regras de negocio, agregacoes e orquestracao
+- `lib/domain`: regras centrais de calculo como custo por voto, progresso e WhatsApp
+- `validations`: schemas Zod compartilhados entre front e back
+- `types`: tipos derivados do Prisma para consumo nas telas
+- `prisma`: schema, migrations e seed
+
+Fluxos principais:
+
+1. O usuario autentica via NextAuth.
+2. As paginas protegidas consomem os `services`.
+3. Os services validam entradas com Zod, consultam repositories e registram auditoria.
+4. O mapa usa Leaflet com base OpenStreetMap e dados vindos do banco.
+5. O cadastro publico cria liderancas pendentes e incrementa a contagem de indicacoes do referente.
+
+## Modelagem principal
+
+Modelos do Prisma:
+
+- `User`
+- `Leadership`
+- `City`
+- `LeadershipCity`
+- `AuditLog`
+- `CampaignSettings`
+
+Campos de destaque:
+
+- `Leadership.fotoPerfilUrl`
+- `Leadership.custoTotal`
+- `Leadership.quantidadeIndicacoes`
+- `Leadership.indicadoPorId`
+- `Leadership.cidadeId`
+- `City.totalEleitores`
+- `City.latitude` e `City.longitude`
+
+## Como rodar localmente
+
+### 1. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-### 2. Configure o ambiente
+### 2. Configurar ambiente
 
-Crie um arquivo `.env` a partir de `.env.example`:
+Copie `.env.example` para `.env`.
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/leadmap"
@@ -101,92 +141,53 @@ NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="troque-por-uma-chave-segura-com-32-caracteres-ou-mais"
 ```
 
-### 3. Suba o PostgreSQL
+### 3. Garantir um PostgreSQL local
 
-Se você já tiver PostgreSQL local, apenas crie o banco `leadmap`.
+Crie um banco chamado `leadmap` na porta `5432`.
 
-Se quiser usar Docker:
+Se voce tiver Docker instalado, pode usar o `docker-compose.yml` do projeto:
 
 ```bash
 docker compose up -d postgres
 ```
 
-### 4. Rode as migrations
+### 4. Gerar client e aplicar migrations
 
 ```bash
-npm run db:migrate
-```
-
-### 5. Rode o seed
-
-```bash
-npm run db:seed
-```
-
-### 6. Inicie o projeto
-
-```bash
-npm run dev
-```
-
-Abra `http://localhost:3000`.
-
-## Deploy com Railway + Netlify
-
-### Railway
-
-1. Crie um projeto no Railway.
-2. Adicione um banco PostgreSQL.
-3. Copie a string de conexão publica do banco para usar fora do Railway.
-4. Rode as migrations contra esse banco:
-
-```bash
-DATABASE_URL="SUA_URL_DO_RAILWAY" npm run db:deploy
-DATABASE_URL="SUA_URL_DO_RAILWAY" npm run db:seed
-```
-
-### Netlify
-
-1. Importe este repositório no Netlify.
-2. O projeto já possui [netlify.toml](./netlify.toml) com `npm run build` e publish em `.next`.
-3. Cadastre as variáveis de ambiente no painel do Netlify.
-
-Variáveis recomendadas:
-
-- `DATABASE_URL`
-- `NEXTAUTH_URL`
-- `NEXTAUTH_SECRET`
-- `NETLIFY_NEXT_SKEW_PROTECTION=true`
-
-Sugestão prática:
-
-- `NEXTAUTH_URL`: use a URL final do site no Netlify, por exemplo `https://seu-site.netlify.app`
-- `NEXTAUTH_SECRET`: gere uma chave longa e aleatória
-- em produção, configure as variáveis com escopo de build e functions
-
-Se você usar domínio customizado, atualize `NEXTAUTH_URL` para esse domínio e faça novo deploy.
-
-## Scripts úteis
-
-```bash
-npm run dev
-npm run build
-npm run start
-npm test
 npm run db:generate
 npm run db:migrate
-npm run db:deploy
+```
+
+### 5. Popular a base
+
+```bash
 npm run db:seed
 ```
+
+### 6. Iniciar a aplicacao
+
+```bash
+npm run dev
+```
+
+Abra:
+
+- `http://localhost:3000/login`
+- `http://localhost:3000/cadastro`
 
 ## Credenciais de teste
 
 - Admin
-  - Email: `admin@leadmap.local`
-  - Senha: `Admin123!`
-- Operador
-  - Email: `operador@leadmap.local`
-  - Senha: `Operador123!`
+  - email: `admin@leadmap.local`
+  - senha: `Admin123!`
+
+- Operator
+  - email: `operador@leadmap.local`
+  - senha: `Operador123!`
+
+- Global admin
+  - email: `global@leadmap.local`
+  - senha: `Global123!`
 
 ## Rotas principais
 
@@ -198,43 +199,67 @@ npm run db:seed
 - `/liderancas/[id]/editar`
 - `/ranking`
 - `/mapa`
-- `/usuarios`
-- `/configuracoes`
+- `/cidades`
+- `/cidades/[id]`
+- `/cadastro`
 
-## Decisões técnicas
+## Upload de foto
 
-- `locationStatus` foi separado de `status` para manter o status operacional da liderança independente da qualidade da geocodificação.
-- A classificação de potencial fica centralizada em `lib/constants/potential.ts`.
-- A geocodificação foi encapsulada em `services/geocoding-service.ts` para facilitar troca futura do provedor.
-- O acesso ao banco fica nos repositórios e as regras de negócio ficam nos serviços.
-- O CRUD usa validação compartilhada com Zod tanto no frontend quanto no backend.
-- Operadores não conseguem excluir definitivamente nem pela interface nem pela API.
-- O mapa usa cluster automático e pins customizados por faixa de potencial.
+- Upload local em `public/uploads/profiles`
+- Formatos aceitos: JPG, PNG, WEBP
+- Tamanho maximo: 5 MB
+
+## Seed
+
+O seed cria:
+
+- 3 usuarios
+- 49 cidades de SP
+- 16 liderancas com diferentes potenciais e status
+- responsabilidades N:N por cidade
+- relacoes de indicacao
+- logs de auditoria iniciais
 
 ## Testes
 
-Cobertura inicial entregue:
-
-- regra de faixa de potencial
-- validação Zod do cadastro
-- criação de liderança via service
-- ranking via service
-
-Rode com:
+Executar:
 
 ```bash
 npm test
 ```
 
-## Observações
+Cobertura entregue:
 
-- A geocodificação depende de acesso à internet para consultar o Nominatim.
-- Se a geocodificação falhar, o cadastro continua e a liderança fica com localização pendente.
-- O build de produção já foi validado localmente.
+- classificacao de potencial
+- custo por voto
+- validacao de cadastro
+- criacao de lideranca no service
 
-## Próximos passos recomendados
+## Validacoes feitas localmente
 
-1. Adicionar paginação totalmente server-side com cache e revalidação por rota.
-2. Incluir gestão completa de usuários com criação/edição pela interface.
-3. Expandir a auditoria para login/logout e alterações de permissões.
-4. Adicionar E2E com Playwright para fluxos críticos.
+Executado com sucesso:
+
+- `npm run db:generate`
+- `npm run db:migrate`
+- `npm run db:seed`
+- `npm test`
+- `npm run build`
+
+## Criterios de aceite validados
+
+- Login funcional com sessao
+- Cadastro de lideranca com foto, custo e cidades
+- Link de indicacao em `/cadastro?ref=ID`
+- Ranking por indicacoes
+- Mapa com pins coloridos por potencial
+- Cidades cobertas e faltantes
+- Votos captados e faltantes por cidade
+- Custo por voto
+- Link direto para WhatsApp
+- Grafico top 5 no dashboard
+
+## Observacoes
+
+- A geocodificacao usa Nominatim/OpenStreetMap e pode depender de internet para novas cidades sem coordenadas locais.
+- O projeto esta focado em SP e o seed usa apenas cidades paulistas.
+- O cadastro publico cria liderancas com status `PENDING`.

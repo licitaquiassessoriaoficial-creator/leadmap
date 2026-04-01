@@ -23,7 +23,7 @@ describe("classifyPotentialLevel", () => {
   });
 
   it("classifica como alto acima do limite medio", () => {
-    expect(classifyPotentialLevel(POTENTIAL_THRESHOLDS.MEDIUM_MAX + 1)).toBe(
+    expect(classifyPotentialLevel(POTENTIAL_THRESHOLDS.HIGH_MIN)).toBe(
       PotentialLevel.HIGH
     );
   });

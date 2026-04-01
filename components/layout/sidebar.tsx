@@ -1,12 +1,12 @@
 "use client";
 
+import { Role } from "@prisma/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Role } from "@prisma/client";
+import type { Session } from "next-auth";
 
 import { canManageTeamUsers, canViewSettings } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
-import type { Session } from "next-auth";
 
 export function Sidebar({
   user,
@@ -20,14 +20,15 @@ export function Sidebar({
   const pathname = usePathname();
   const navigation = [
     { href: "/dashboard", label: "Dashboard" },
-    { href: "/liderancas", label: "Lideranças" },
+    { href: "/liderancas", label: "Liderancas" },
     { href: "/ranking", label: "Ranking" },
     { href: "/mapa", label: "Mapa" },
+    { href: "/cidades", label: "Cidades" },
     ...(canManageTeamUsers(user.role)
-      ? [{ href: "/usuarios", label: "Usuários" }]
+      ? [{ href: "/usuarios", label: "Usuarios" }]
       : []),
     ...(canViewSettings(user.role)
-      ? [{ href: "/configuracoes", label: "Configurações" }]
+      ? [{ href: "/configuracoes", label: "Configuracoes" }]
       : []),
     ...(user.role === Role.GLOBAL_ADMIN
       ? [{ href: "/admin-global", label: "Admin Global" }]
@@ -77,9 +78,9 @@ export function Sidebar({
         })}
       </nav>
       <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-        <p className="text-sm font-medium text-white">Território monitorado</p>
+        <p className="text-sm font-medium text-white">Territorio monitorado</p>
         <p className="mt-2 text-xs text-slate-400">
-          Cadastro, filtros, ranking e mapa em uma única operação.
+          Cadastro, filtros, ranking, cidades e mapa em uma unica operacao.
         </p>
       </div>
     </aside>
