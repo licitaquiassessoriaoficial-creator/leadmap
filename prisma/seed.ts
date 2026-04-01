@@ -33,7 +33,8 @@ async function main() {
       name: "Mariana Souza",
       email: "admin@leadmap.local",
       passwordHash: adminPasswordHash,
-      role: Role.ADMIN
+      role: Role.ADMIN,
+      createdById: globalAdmin.id
     }
   });
 
@@ -42,7 +43,8 @@ async function main() {
       name: "Carlos Lima",
       email: "operador@leadmap.local",
       passwordHash: operatorPasswordHash,
-      role: Role.OPERATOR
+      role: Role.OPERATOR,
+      createdById: admin.id
     }
   });
 

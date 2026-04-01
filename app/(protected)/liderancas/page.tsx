@@ -6,7 +6,7 @@ import { LeadershipTable } from "@/components/liderancas/leadership-table";
 import { Card } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { formatInteger } from "@/lib/utils";
-import { getUsers } from "@/services/user-service";
+import { getVisibleUsersForLeadershipFilters } from "@/services/user-service";
 import {
   getLeadershipFilters,
   getLeadershipList
@@ -27,9 +27,9 @@ export default async function LeadershipListPage({
   }
 
   const [listData, filterOptions, users] = await Promise.all([
-    getLeadershipList(resolvedSearchParams, session.user.role),
-    getLeadershipFilters(session.user.role),
-    getUsers()
+    getLeadershipList(resolvedSearchParams, session.user.role, session.user.id),
+    getLeadershipFilters(session.user.role, session.user.id),
+    getVisibleUsersForLeadershipFilters(session.user.id, session.user.role)
   ]);
 
   const feedback =
@@ -61,6 +61,7 @@ export default async function LeadershipListPage({
           endDate: listData.filters.endDate
         }}
         lockedState={filterOptions.enforcedState}
+        showResponsible={session.user.role !== "OPERATOR"}
       />
       <Card className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>

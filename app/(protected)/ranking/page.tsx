@@ -22,8 +22,8 @@ export default async function RankingPage({
   }
 
   const [ranking, filterOptions] = await Promise.all([
-    getRankingData(resolvedSearchParams, session.user.role),
-    getLeadershipFilters(session.user.role)
+    getRankingData(resolvedSearchParams, session.user.role, session.user.id),
+    getLeadershipFilters(session.user.role, session.user.id)
   ]);
 
   return (

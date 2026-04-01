@@ -36,12 +36,16 @@ model User {
   email        String       @unique
   passwordHash String
   role         Role         @default(OPERATOR)
+  createdById  String?
+  createdBy    User?        @relation("UserHierarchy", fields: [createdById], references: [id], onDelete: SetNull)
+  managedUsers User[]       @relation("UserHierarchy")
   leaderships  Leadership[] @relation("LeadershipCreatedBy")
   auditLogs    AuditLog[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
   @@index([role])
+  @@index([createdById])
 }
 
 model CampaignSettings {

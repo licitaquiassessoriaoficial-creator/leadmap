@@ -16,7 +16,7 @@ export default async function EditLeadershipPage({
   const { id } = await params;
   const session = await auth();
   const [leadership, scope] = await Promise.all([
-    getLeadershipById(id, session?.user.role),
+    getLeadershipById(id, session?.user.role, session?.user.id),
     getCampaignScope(session?.user.role)
   ]);
 

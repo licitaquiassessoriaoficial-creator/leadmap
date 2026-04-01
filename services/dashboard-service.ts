@@ -3,11 +3,14 @@ import { LeadershipStatus, PotentialLevel, Role } from "@prisma/client";
 import { POTENTIAL_METADATA } from "@/lib/constants/potential";
 import { getDashboardAggregates } from "@/repositories/leadership-repository";
 import { getCampaignScope } from "@/services/campaign-settings-service";
+import { getScopedLeadershipUserIds } from "@/services/user-service";
 
-export async function getDashboardData(role?: Role | null) {
+export async function getDashboardData(role?: Role | null, userId?: string) {
   const scope = role ? await getCampaignScope(role) : undefined;
+  const responsavelIds = await getScopedLeadershipUserIds(userId, role);
   const data = await getDashboardAggregates({
-    estado: scope?.enforcedState
+    estado: scope?.enforcedState,
+    responsavelIds
   });
 
   const statusCounts = {

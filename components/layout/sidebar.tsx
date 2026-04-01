@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Role } from "@prisma/client";
 
+import { canManageTeamUsers, canViewSettings } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
 
@@ -22,8 +23,12 @@ export function Sidebar({
     { href: "/liderancas", label: "Lideranças" },
     { href: "/ranking", label: "Ranking" },
     { href: "/mapa", label: "Mapa" },
-    { href: "/usuarios", label: "Usuários" },
-    { href: "/configuracoes", label: "Configurações" },
+    ...(canManageTeamUsers(user.role)
+      ? [{ href: "/usuarios", label: "Usuários" }]
+      : []),
+    ...(canViewSettings(user.role)
+      ? [{ href: "/configuracoes", label: "Configurações" }]
+      : []),
     ...(user.role === Role.GLOBAL_ADMIN
       ? [{ href: "/admin-global", label: "Admin Global" }]
       : [])

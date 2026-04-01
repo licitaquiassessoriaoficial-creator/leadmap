@@ -19,3 +19,11 @@ export function canViewUsers(role?: Role | null) {
 export function canManageUsers(role?: Role | null) {
   return isGlobalAdmin(role);
 }
+
+export function canManageTeamUsers(role?: Role | null) {
+  return role === Role.ADMIN;
+}
+
+export function canViewSettings(role?: Role | null) {
+  return role === Role.ADMIN || role === Role.GLOBAL_ADMIN;
+}

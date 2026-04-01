@@ -12,7 +12,11 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const data = await getMapData(getQueryObject(url.searchParams), session.user.role);
+  const data = await getMapData(
+    getQueryObject(url.searchParams),
+    session.user.role,
+    session.user.id
+  );
 
   return NextResponse.json({ data });
 }

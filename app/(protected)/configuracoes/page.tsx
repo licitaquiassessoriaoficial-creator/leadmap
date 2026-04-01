@@ -1,11 +1,37 @@
+import { redirect } from "next/navigation";
 import { Role } from "@prisma/client";
 
 import { LinkCard } from "@/components/shared/link-card";
 import { PageHeader } from "@/components/shared/page-header";
 import { RoleBadge } from "@/components/shared/status-badge";
 import { POTENTIAL_THRESHOLDS } from "@/lib/constants/potential";
+import { auth } from "@/lib/auth";
+import { canViewSettings } from "@/lib/permissions";
+import { Card } from "@/components/ui/card";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  if (!canViewSettings(session.user.role)) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Configurações"
+          description="Área disponível apenas para administradores."
+        />
+        <Card>
+          <p className="text-sm text-slate-600">
+            Seu perfil atual não possui permissão para acessar esta página.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader

@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 
 import { countLeaderships, listMapLeaderships } from "@/repositories/leadership-repository";
 import { getCampaignScope } from "@/services/campaign-settings-service";
+import { getScopedLeadershipUserIds } from "@/services/user-service";
 import { leadershipQuerySchema } from "@/validations/leadership";
 
 function parseDateRange(startDate?: string, endDate?: string) {
@@ -13,10 +14,12 @@ function parseDateRange(startDate?: string, endDate?: string) {
 
 export async function getMapData(
   rawQuery: Record<string, string | string[] | undefined>,
-  role?: Role | null
+  role?: Role | null,
+  userId?: string
 ) {
   const scope = role ? await getCampaignScope(role) : undefined;
   const enforcedState = scope?.enforcedState;
+  const responsavelIds = await getScopedLeadershipUserIds(userId, role);
   const query = leadershipQuerySchema.parse({
     cidade: rawQuery.cidade,
     estado: enforcedState ?? rawQuery.estado,
@@ -35,6 +38,7 @@ export async function getMapData(
     faixaPotencial: query.faixaPotencial,
     status: query.status,
     responsavelId: query.responsavelId,
+    responsavelIds,
     ...parseDateRange(query.startDate, query.endDate)
   };
 

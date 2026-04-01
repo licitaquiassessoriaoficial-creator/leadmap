@@ -25,8 +25,8 @@ export default async function MapPage({
   }
 
   const [mapData, filterOptions] = await Promise.all([
-    getMapData(resolvedSearchParams, session.user.role),
-    getLeadershipFilters(session.user.role)
+    getMapData(resolvedSearchParams, session.user.role, session.user.id),
+    getLeadershipFilters(session.user.role, session.user.id)
   ]);
 
   return (

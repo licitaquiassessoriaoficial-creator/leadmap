@@ -21,7 +21,11 @@ export async function GET(_: Request, context: Context) {
   }
 
   const { id } = await context.params;
-  const leadership = await getLeadershipById(id, session.user.role);
+  const leadership = await getLeadershipById(
+    id,
+    session.user.role,
+    session.user.id
+  );
 
   if (!leadership) {
     return jsonError("Liderança não encontrada", 404);

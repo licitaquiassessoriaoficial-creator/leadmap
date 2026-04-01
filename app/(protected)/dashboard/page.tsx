@@ -18,7 +18,7 @@ export default async function DashboardPage() {
     return null;
   }
 
-  const data = await getDashboardData(session.user.role);
+  const data = await getDashboardData(session.user.role, session.user.id);
 
   return (
     <div className="space-y-6">

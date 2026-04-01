@@ -11,7 +11,7 @@ export async function GET() {
     return jsonError("Não autenticado", 401);
   }
 
-  const data = await getDashboardData(session.user.role);
+  const data = await getDashboardData(session.user.role, session.user.id);
 
   return NextResponse.json({ data });
 }

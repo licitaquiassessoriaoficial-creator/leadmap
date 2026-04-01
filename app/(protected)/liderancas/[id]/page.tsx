@@ -30,7 +30,7 @@ export default async function LeadershipDetailsPage({
   ]);
 
   const [leadership, auditLogs] = await Promise.all([
-    getLeadershipById(id, session?.user.role),
+    getLeadershipById(id, session?.user.role, session?.user.id),
     getEntityAuditLogs("Leadership", id)
   ]);
 

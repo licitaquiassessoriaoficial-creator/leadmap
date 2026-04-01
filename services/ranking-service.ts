@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 
 import { countLeaderships, listRanking } from "@/repositories/leadership-repository";
 import { getCampaignScope } from "@/services/campaign-settings-service";
+import { getScopedLeadershipUserIds } from "@/services/user-service";
 import { rankingQuerySchema } from "@/validations/leadership";
 
 function parseDateRange(startDate?: string, endDate?: string) {
@@ -13,10 +14,12 @@ function parseDateRange(startDate?: string, endDate?: string) {
 
 export async function getRankingData(
   rawQuery: Record<string, string | string[] | undefined>,
-  role?: Role | null
+  role?: Role | null,
+  userId?: string
 ) {
   const scope = role ? await getCampaignScope(role) : undefined;
   const enforcedState = scope?.enforcedState;
+  const responsavelIds = await getScopedLeadershipUserIds(userId, role);
   const query = rankingQuerySchema.parse({
     page: rawQuery.page,
     pageSize: rawQuery.pageSize,
@@ -37,6 +40,7 @@ export async function getRankingData(
     faixaPotencial: query.faixaPotencial,
     status: query.status,
     responsavelId: query.responsavelId,
+    responsavelIds,
     ...parseDateRange(query.startDate, query.endDate)
   };
 

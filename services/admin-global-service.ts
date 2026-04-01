@@ -70,7 +70,8 @@ export async function createManagedUser(rawInput: unknown, usuarioId: string) {
     name: input.name,
     email: input.email,
     passwordHash,
-    role: input.role
+    role: input.role,
+    createdById: usuarioId
   });
 
   await recordAuditLog({

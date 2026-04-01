@@ -19,6 +19,7 @@ import {
 } from "@/repositories/leadership-repository";
 import { recordAuditLog } from "@/services/audit-service";
 import { geocodeCityState } from "@/services/geocoding-service";
+import { getScopedLeadershipUserIds } from "@/services/user-service";
 import {
   leadershipCreateSchema,
   leadershipQuerySchema,
@@ -39,11 +40,35 @@ async function resolveScopedState(role?: Role | null) {
   return scope.enforcedState;
 }
 
-export async function getLeadershipFilters(role?: Role | null) {
-  const enforcedState = await resolveScopedState(role);
+async function resolveLeadershipScope(userId?: string, role?: Role | null) {
+  const [enforcedState, responsavelIds] = await Promise.all([
+    resolveScopedState(role),
+    getScopedLeadershipUserIds(userId, role)
+  ]);
+
+  return {
+    enforcedState,
+    responsavelIds
+  };
+}
+
+export async function getLeadershipFilters(
+  role?: Role | null,
+  userId?: string
+) {
+  const { enforcedState, responsavelIds } = await resolveLeadershipScope(
+    userId,
+    role
+  );
   const [cities, states] = await Promise.all([
-    listCities(enforcedState),
-    listStates(enforcedState)
+    listCities({
+      estado: enforcedState,
+      responsavelIds
+    }),
+    listStates({
+      estado: enforcedState,
+      responsavelIds
+    })
   ]);
 
   return {
@@ -62,9 +87,13 @@ function parseDateRange(startDate?: string, endDate?: string) {
 
 export async function getLeadershipList(
   rawQuery: Record<string, string | string[] | undefined>,
-  role?: Role | null
+  role?: Role | null,
+  userId?: string
 ) {
-  const enforcedState = await resolveScopedState(role);
+  const { enforcedState, responsavelIds } = await resolveLeadershipScope(
+    userId,
+    role
+  );
   const query = leadershipQuerySchema.parse({
     page: rawQuery.page,
     pageSize: rawQuery.pageSize,
@@ -85,6 +114,7 @@ export async function getLeadershipList(
     faixaPotencial: query.faixaPotencial,
     status: query.status,
     responsavelId: query.responsavelId,
+    responsavelIds,
     ...parseDateRange(query.startDate, query.endDate)
   };
 
@@ -106,9 +136,20 @@ export async function getLeadershipList(
   };
 }
 
-export async function getLeadershipById(id: string, role?: Role | null) {
-  const enforcedState = await resolveScopedState(role);
-  return findLeadershipById(id, enforcedState);
+export async function getLeadershipById(
+  id: string,
+  role?: Role | null,
+  userId?: string
+) {
+  const { enforcedState, responsavelIds } = await resolveLeadershipScope(
+    userId,
+    role
+  );
+
+  return findLeadershipById(id, {
+    estado: enforcedState,
+    responsavelIds
+  });
 }
 
 async function resolveCoordinates(cidade: string, estado: string) {
@@ -189,8 +230,14 @@ export async function updateLeadershipRecord(
   userId: string,
   role?: Role | null
 ) {
-  const enforcedState = await resolveScopedState(role);
-  const existing = await findLeadershipById(id, enforcedState);
+  const { enforcedState, responsavelIds } = await resolveLeadershipScope(
+    userId,
+    role
+  );
+  const existing = await findLeadershipById(id, {
+    estado: enforcedState,
+    responsavelIds
+  });
 
   if (!existing) {
     throw new Error("Liderança não encontrada");
@@ -254,8 +301,14 @@ export async function setLeadershipStatus(
   userId: string,
   role?: Role | null
 ) {
-  const enforcedState = await resolveScopedState(role);
-  const existing = await findLeadershipById(id, enforcedState);
+  const { enforcedState, responsavelIds } = await resolveLeadershipScope(
+    userId,
+    role
+  );
+  const existing = await findLeadershipById(id, {
+    estado: enforcedState,
+    responsavelIds
+  });
 
   if (!existing) {
     throw new Error("Liderança não encontrada");
@@ -284,8 +337,14 @@ export async function deleteLeadershipRecord(
   userId: string,
   role?: Role | null
 ) {
-  const enforcedState = await resolveScopedState(role);
-  const existing = await findLeadershipById(id, enforcedState);
+  const { enforcedState, responsavelIds } = await resolveLeadershipScope(
+    userId,
+    role
+  );
+  const existing = await findLeadershipById(id, {
+    estado: enforcedState,
+    responsavelIds
+  });
 
   if (!existing) {
     throw new Error("Liderança não encontrada");

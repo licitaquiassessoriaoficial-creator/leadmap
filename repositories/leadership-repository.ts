@@ -14,6 +14,7 @@ export type LeadershipFilters = {
   faixaPotencial?: PotentialLevel;
   status?: LeadershipStatus;
   responsavelId?: string;
+  responsavelIds?: string[];
   startDate?: Date;
   endDate?: Date;
 };
@@ -29,31 +30,73 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
         }
       : undefined;
 
+  const conditions: Prisma.LeadershipWhereInput[] = [];
+
+  if (filters.cidade) {
+    conditions.push({
+      cidade: {
+        equals: filters.cidade,
+        mode: "insensitive"
+      }
+    });
+  }
+
+  if (filters.estado) {
+    conditions.push({
+      estado: {
+        equals: filters.estado,
+        mode: "insensitive"
+      }
+    });
+  }
+
+  if (filters.faixaPotencial) {
+    conditions.push({
+      faixaPotencial: filters.faixaPotencial
+    });
+  }
+
+  if (filters.status) {
+    conditions.push({
+      status: filters.status
+    });
+  }
+
+  if (filters.responsavelIds?.length) {
+    conditions.push({
+      cadastradoPorId: {
+        in: filters.responsavelIds
+      }
+    });
+  }
+
+  if (filters.responsavelId) {
+    conditions.push({
+      cadastradoPorId: filters.responsavelId
+    });
+  }
+
+  if (createdAt) {
+    conditions.push({ createdAt });
+  }
+
+  if (search) {
+    conditions.push({
+      OR: [
+        { nome: { contains: search, mode: "insensitive" } },
+        { telefone: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+        { cidade: { contains: search, mode: "insensitive" } }
+      ]
+    });
+  }
+
+  if (!conditions.length) {
+    return {};
+  }
+
   return {
-    cidade: filters.cidade
-      ? {
-          equals: filters.cidade,
-          mode: "insensitive"
-        }
-      : undefined,
-    estado: filters.estado
-      ? {
-          equals: filters.estado,
-          mode: "insensitive"
-        }
-      : undefined,
-    faixaPotencial: filters.faixaPotencial,
-    status: filters.status,
-    cadastradoPorId: filters.responsavelId,
-    createdAt,
-    OR: search
-      ? [
-          { nome: { contains: search, mode: "insensitive" } },
-          { telefone: { contains: search, mode: "insensitive" } },
-          { email: { contains: search, mode: "insensitive" } },
-          { cidade: { contains: search, mode: "insensitive" } }
-        ]
-      : undefined
+    AND: conditions
   };
 }
 
@@ -81,14 +124,22 @@ export function countLeaderships(filters: LeadershipFilters) {
   });
 }
 
-export function findLeadershipById(id: string, estado?: string) {
+export function findLeadershipById(
+  id: string,
+  filters: Pick<LeadershipFilters, "estado" | "responsavelIds"> = {}
+) {
   return prisma.leadership.findFirst({
     where: {
       id,
-      estado: estado
+      estado: filters.estado
         ? {
-            equals: estado,
+            equals: filters.estado,
             mode: "insensitive"
+          }
+        : undefined,
+      cadastradoPorId: filters.responsavelIds?.length
+        ? {
+            in: filters.responsavelIds
           }
         : undefined
     },
@@ -152,32 +203,18 @@ export function listMapLeaderships(filters: LeadershipFilters) {
   });
 }
 
-export function listCities(estado?: string) {
+export function listCities(filters: LeadershipFilters = {}) {
   return prisma.leadership.findMany({
-    where: estado
-      ? {
-          estado: {
-            equals: estado,
-            mode: "insensitive"
-          }
-        }
-      : undefined,
+    where: buildWhere(filters),
     select: { cidade: true },
     distinct: ["cidade"],
     orderBy: { cidade: "asc" }
   });
 }
 
-export function listStates(estado?: string) {
+export function listStates(filters: LeadershipFilters = {}) {
   return prisma.leadership.findMany({
-    where: estado
-      ? {
-          estado: {
-            equals: estado,
-            mode: "insensitive"
-          }
-        }
-      : undefined,
+    where: buildWhere(filters),
     select: { estado: true },
     distinct: ["estado"],
     orderBy: { estado: "asc" }

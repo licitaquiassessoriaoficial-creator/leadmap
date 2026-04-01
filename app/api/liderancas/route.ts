@@ -17,7 +17,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const data = await getLeadershipList(
     getQueryObject(url.searchParams),
-    session.user.role
+    session.user.role,
+    session.user.id
   );
 
   return NextResponse.json({ data });
