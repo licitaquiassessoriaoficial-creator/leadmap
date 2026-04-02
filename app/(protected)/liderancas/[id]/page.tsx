@@ -56,7 +56,7 @@ export default async function LeadershipDetailsPage({
   const referralPath = buildReferralPath(leadership.id);
   const whatsAppLink = buildWhatsAppLink(
     leadership.telefone,
-    `Ola, ${leadership.nome}! Vamos falar sobre a operacao em ${leadership.cidade}?`
+    `Olá, ${leadership.nome}! Vamos falar sobre a operação em ${leadership.cidade}?`
   );
   const custoPorVoto = calculateCostPerVote(
     leadership.custoTotal,
@@ -85,7 +85,7 @@ export default async function LeadershipDetailsPage({
                     <LeadershipStatusBadge status={leadership.status} />
                     <PotentialBadge level={leadership.faixaPotencial} />
                     <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                      {formatInteger(leadership.quantidadeIndicacoes)} indicacoes
+                      {formatInteger(leadership.quantidadeIndicacoes)} indicações
                     </span>
                   </div>
                   <p className="text-sm text-slate-500">
@@ -120,19 +120,19 @@ export default async function LeadershipDetailsPage({
               <div>
                 <p className="text-sm text-slate-500">Email</p>
                 <p className="mt-1 text-sm font-medium text-slate-900">
-                  {leadership.email ?? "Nao informado"}
+                  {leadership.email ?? "Não informado"}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-slate-500">Bairro</p>
                 <p className="mt-1 text-sm font-medium text-slate-900">
-                  {leadership.bairro ?? "Nao informado"}
+                  {leadership.bairro ?? "Não informado"}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-slate-500">Endereco</p>
+                <p className="text-sm text-slate-500">Endereço</p>
                 <p className="mt-1 text-sm font-medium text-slate-900">
-                  {leadership.endereco ?? "Nao informado"}
+                  {leadership.endereco ?? "Não informado"}
                 </p>
               </div>
               <div>
@@ -154,7 +154,7 @@ export default async function LeadershipDetailsPage({
                 </p>
               </div>
               <div>
-                <p className="text-sm text-slate-500">Responsavel</p>
+                <p className="text-sm text-slate-500">Responsável</p>
                 <p className="mt-1 text-sm font-medium text-slate-900">
                   {leadership.cadastradoPor.name}
                 </p>
@@ -167,9 +167,9 @@ export default async function LeadershipDetailsPage({
               </div>
             </div>
             <div>
-              <p className="text-sm text-slate-500">Observacoes</p>
+              <p className="text-sm text-slate-500">Observações</p>
               <p className="mt-2 text-sm text-slate-700">
-                {leadership.observacoes ?? "Sem observacoes."}
+                {leadership.observacoes ?? "Sem observações."}
               </p>
             </div>
           </Card>
@@ -180,7 +180,7 @@ export default async function LeadershipDetailsPage({
                   Cidades sob responsabilidade
                 </h3>
                 <p className="text-sm text-slate-500">
-                  Relacao N:N usada para cobertura e metas.
+                  Relação N:N usada para cobertura e metas.
                 </p>
               </div>
             </div>
@@ -206,7 +206,7 @@ export default async function LeadershipDetailsPage({
                   Pessoas indicadas
                 </h3>
                 <p className="text-sm text-slate-500">
-                  Lista de cadastros criados a partir do link desta lideranca.
+                  Lista de cadastros criados a partir do link desta liderança.
                 </p>
               </div>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
@@ -242,7 +242,7 @@ export default async function LeadershipDetailsPage({
                 ))
               ) : (
                 <p className="text-sm text-slate-500">
-                  Ainda nao ha cadastros vinculados por indicacao.
+                  Ainda não há cadastros vinculados por indicação.
                 </p>
               )}
             </div>
@@ -267,7 +267,7 @@ export default async function LeadershipDetailsPage({
                 ))
               ) : (
                 <p className="text-sm text-slate-500">
-                  Nenhum log registrado para esta lideranca.
+                  Nenhum log registrado para esta liderança.
                 </p>
               )}
             </div>
@@ -275,7 +275,7 @@ export default async function LeadershipDetailsPage({
         </div>
         <div className="space-y-6">
           <Card className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900">Acoes</h3>
+            <h3 className="text-lg font-semibold text-slate-900">Ações</h3>
             <LeadershipActions
               id={leadership.id}
               status={leadership.status}
@@ -283,7 +283,7 @@ export default async function LeadershipDetailsPage({
             />
           </Card>
           <Card className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900">Localizacao</h3>
+            <h3 className="text-lg font-semibold text-slate-900">Localização</h3>
             <div className="space-y-3 text-sm text-slate-600">
               <p>
                 <span className="font-medium text-slate-900">Latitude:</span>{" "}
@@ -304,7 +304,7 @@ export default async function LeadershipDetailsPage({
               Atualizada em {formatDate(leadership.updatedAt)}
             </p>
             <p className="text-sm text-slate-600 break-all">
-              Link de indicacao: {referralPath}
+              Link de indicação: {referralPath}
             </p>
           </Card>
         </div>

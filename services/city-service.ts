@@ -5,6 +5,7 @@ import {
   findCityWithCoverageById,
   listCitiesWithCoverage
 } from "@/repositories/city-repository";
+import { ensureStateCityBase } from "@/services/city-base-service";
 import { getCampaignScope } from "@/services/campaign-settings-service";
 import { getScopedLeadershipUserIds } from "@/services/user-service";
 
@@ -12,6 +13,7 @@ type VisibleCityRecord = Awaited<ReturnType<typeof listCitiesWithCoverage>>[numb
 type CityCoverageFilters = {
   search?: string;
   cidade?: string;
+  citySearch?: string;
   estado?: string;
   faixaPotencial?: string;
   status?: string;
@@ -19,6 +21,14 @@ type CityCoverageFilters = {
   startDate?: Date;
   endDate?: Date;
 };
+
+function matchesText(value?: string | null, query?: string) {
+  if (!query?.trim()) {
+    return true;
+  }
+
+  return value?.toLowerCase().includes(query.trim().toLowerCase()) ?? false;
+}
 
 async function resolveScope(userId?: string, role?: Role | null) {
   const scope = role ? await getCampaignScope(role) : undefined;
@@ -54,7 +64,7 @@ function filterResponsibilities(
       return false;
     }
 
-    if (filters.cidade && leadership.cidade !== filters.cidade) {
+    if (!matchesText(leadership.cidade, filters.cidade)) {
       return false;
     }
 
@@ -139,11 +149,17 @@ export async function getCitiesCoverageSnapshot(
   filters: CityCoverageFilters = {}
 ) {
   const { enforcedState, responsavelIds } = await resolveScope(userId, role);
+  const targetState = filters.estado ?? enforcedState ?? "SP";
+  const citySearch = filters.citySearch?.trim() || filters.cidade?.trim();
+
+  await ensureStateCityBase(targetState);
+
   const cities = await listCitiesWithCoverage({
-    estado: filters.estado ?? enforcedState ?? "SP"
+    estado: targetState,
+    search: citySearch
   });
   const summaries = cities
-    .filter((city) => !filters.cidade || city.nome === filters.cidade)
+    .filter((city) => matchesText(city.nome, citySearch))
     .map((city) => buildCitySummary(city, responsavelIds, filters));
 
   const coveredCities = summaries.filter((city) => city.totalResponsaveis > 0);

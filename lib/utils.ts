@@ -28,7 +28,7 @@ export function formatInteger(value: number) {
 
 export function formatCurrency(value?: number | null) {
   if (value == null || Number.isNaN(value)) {
-    return "Nao informado";
+    return "Não informado";
   }
 
   return new Intl.NumberFormat("pt-BR", {

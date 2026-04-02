@@ -2,7 +2,7 @@
 
 import { LeadershipStatus, PotentialLevel } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 
 import { POTENTIAL_METADATA } from "@/lib/constants/potential";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,7 @@ export function LeadershipFilters({
 }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const cityListId = useId();
   const [values, setValues] = useState({
     search: initialValues.search ?? "",
     cidade: initialValues.cidade ?? "",
@@ -101,18 +102,21 @@ export function LeadershipFilters({
             />
           </Field>
         ) : null}
-        <Field label="Cidade">
-          <Select
+        <Field
+          label="Cidade"
+          hint="Digite para buscar entre os municípios disponíveis"
+        >
+          <Input
+            list={cityListId}
             value={values.cidade}
+            placeholder="Digite o nome da cidade"
             onChange={(event) => handleChange("cidade", event.target.value)}
-          >
-            <option value="">Todas</option>
+          />
+          <datalist id={cityListId}>
             {sortedCities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
+              <option key={city} value={city} />
             ))}
-          </Select>
+          </datalist>
         </Field>
         <Field
           label="Estado"

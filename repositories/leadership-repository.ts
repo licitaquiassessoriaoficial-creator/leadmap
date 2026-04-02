@@ -43,7 +43,7 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
   if (filters.cidade) {
     conditions.push({
       cidade: {
-        equals: filters.cidade,
+        contains: filters.cidade,
         mode: "insensitive"
       }
     });

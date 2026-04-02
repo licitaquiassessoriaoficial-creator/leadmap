@@ -24,6 +24,7 @@ import {
 } from "@/repositories/leadership-repository";
 import { findDefaultLeadershipOwner } from "@/repositories/user-repository";
 import { recordAuditLog } from "@/services/audit-service";
+import { ensureStateCityBase } from "@/services/city-base-service";
 import { geocodeCityState } from "@/services/geocoding-service";
 import { getScopedLeadershipUserIds } from "@/services/user-service";
 import {
@@ -63,7 +64,7 @@ async function resolveCity(cidadeId: string, enforcedState?: string) {
   const city = await findCityById(cidadeId);
 
   if (!city) {
-    throw new Error("Cidade nao encontrada");
+    throw new Error("Cidade não encontrada");
   }
 
   if (enforcedState && city.estado !== enforcedState) {
@@ -146,6 +147,7 @@ export async function getLeadershipFilters(
   userId?: string
 ) {
   const { enforcedState } = await resolveLeadershipScope(userId, role);
+  await ensureStateCityBase(enforcedState ?? "SP");
   const [cities, states] = await Promise.all([
     listRegisteredCities({
       estado: enforcedState
@@ -273,7 +275,7 @@ export async function createLeadershipRecord(
   });
 
   if (!leadership) {
-    throw new Error("Falha ao carregar a lideranca criada");
+    throw new Error("Falha ao carregar a liderança criada");
   }
 
   await recordAuditLog({
@@ -296,11 +298,11 @@ export async function createPublicLeadershipRecord(rawInput: unknown) {
   ]);
 
   if (!owner) {
-    throw new Error("Nenhum usuario administrativo disponivel para o cadastro");
+    throw new Error("Nenhum usuário administrativo disponível para o cadastro");
   }
 
   if (input.indicadoPorId && !referrer) {
-    throw new Error("Link de indicacao invalido");
+    throw new Error("Link de indicação inválido");
   }
 
   const payload = buildCreatePayload(
@@ -347,8 +349,8 @@ export async function createPublicLeadershipRecord(rawInput: unknown) {
     acao: "CREATE",
     usuarioId: owner.id,
     descricao: referrer
-      ? `Lideranca ${leadership.nome} criada via indicacao de ${referrer.nome}`
-      : `Lideranca ${leadership.nome} criada via cadastro publico`
+      ? `Liderança ${leadership.nome} criada via indicação de ${referrer.nome}`
+      : `Liderança ${leadership.nome} criada via cadastro público`
   });
 
   return leadership;
@@ -370,7 +372,7 @@ export async function updateLeadershipRecord(
   });
 
   if (!existing) {
-    throw new Error("Lideranca nao encontrada");
+    throw new Error("Liderança não encontrada");
   }
 
   const input = leadershipUpdateSchema.parse(rawInput);
@@ -379,7 +381,7 @@ export async function updateLeadershipRecord(
     : existing.city;
 
   if (!city) {
-    throw new Error("Cidade base nao encontrada");
+    throw new Error("Cidade base não encontrada");
   }
 
   const shouldRefreshCoordinates = city.id !== existing.cidadeId;
@@ -438,7 +440,7 @@ export async function updateLeadershipRecord(
   });
 
   if (!leadership) {
-    throw new Error("Falha ao carregar a lideranca atualizada");
+    throw new Error("Falha ao carregar a liderança atualizada");
   }
 
   await recordAuditLog({
@@ -468,7 +470,7 @@ export async function setLeadershipStatus(
   });
 
   if (!existing) {
-    throw new Error("Lideranca nao encontrada");
+    throw new Error("Liderança não encontrada");
   }
 
   const leadership = await updateLeadership(id, {
@@ -504,7 +506,7 @@ export async function deleteLeadershipRecord(
   });
 
   if (!existing) {
-    throw new Error("Lideranca nao encontrada");
+    throw new Error("Liderança não encontrada");
   }
 
   await prisma.$transaction(async (tx) => {

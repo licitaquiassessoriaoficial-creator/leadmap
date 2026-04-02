@@ -27,8 +27,8 @@ export default async function MapPage({
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Mapa de liderancas"
-        description="Visualizacao focada em Sao Paulo, com pins por potencial e cobertura por cidade."
+        title="Mapa de lideranças"
+        description="Visualização focada em São Paulo, com pins por potencial e cobertura por cidade."
       />
       <LeadershipFilters
         cities={filterOptions.cities}

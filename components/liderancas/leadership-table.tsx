@@ -24,7 +24,7 @@ export function LeadershipTable({
   const columns = useMemo<ColumnDef<LeadershipWithRelations>[]>(
     () => [
       {
-        header: "Lideranca",
+        header: "Liderança",
         accessorKey: "nome",
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export function LeadershipTable({
         )
       },
       {
-        header: "Indicacoes",
+        header: "Indicações",
         cell: ({ row }) => formatInteger(row.original.quantidadeIndicacoes)
       },
       {
@@ -82,7 +82,7 @@ export function LeadershipTable({
         cell: ({ row }) => <LeadershipStatusBadge status={row.original.status} />
       },
       {
-        header: "Responsavel",
+        header: "Responsável",
         cell: ({ row }) => (
           <div className="space-y-1">
             <p className="text-sm font-medium text-slate-900">
@@ -93,7 +93,7 @@ export function LeadershipTable({
         )
       },
       {
-        header: "Acoes",
+        header: "Ações",
         cell: ({ row }) => (
           <div className="flex gap-2">
             <Link
@@ -161,7 +161,7 @@ export function LeadershipTable({
                   colSpan={columns.length}
                   className="px-4 py-8 text-center text-sm text-slate-500"
                 >
-                  Nenhuma lideranca encontrada para os filtros aplicados.
+                  Nenhuma liderança encontrada para os filtros aplicados.
                 </td>
               </tr>
             )}

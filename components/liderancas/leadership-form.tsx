@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LeadershipStatus } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ProfilePhotoUpload } from "@/components/liderancas/profile-photo-upload";
@@ -34,6 +34,14 @@ type LeadershipFormProps = {
   referralName?: string;
 };
 
+function normalizeCityName(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
 export function LeadershipForm({
   mode,
   variant = "internal",
@@ -44,8 +52,11 @@ export function LeadershipForm({
   referralName
 }: LeadershipFormProps) {
   const router = useRouter();
+  const cityListId = useId();
+  const initialCity = cityOptions.find((item) => item.id === initialData?.cidadeId);
   const [serverError, setServerError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [citySearch, setCitySearch] = useState(initialCity?.nome ?? "");
   const form = useForm<LeadershipCreateInput>({
     resolver: zodResolver(leadershipCreateSchema),
     defaultValues: {
@@ -53,7 +64,7 @@ export function LeadershipForm({
       telefone: initialData?.telefone ?? "",
       email: initialData?.email ?? "",
       cpf: initialData?.cpf ?? "",
-      cidadeId: initialData?.cidadeId ?? cityOptions[0]?.id ?? "",
+      cidadeId: initialData?.cidadeId ?? "",
       estado: initialData?.estado ?? lockedState ?? "SP",
       bairro: initialData?.bairro ?? "",
       endereco: initialData?.endereco ?? "",
@@ -70,6 +81,19 @@ export function LeadershipForm({
   const watchedCityId = form.watch("cidadeId");
   const selectedCity = cityOptions.find((item) => item.id === watchedCityId);
   const selectedState = selectedCity?.estado ?? lockedState ?? "SP";
+
+  function handleCityChange(value: string) {
+    setCitySearch(value);
+
+    const matchedCity = cityOptions.find(
+      (item) => normalizeCityName(item.nome) === normalizeCityName(value)
+    );
+
+    form.setValue("cidadeId", matchedCity?.id ?? "", {
+      shouldDirty: true,
+      shouldValidate: true
+    });
+  }
 
   async function handleSubmit(values: LeadershipCreateInput) {
     setServerError(null);
@@ -103,19 +127,19 @@ export function LeadershipForm({
 
     if (!response.ok) {
       setServerError(
-        responsePayload.error ?? "Nao foi possivel salvar a lideranca."
+        responsePayload.error ?? "Não foi possível salvar a liderança."
       );
       return;
     }
 
     if (variant === "public") {
-      setSuccessMessage("Cadastro recebido com sucesso. Nossa equipe fara a validacao.");
+      setSuccessMessage("Cadastro recebido com sucesso. Nossa equipe fará a validação.");
       form.reset({
         nome: "",
         telefone: "",
         email: "",
         cpf: "",
-        cidadeId: cityOptions[0]?.id ?? "",
+        cidadeId: "",
         estado: lockedState ?? "SP",
         bairro: "",
         endereco: "",
@@ -126,14 +150,15 @@ export function LeadershipForm({
         cidadesResponsaveisIds: [],
         status: LeadershipStatus.ACTIVE
       });
+      setCitySearch("");
       return;
     }
 
     const targetId = responsePayload.data?.id ?? initialData?.id;
     const feedback =
       mode === "create"
-        ? "Lideranca criada com sucesso."
-        : "Lideranca atualizada com sucesso.";
+        ? "Liderança criada com sucesso."
+        : "Liderança atualizada com sucesso.";
 
     router.push(
       `/liderancas/${targetId}?feedback=${encodeURIComponent(feedback)}`
@@ -148,7 +173,7 @@ export function LeadershipForm({
     >
       {variant === "public" && referralName ? (
         <div className="rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
-          Cadastro vinculado a indicacao de <strong>{referralName}</strong>.
+          Cadastro vinculado à indicação de <strong>{referralName}</strong>.
         </div>
       ) : null}
       <ProfilePhotoUpload
@@ -167,33 +192,39 @@ export function LeadershipForm({
         <Field label="Telefone" error={form.formState.errors.telefone?.message}>
           <Input {...form.register("telefone")} placeholder="5511999999999" />
         </Field>
-        <Field label="Email" error={form.formState.errors.email?.message}>
-          <Input {...form.register("email")} type="email" placeholder="Email" />
+        <Field label="E-mail" error={form.formState.errors.email?.message}>
+          <Input {...form.register("email")} type="email" placeholder="E-mail" />
         </Field>
         <Field label="CPF" error={form.formState.errors.cpf?.message}>
-          <Input {...form.register("cpf")} placeholder="Somente numeros" />
+          <Input {...form.register("cpf")} placeholder="Somente números" />
         </Field>
         <Field label="Cidade" error={form.formState.errors.cidadeId?.message}>
-          <Select {...form.register("cidadeId")}>
-            <option value="">Selecione</option>
-            {cityOptions.map((city) => (
-              <option key={city.id} value={city.id}>
-                {city.nome}
-              </option>
-            ))}
-          </Select>
+          <>
+            <input type="hidden" {...form.register("cidadeId")} />
+            <Input
+              value={citySearch}
+              list={cityListId}
+              placeholder="Digite o nome da cidade"
+              onChange={(event) => handleCityChange(event.target.value)}
+            />
+            <datalist id={cityListId}>
+              {cityOptions.map((city) => (
+                <option key={city.id} value={city.nome} />
+              ))}
+            </datalist>
+          </>
         </Field>
         <Field
           label="Estado"
-          hint={lockedState ? "Definido pelo escopo atual" : "Default SP"}
+          hint={lockedState ? "Definido pelo escopo atual" : "Padrão SP"}
         >
           <Input value={selectedState} readOnly />
         </Field>
         <Field label="Bairro" error={form.formState.errors.bairro?.message}>
           <Input {...form.register("bairro")} placeholder="Bairro" />
         </Field>
-        <Field label="Endereco" error={form.formState.errors.endereco?.message}>
-          <Input {...form.register("endereco")} placeholder="Endereco" />
+        <Field label="Endereço" error={form.formState.errors.endereco?.message}>
+          <Input {...form.register("endereco")} placeholder="Endereço" />
         </Field>
         <Field
           label="Potencial de votos"
@@ -219,9 +250,9 @@ export function LeadershipForm({
         ) : null}
         <Field
           label="Cidades sob responsabilidade"
-          hint="A cidade base sera incluida automaticamente"
+          hint="A cidade base será incluída automaticamente"
           error={form.formState.errors.cidadesResponsaveisIds?.message as string | undefined}
-          className={variant === "internal" ? "md:col-span-2" : "md:col-span-2"}
+          className="md:col-span-2"
         >
           <Select
             multiple
@@ -237,12 +268,12 @@ export function LeadershipForm({
         </Field>
       </div>
       <Field
-        label="Observacoes"
+        label="Observações"
         error={form.formState.errors.observacoes?.message}
       >
         <Textarea
           {...form.register("observacoes")}
-          placeholder="Observacoes adicionais"
+          placeholder="Observações adicionais"
         />
       </Field>
       {serverError ? (
@@ -262,8 +293,8 @@ export function LeadershipForm({
             : variant === "public"
               ? "Enviar cadastro"
               : mode === "create"
-                ? "Cadastrar lideranca"
-                : "Salvar alteracoes"}
+                ? "Cadastrar liderança"
+                : "Salvar alterações"}
         </Button>
         {variant === "internal" ? (
           <Button

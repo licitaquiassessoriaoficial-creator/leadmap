@@ -92,10 +92,10 @@ export function LeadershipMap({
     return (
       <Card className="text-center">
         <h3 className="text-lg font-semibold text-slate-900">
-          Nenhum ponto disponivel
+          Nenhum ponto disponível
         </h3>
         <p className="mt-2 text-sm text-slate-500">
-          Ajuste os filtros ou conclua a geocodificacao das liderancas.
+          Ajuste os filtros ou conclua a geocodificação das lideranças.
         </p>
       </Card>
     );
@@ -136,7 +136,7 @@ export function LeadershipMap({
                 <div className="min-w-[220px] space-y-2">
                   <strong>{city.nome}</strong>
                   <p className="text-sm text-slate-600">
-                    {city.totalResponsaveis} liderancas responsaveis
+                    {city.totalResponsaveis} lideranças responsáveis
                   </p>
                   <p className="text-sm text-slate-600">
                     Captado: {formatInteger(city.votosCaptados)} /{" "}
@@ -162,7 +162,7 @@ export function LeadershipMap({
 
             const whatsAppLink = buildWhatsAppLink(
               point.telefone,
-              `Ola, ${point.nome}! Vamos falar sobre a operacao em ${point.cidade}?`
+              `Olá, ${point.nome}! Vamos falar sobre a operação em ${point.cidade}?`
             );
 
             return (
@@ -188,7 +188,7 @@ export function LeadershipMap({
                     </div>
                     <div className="space-y-1 text-sm text-slate-600">
                       <div>Votos: {formatInteger(point.potencialVotosEstimado)}</div>
-                      <div>Indicacoes: {formatInteger(point.quantidadeIndicacoes)}</div>
+                      <div>Indicações: {formatInteger(point.quantidadeIndicacoes)}</div>
                     </div>
                     <div>
                       <PotentialBadge level={point.faixaPotencial} />
@@ -218,7 +218,7 @@ export function LeadershipMap({
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Cobertura de SP</h3>
             <p className="text-sm text-slate-500">
-              {points.length} pins visiveis e {cityPoints.length} cidades monitoradas.
+              {points.length} pins visíveis e {cityPoints.length} cidades monitoradas.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -241,7 +241,7 @@ export function LeadershipMap({
           </div>
           <div className="space-y-3">
             <p className="text-sm font-medium text-slate-700">
-              Liderancas com mais cidades sob responsabilidade
+              Lideranças com mais cidades sob responsabilidade
             </p>
             {leadershipCoverage.slice(0, 8).map((item) => (
               <Link
@@ -276,7 +276,7 @@ export function LeadershipMap({
                 {selectedCity?.nome ?? "Selecione uma cidade"}
               </h3>
               <p className="text-sm text-slate-500">
-                Clique em um circulo no mapa para ver o detalhe da cidade.
+                Clique em um círculo no mapa para ver o detalhe da cidade.
               </p>
             </div>
             {selectedCity ? (
@@ -284,7 +284,7 @@ export function LeadershipMap({
                 href={`/cidades/${selectedCity.id}`}
                 className="text-sm font-semibold text-brand-700"
               >
-                Abrir pagina
+                Abrir página
               </Link>
             ) : null}
           </div>
@@ -342,7 +342,7 @@ export function LeadershipMap({
                           </p>
                           <p className="text-xs text-slate-500">
                             {formatInteger(leadership.potencialVotosEstimado)} votos ·{" "}
-                            {formatInteger(leadership.quantidadeIndicacoes)} indicacoes
+                            {formatInteger(leadership.quantidadeIndicacoes)} indicações
                           </p>
                         </div>
                       </div>
@@ -353,14 +353,14 @@ export function LeadershipMap({
                   ))
                 ) : (
                   <p className="text-sm text-slate-500">
-                    Nenhuma lideranca responsavel por esta cidade.
+                    Nenhuma liderança responsável por esta cidade.
                   </p>
                 )}
               </div>
             </>
           ) : (
             <p className="text-sm text-slate-500">
-              Selecione uma cidade para ver liderancas, votos captados, indicacoes e faltante.
+              Selecione uma cidade para ver lideranças, votos captados, indicações e faltante.
             </p>
           )}
         </Card>

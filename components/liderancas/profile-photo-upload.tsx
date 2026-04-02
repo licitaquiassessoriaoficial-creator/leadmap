@@ -38,13 +38,13 @@ export function ProfilePhotoUpload({
       };
 
       if (!response.ok || !payload.data?.url) {
-        setError(payload.error ?? "Nao foi possivel enviar a imagem.");
+        setError(payload.error ?? "Não foi possível enviar a imagem.");
         return;
       }
 
       onChange(payload.data.url);
     } catch {
-      setError("Nao foi possivel enviar a imagem.");
+      setError("Não foi possível enviar a imagem.");
     } finally {
       setIsUploading(false);
 
@@ -71,7 +71,7 @@ export function ProfilePhotoUpload({
         <div className="space-y-2">
           <p className="text-sm font-medium text-slate-800">Foto de perfil</p>
           <p className="text-xs text-slate-500">
-            JPG, PNG ou WEBP com ate 5 MB.
+            JPG, PNG ou WEBP com até 5 MB.
           </p>
           <div className="flex flex-wrap gap-2">
             <input

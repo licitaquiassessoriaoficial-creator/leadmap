@@ -2,28 +2,53 @@ import Link from "next/link";
 
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { auth } from "@/lib/auth";
 import { formatInteger, formatPercent } from "@/lib/utils";
 import { getCitiesCoverageSnapshot } from "@/services/city-service";
 
-export default async function CitiesPage() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function CitiesPage({
+  searchParams
+}: {
+  searchParams: SearchParams;
+}) {
+  const resolvedSearchParams = await searchParams;
   const session = await auth();
 
   if (!session) {
     return null;
   }
 
-  const coverage = await getCitiesCoverageSnapshot(
-    session.user.role,
-    session.user.id
-  );
+  const cityQuery =
+    typeof resolvedSearchParams.cidade === "string"
+      ? resolvedSearchParams.cidade.trim()
+      : "";
+
+  const [coverage, filteredCoverage] = await Promise.all([
+    getCitiesCoverageSnapshot(session.user.role, session.user.id),
+    cityQuery
+      ? getCitiesCoverageSnapshot(session.user.role, session.user.id, {
+          citySearch: cityQuery
+        })
+      : Promise.resolve(null)
+  ]);
+
+  const visibleCities = filteredCoverage?.cities ?? [];
+  const missingCityResults = cityQuery
+    ? coverage.missingCityList.filter((city) =>
+        city.nome.toLowerCase().includes(cityQuery.toLowerCase())
+      )
+    : [];
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Cidades"
-        description="Cobertura territorial, metas de votos e distribuicao de responsabilidades em SP."
+        description="Cobertura territorial, metas de votos e distribuição de responsabilidades em SP."
       />
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard
@@ -43,53 +68,115 @@ export default async function CitiesPage() {
           value={formatInteger(coverage.metaVotos)}
         />
       </div>
+      <Card className="space-y-4">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900">
+              Consulta por cidade
+            </h3>
+            <p className="text-sm text-slate-500">
+              {formatInteger(coverage.totalCities)} municípios disponíveis para
+              consulta em SP.
+            </p>
+          </div>
+          <Link href="/mapa" className="text-sm font-semibold text-brand-700">
+            Abrir mapa
+          </Link>
+        </div>
+        <form className="grid gap-3 md:grid-cols-[1fr,auto,auto]" method="get">
+          <div className="space-y-2">
+            <Input
+              name="cidade"
+              defaultValue={cityQuery}
+              placeholder="Digite o nome da cidade que deseja consultar"
+              list="city-search-options"
+            />
+            <datalist id="city-search-options">
+              {coverage.cities.map((city) => (
+                <option key={city.id} value={city.nome} />
+              ))}
+            </datalist>
+          </div>
+          <Button type="submit">Consultar</Button>
+          {cityQuery ? (
+            <Link
+              href="/cidades"
+              className="inline-flex items-center justify-center rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+            >
+              Limpar busca
+            </Link>
+          ) : null}
+        </form>
+        <p className="text-sm text-slate-500">
+          {cityQuery
+            ? `${formatInteger(visibleCities.length)} resultado(s) para "${cityQuery}".`
+            : "Digite o nome da cidade para consultar cobertura, meta de votos e responsáveis."}
+        </p>
+      </Card>
       <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
         <Card className="space-y-4">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-semibold text-slate-900">
-                Cidades monitoradas
-              </h3>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900">
+              Resultado da consulta
+            </h3>
+            <p className="text-sm text-slate-500">
+              Abra o detalhe da cidade para ver lideranças, votos captados e
+              faltantes.
+            </p>
+          </div>
+          {cityQuery ? (
+            visibleCities.length ? (
+              <div className="space-y-3">
+                {visibleCities.map((city) => (
+                  <Link
+                    key={city.id}
+                    href={`/cidades/${city.id}`}
+                    className="grid gap-3 rounded-2xl border border-slate-200 px-4 py-4 transition hover:border-brand-200 hover:bg-brand-50 md:grid-cols-[1fr,140px,120px,120px]"
+                  >
+                    <div>
+                      <p className="font-medium text-slate-900">{city.nome}</p>
+                      <p className="text-xs text-slate-500">
+                        {city.totalResponsaveis} lideranças responsáveis
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Captado
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {formatInteger(city.votosCaptados)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Faltante
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {formatInteger(city.votosRestantes)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Progresso
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {formatPercent(city.progresso)}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
               <p className="text-sm text-slate-500">
-                Clique em uma cidade para abrir os detalhes completos.
+                Nenhuma cidade encontrada para a busca informada.
               </p>
+            )
+          ) : (
+            <div className="rounded-2xl bg-slate-50 px-4 py-6 text-sm text-slate-600">
+              Digite o nome da cidade que deseja consultar. Isso evita navegar
+              por uma lista extensa dos 645 municípios.
             </div>
-            <Link href="/mapa" className="text-sm font-semibold text-brand-700">
-              Abrir mapa
-            </Link>
-          </div>
-          <div className="space-y-3">
-            {coverage.cities.map((city) => (
-              <Link
-                key={city.id}
-                href={`/cidades/${city.id}`}
-                className="grid gap-3 rounded-2xl border border-slate-200 px-4 py-4 transition hover:border-brand-200 hover:bg-brand-50 md:grid-cols-[1fr,140px,120px]"
-              >
-                <div>
-                  <p className="font-medium text-slate-900">{city.nome}</p>
-                  <p className="text-xs text-slate-500">
-                    {city.totalResponsaveis} liderancas responsaveis
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
-                    Captado
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">
-                    {formatInteger(city.votosCaptados)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
-                    Progresso
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">
-                    {formatPercent(city.progresso)}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          )}
         </Card>
         <div className="space-y-6">
           <Card className="space-y-4">
@@ -98,12 +185,14 @@ export default async function CitiesPage() {
                 Cidades faltantes
               </h3>
               <p className="text-sm text-slate-500">
-                Territorios ainda sem cobertura ativa.
+                {cityQuery
+                  ? "Municípios sem cobertura que combinam com a busca atual."
+                  : "Panorama das cidades ainda sem cobertura ativa."}
               </p>
             </div>
             <div className="space-y-2">
-              {coverage.missingCityList.length ? (
-                coverage.missingCityList.slice(0, 12).map((city) => (
+              {missingCityResults.length ? (
+                missingCityResults.map((city) => (
                   <div
                     key={city.id}
                     className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700"
@@ -113,7 +202,9 @@ export default async function CitiesPage() {
                 ))
               ) : (
                 <p className="text-sm text-slate-500">
-                  Nenhuma cidade faltante no recorte atual.
+                  {cityQuery
+                    ? "Nenhuma cidade faltante encontrada para essa busca."
+                    : "Use a busca acima para verificar se um município está sem cobertura."}
                 </p>
               )}
             </div>
@@ -121,10 +212,10 @@ export default async function CitiesPage() {
           <Card className="space-y-4">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">
-                Distribuicao por lideranca
+                Distribuição por liderança
               </h3>
               <p className="text-sm text-slate-500">
-                Quantidade de cidades sob responsabilidade por lideranca.
+                Quantidade de cidades sob responsabilidade por liderança.
               </p>
             </div>
             <div className="space-y-3">

@@ -36,7 +36,7 @@ export default async function CityDetailPage({
       />
       <div className="grid gap-4 md:grid-cols-4">
         <Card className="space-y-2">
-          <p className="text-sm text-slate-500">Liderancas da cidade</p>
+          <p className="text-sm text-slate-500">Lideranças da cidade</p>
           <p className="text-3xl font-semibold text-slate-900">
             {formatInteger(city.totalResponsaveis)}
           </p>
@@ -48,7 +48,7 @@ export default async function CityDetailPage({
           </p>
         </Card>
         <Card className="space-y-2">
-          <p className="text-sm text-slate-500">Indicacoes</p>
+          <p className="text-sm text-slate-500">Indicações</p>
           <p className="text-3xl font-semibold text-slate-900">
             {formatInteger(city.indicacoes)}
           </p>
@@ -65,10 +65,10 @@ export default async function CityDetailPage({
           <div className="flex items-start justify-between gap-4">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">
-                Liderancas responsaveis
+                Lideranças responsáveis
               </h3>
               <p className="text-sm text-slate-500">
-                Potencial, indicacoes e contato rapido por WhatsApp.
+                Potencial, indicações e contato rápido por WhatsApp.
               </p>
             </div>
           </div>
@@ -94,14 +94,14 @@ export default async function CityDetailPage({
                       </a>
                       <p className="text-xs text-slate-500">
                         {formatInteger(leadership.potencialVotosEstimado)} votos ·{" "}
-                        {formatInteger(leadership.quantidadeIndicacoes)} indicacoes
+                        {formatInteger(leadership.quantidadeIndicacoes)} indicações
                       </p>
                     </div>
                   </div>
                   <a
                     href={buildWhatsAppLink(
                       leadership.telefone,
-                      `Ola, ${leadership.nome}! Vamos falar sobre a cidade de ${city.nome}?`
+                      `Olá, ${leadership.nome}! Vamos falar sobre a cidade de ${city.nome}?`
                     )}
                     target="_blank"
                     rel="noreferrer"
@@ -111,11 +111,11 @@ export default async function CityDetailPage({
                   </a>
                 </div>
               ))
-            ) : (
-              <p className="text-sm text-slate-500">
-                Nenhuma lideranca associada a esta cidade.
-              </p>
-            )}
+              ) : (
+                <p className="text-sm text-slate-500">
+                  Nenhuma liderança associada a esta cidade.
+                </p>
+              )}
           </div>
         </Card>
         <div className="space-y-6">

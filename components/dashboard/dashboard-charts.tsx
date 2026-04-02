@@ -42,7 +42,7 @@ export function DashboardCharts({
       <Card className="transition duration-200 hover:ring-1 hover:ring-brand-200 hover:shadow-2xl">
         <div className="mb-4 flex items-start justify-between gap-4">
           <h3 className="text-lg font-semibold text-slate-900">
-            Distribuicao por potencial
+            Distribuição por potencial
           </h3>
           <Link
             href="/liderancas"
@@ -69,7 +69,7 @@ export function DashboardCharts({
       <Card className="transition duration-200 hover:ring-1 hover:ring-brand-200 hover:shadow-2xl">
         <div className="mb-4 flex items-start justify-between gap-4">
           <h3 className="text-lg font-semibold text-slate-900">
-            Top 5 por indicacoes
+            Top 5 por indicações
           </h3>
           <Link
             href="/ranking"

@@ -27,26 +27,26 @@ export default async function PublicRegistrationPage({
             LeadMap CRM
           </p>
           <h1 className="mt-4 text-3xl font-semibold leading-tight">
-            Cadastro de liderancas para a operacao em SP
+            Cadastro de lideranças para a operação em SP
           </h1>
           <p className="mt-4 text-sm text-slate-300">
             Preencha os dados principais, informe sua cidade e registre as
-            cidades sob responsabilidade. Se este cadastro vier por indicacao,
-            o vinculo sera feito automaticamente.
+            cidades sob responsabilidade. Se este cadastro vier por indicação,
+            o vínculo será feito automaticamente.
           </p>
           <div className="mt-8 space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200">
             <p>
-              Estado padrao: <strong>SP</strong>
+              Estado padrão: <strong>SP</strong>
             </p>
             <p>
-              Base cartografica: <strong>OpenStreetMap</strong>
+              Base cartográfica: <strong>OpenStreetMap</strong>
             </p>
             <p>
-              Contato rapido: <strong>WhatsApp</strong>
+              Contato rápido: <strong>WhatsApp</strong>
             </p>
           </div>
           <div className="mt-8 text-sm text-slate-400">
-            Ja possui acesso interno? <Link href="/login" className="font-semibold text-white">Entrar</Link>
+            Já possui acesso interno? <Link href="/login" className="font-semibold text-white">Entrar</Link>
           </div>
         </Card>
         <div className="space-y-6">
@@ -55,14 +55,14 @@ export default async function PublicRegistrationPage({
               Novo cadastro
             </h2>
             <p className="mt-2 text-sm text-slate-500">
-              Os dados enviados entram em validacao e ja podem alimentar a malha
-              territorial quando aprovados.
+              Os dados enviados entram em validação e já podem alimentar a
+              malha territorial quando aprovados.
             </p>
           </div>
           {referralId && !referralLeadership ? (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-              O link de indicacao informado nao foi encontrado. Voce ainda pode
-              concluir o cadastro sem vinculo.
+              O link de indicação informado não foi encontrado. Você ainda pode
+              concluir o cadastro sem vínculo.
             </div>
           ) : null}
           <LeadershipForm

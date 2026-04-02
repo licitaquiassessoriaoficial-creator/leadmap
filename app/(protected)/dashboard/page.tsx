@@ -23,13 +23,13 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <PageHeader
         title="Dashboard"
-        description="Acompanhe liderancas, cobertura de cidades, metas de votos e desempenho territorial em SP."
-        action="Nova lideranca"
+        description="Acompanhe lideranças, cobertura de cidades, metas de votos e desempenho territorial em SP."
+        action="Nova liderança"
         actionHref="/liderancas/nova"
       />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Total de liderancas"
+          label="Total de lideranças"
           value={formatInteger(data.summary.total)}
           helper="Abrir cadastro completo"
           href="/liderancas"
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
         <StatCard
           label="Cidades faltantes"
           value={formatInteger(data.summary.missingCities)}
-          helper="Priorizar expansao"
+          helper="Priorizar expansão"
           href="/cidades"
         />
         <StatCard
@@ -63,10 +63,10 @@ export default async function DashboardPage() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">
-                Top 5 liderancas
+                Top 5 lideranças
               </h3>
               <p className="text-sm text-slate-500">
-                Ordenacao por quantidade de indicacoes.
+                Ordenação por quantidade de indicações.
               </p>
             </div>
             <Link href="/ranking" className="text-sm font-semibold text-brand-700">
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <PotentialBadge level={leadership.faixaPotencial} />
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                    {formatInteger(leadership.quantidadeIndicacoes)} indicacoes
+                    {formatInteger(leadership.quantidadeIndicacoes)} indicações
                   </span>
                 </div>
               </Link>
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
                   Cidades plantadas
                 </h3>
                 <p className="text-sm text-slate-500">
-                  Primeiras cidades com liderancas responsaveis.
+                  Primeiras cidades com lideranças responsáveis.
                 </p>
               </div>
               <Link href="/cidades" className="text-sm font-semibold text-brand-700">

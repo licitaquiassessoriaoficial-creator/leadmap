@@ -27,7 +27,7 @@ export function RankingTable({
   const columns = useMemo<ColumnDef<LeadershipWithRelations>[]>(
     () => [
       {
-        header: "Posicao",
+        header: "Posição",
         cell: ({ row }) => (
           <span className="font-semibold text-slate-900">
             {(page - 1) * pageSize + row.index + 1}
@@ -35,7 +35,7 @@ export function RankingTable({
         )
       },
       {
-        header: "Lideranca",
+        header: "Liderança",
         cell: ({ row }) => (
           <Link href={`/liderancas/${row.original.id}`} className="flex items-center gap-3">
             <ProfileAvatar
@@ -53,7 +53,7 @@ export function RankingTable({
         )
       },
       {
-        header: "Indicacoes",
+        header: "Indicações",
         cell: ({ row }) => formatInteger(row.original.quantidadeIndicacoes)
       },
       {
@@ -127,7 +127,7 @@ export function RankingTable({
                   colSpan={columns.length}
                   className="px-4 py-8 text-center text-sm text-slate-500"
                 >
-                  Nenhuma lideranca encontrada para o ranking atual.
+                  Nenhuma liderança encontrada para o ranking atual.
                 </td>
               </tr>
             )}

@@ -27,19 +27,19 @@ const optionalImageUrlField = optionalStringField.refine(
     !value ||
     value.startsWith("/") ||
     z.string().url().safeParse(value).success,
-  "Informe uma URL de imagem valida"
+  "Informe uma URL de imagem válida"
 );
 
 export const leadershipCreateSchema = z.object({
-  nome: z.string().trim().min(3, "Informe o nome da lideranca"),
-  telefone: z.string().trim().min(8, "Informe um telefone valido"),
+  nome: z.string().trim().min(3, "Informe o nome da liderança"),
+  telefone: z.string().trim().min(8, "Informe um telefone válido"),
   email: optionalStringField.refine(
     (value) => !value || z.string().email().safeParse(value).success,
-    "Informe um email valido"
+    "Informe um e-mail válido"
   ),
   cpf: optionalStringField.refine(
     (value) => !value || /^\d{11}$/.test(value.replace(/\D/g, "")),
-    "CPF deve ter 11 digitos"
+    "CPF deve ter 11 dígitos"
   ),
   cidadeId: z.string().trim().min(1, "Selecione a cidade"),
   estado: z.string().trim().min(2, "Informe o estado").default("SP"),

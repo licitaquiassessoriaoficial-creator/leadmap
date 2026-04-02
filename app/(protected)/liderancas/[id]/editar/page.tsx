@@ -32,7 +32,7 @@ export default async function EditLeadershipPage({
     <div className="space-y-6">
       <PageHeader
         title={`Editar ${leadership.nome}`}
-        description="Atualize dados cadastrais, potencial, custo, indicacoes e territorio."
+        description="Atualize dados cadastrais, potencial, custo, indicações e território."
       />
       <LeadershipForm
         mode="edit"
