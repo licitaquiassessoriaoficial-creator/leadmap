@@ -17,9 +17,18 @@ export type LeadershipFilters = {
   status?: LeadershipStatus;
   responsavelId?: string;
   responsavelIds?: string[];
+  minIndicacoes?: number;
+  minScore?: number;
+  maxCostPerVote?: number;
   startDate?: Date;
   endDate?: Date;
 };
+
+export type RankingSort =
+  | "INDICATIONS_DESC"
+  | "POTENTIAL_DESC"
+  | "COST_PER_VOTE_ASC"
+  | "SCORE_DESC";
 
 type DbClient = PrismaClient | Prisma.TransactionClient;
 
@@ -84,6 +93,30 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
     });
   }
 
+  if (filters.minIndicacoes != null) {
+    conditions.push({
+      quantidadeIndicacoes: {
+        gte: filters.minIndicacoes
+      }
+    });
+  }
+
+  if (filters.minScore != null) {
+    conditions.push({
+      scoreLideranca: {
+        gte: filters.minScore
+      }
+    });
+  }
+
+  if (filters.maxCostPerVote != null) {
+    conditions.push({
+      custoPorVoto: {
+        lte: filters.maxCostPerVote
+      }
+    });
+  }
+
   if (createdAt) {
     conditions.push({ createdAt });
   }
@@ -93,6 +126,7 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
       OR: [
         { nome: { contains: search, mode: "insensitive" } },
         { telefone: { contains: search, mode: "insensitive" } },
+        { whatsapp: { contains: search, mode: "insensitive" } },
         { email: { contains: search, mode: "insensitive" } },
         { cidade: { contains: search, mode: "insensitive" } },
         { bairro: { contains: search, mode: "insensitive" } }
@@ -109,6 +143,43 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
   };
 }
 
+function getRankingOrderBy(
+  sortBy: RankingSort
+): Prisma.LeadershipOrderByWithRelationInput[] {
+  if (sortBy === "POTENTIAL_DESC") {
+    return [
+      { potencialVotosEstimado: "desc" },
+      { quantidadeIndicacoes: "desc" },
+      { nome: "asc" }
+    ];
+  }
+
+  if (sortBy === "COST_PER_VOTE_ASC") {
+    return [
+      { custoPorVoto: { sort: "asc", nulls: "last" } },
+      { scoreLideranca: "desc" },
+      { quantidadeIndicacoes: "desc" },
+      { nome: "asc" }
+    ];
+  }
+
+  if (sortBy === "SCORE_DESC") {
+    return [
+      { scoreLideranca: "desc" },
+      { quantidadeIndicacoes: "desc" },
+      { potencialVotosEstimado: "desc" },
+      { nome: "asc" }
+    ];
+  }
+
+  return [
+    { quantidadeIndicacoes: "desc" },
+    { scoreLideranca: "desc" },
+    { potencialVotosEstimado: "desc" },
+    { nome: "asc" }
+  ];
+}
+
 export function listLeaderships(
   filters: LeadershipFilters,
   page: number,
@@ -120,6 +191,17 @@ export function listLeaderships(
     orderBy: [{ updatedAt: "desc" }, { nome: "asc" }],
     skip: (page - 1) * pageSize,
     take: pageSize
+  });
+}
+
+export function listAllLeaderships(
+  filters: LeadershipFilters,
+  orderBy: Prisma.LeadershipOrderByWithRelationInput[] = [{ nome: "asc" }]
+) {
+  return prisma.leadership.findMany({
+    where: buildWhere(filters),
+    include: leadershipListInclude,
+    orderBy
   });
 }
 
@@ -166,7 +248,23 @@ export function findLeadershipSummaryById(id: string, db?: DbClient) {
       id: true,
       nome: true,
       cidadeId: true,
-      indicadoPorId: true
+      indicadoPorId: true,
+      referralCode: true
+    }
+  });
+}
+
+export function findLeadershipSummaryByReference(reference: string, db?: DbClient) {
+  return getDb(db).leadership.findFirst({
+    where: {
+      OR: [{ id: reference }, { referralCode: reference }]
+    },
+    select: {
+      id: true,
+      nome: true,
+      cidadeId: true,
+      indicadoPorId: true,
+      referralCode: true
     }
   });
 }
@@ -246,15 +344,16 @@ export function decrementLeadershipIndications(id: string, db?: DbClient) {
   });
 }
 
-export function listRanking(filters: LeadershipFilters, page: number, pageSize: number) {
+export function listRanking(
+  filters: LeadershipFilters,
+  page: number,
+  pageSize: number,
+  sortBy: RankingSort = "INDICATIONS_DESC"
+) {
   return prisma.leadership.findMany({
     where: buildWhere(filters),
     include: leadershipListInclude,
-    orderBy: [
-      { quantidadeIndicacoes: "desc" },
-      { potencialVotosEstimado: "desc" },
-      { nome: "asc" }
-    ],
+    orderBy: getRankingOrderBy(sortBy),
     skip: (page - 1) * pageSize,
     take: pageSize
   });
@@ -272,7 +371,7 @@ export function listMapLeaderships(filters: LeadershipFilters) {
       }
     },
     include: leadershipListInclude,
-    orderBy: [{ cidade: "asc" }, { nome: "asc" }]
+    orderBy: [{ scoreLideranca: "desc" }, { cidade: "asc" }, { nome: "asc" }]
   });
 }
 
@@ -285,6 +384,8 @@ export async function getDashboardAggregates(filters: LeadershipFilters = {}) {
     groupedByPotential,
     groupedByStatus,
     topLeaderships,
+    efficiencyAverage,
+    bestEfficiencyLeadership,
     pendingLocations,
     estimatedVotes
   ] = await Promise.all([
@@ -318,8 +419,24 @@ export async function getDashboardAggregates(filters: LeadershipFilters = {}) {
     prisma.leadership.findMany({
       where,
       include: leadershipListInclude,
-      orderBy: [{ quantidadeIndicacoes: "desc" }, { potencialVotosEstimado: "desc" }],
+      orderBy: getRankingOrderBy("INDICATIONS_DESC"),
       take: 5
+    }),
+    prisma.leadership.aggregate({
+      where,
+      _avg: {
+        custoPorVoto: true
+      }
+    }),
+    prisma.leadership.findFirst({
+      where: {
+        ...where,
+        custoPorVoto: {
+          not: null
+        }
+      },
+      include: leadershipListInclude,
+      orderBy: getRankingOrderBy("COST_PER_VOTE_ASC")
     }),
     prisma.leadership.count({
       where: {
@@ -330,7 +447,8 @@ export async function getDashboardAggregates(filters: LeadershipFilters = {}) {
     prisma.leadership.aggregate({
       where,
       _sum: {
-        potencialVotosEstimado: true
+        potencialVotosEstimado: true,
+        votosReais: true
       }
     })
   ]);
@@ -341,7 +459,10 @@ export async function getDashboardAggregates(filters: LeadershipFilters = {}) {
     groupedByPotential,
     groupedByStatus,
     topLeaderships,
+    efficiencyAverage: efficiencyAverage._avg.custoPorVoto ?? null,
+    bestEfficiencyLeadership,
     pendingLocations,
-    estimatedVotes: estimatedVotes._sum.potencialVotosEstimado ?? 0
+    estimatedVotes: estimatedVotes._sum.potencialVotosEstimado ?? 0,
+    realVotes: estimatedVotes._sum.votosReais ?? 0
   };
 }

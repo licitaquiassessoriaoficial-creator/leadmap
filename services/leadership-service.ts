@@ -1,7 +1,15 @@
 import { LeadershipStatus, LocationStatus, Role } from "@prisma/client";
 
-import { calculateCostPerVote } from "@/lib/domain/leadership";
 import { classifyPotentialLevel } from "@/lib/constants/potential";
+import {
+  buildWhatsAppNumber,
+  calculateCostPerVote,
+  calculateGoalProgress,
+  calculateGoalRemaining,
+  generateReferralCode,
+  resolveLeadershipVoteBase
+} from "@/lib/domain/leadership";
+import { calculateLeadershipScore } from "@/lib/domain/score";
 import { prisma } from "@/lib/prisma";
 import { optionalText } from "@/lib/utils";
 import {
@@ -9,6 +17,8 @@ import {
   listCities as listRegisteredCities,
   listStates as listRegisteredStates
 } from "@/repositories/city-repository";
+import { createPerformanceSnapshot } from "@/repositories/performance-history-repository";
+import { createReferralSignup } from "@/repositories/referral-signup-repository";
 import {
   countLeaderships,
   createLeadership,
@@ -17,6 +27,7 @@ import {
   findLeadershipById,
   findLeadershipDetailsById,
   findLeadershipSummaryById,
+  findLeadershipSummaryByReference,
   incrementLeadershipIndications,
   listLeaderships,
   replaceLeadershipResponsibleCities,
@@ -24,6 +35,7 @@ import {
 } from "@/repositories/leadership-repository";
 import { findDefaultLeadershipOwner } from "@/repositories/user-repository";
 import { recordAuditLog } from "@/services/audit-service";
+import { getCampaignScope } from "@/services/campaign-settings-service";
 import { ensureStateCityBase } from "@/services/city-base-service";
 import { geocodeCityState } from "@/services/geocoding-service";
 import { getScopedLeadershipUserIds } from "@/services/user-service";
@@ -33,10 +45,34 @@ import {
   leadershipUpdateSchema,
   publicLeadershipCreateSchema
 } from "@/validations/leadership";
-import { getCampaignScope } from "@/services/campaign-settings-service";
 
 function normalizeState(value?: string) {
   return value?.trim().toUpperCase();
+}
+
+function calculateRecentGrowthRate(
+  currentVoteBase?: number | null,
+  previousSnapshot?: {
+    votosEstimados: number;
+    votosReais?: number | null;
+  } | null
+) {
+  const previousVoteBase = resolveLeadershipVoteBase(
+    previousSnapshot?.votosReais,
+    previousSnapshot?.votosEstimados
+  );
+
+  if (currentVoteBase == null || previousVoteBase == null || previousVoteBase <= 0) {
+    return null;
+  }
+
+  return (
+    Math.round(
+      ((((currentVoteBase - previousVoteBase) / previousVoteBase) * 100) +
+        Number.EPSILON) *
+        100
+    ) / 100
+  );
 }
 
 async function resolveScopedState(role?: Role | null) {
@@ -74,10 +110,14 @@ async function resolveCity(cidadeId: string, enforcedState?: string) {
   return city;
 }
 
-async function resolveCoordinates(cidade: string, estado: string, fallback?: {
-  latitude?: number | null;
-  longitude?: number | null;
-}) {
+async function resolveCoordinates(
+  cidade: string,
+  estado: string,
+  fallback?: {
+    latitude?: number | null;
+    longitude?: number | null;
+  }
+) {
   const geocoded = await geocodeCityState(cidade, estado);
 
   if (geocoded) {
@@ -107,32 +147,132 @@ function buildResponsibleCityIds(baseCityId: string, cityIds?: string[]) {
   return Array.from(new Set([baseCityId, ...(cityIds ?? [])]));
 }
 
-function buildCreatePayload(
-  input: ReturnType<typeof leadershipCreateSchema.parse>,
-  city: Awaited<ReturnType<typeof resolveCity>>,
-  userId: string,
-  status: LeadershipStatus
-) {
-  const faixaPotencial = classifyPotentialLevel(input.potencialVotosEstimado);
+async function ensureUniqueReferralCode(name: string, seed: string) {
+  const baseCode = generateReferralCode(name, seed);
+  let candidate = baseCode;
+  let suffix = 1;
+
+  while (await prisma.leadership.findUnique({ where: { referralCode: candidate } })) {
+    candidate = `${baseCode}-${suffix}`;
+    suffix += 1;
+  }
+
+  return candidate;
+}
+
+function buildDerivedLeadershipData(input: {
+  nome: string;
+  telefone: string;
+  potencialVotosEstimado: number;
+  votosReais?: number | null;
+  custoTotal?: number | null;
+  metaVotosIndividual?: number | null;
+  quantidadeIndicacoes: number;
+  totalCidadesResponsaveis: number;
+  status: LeadershipStatus;
+  recentGrowthRate?: number | null;
+}) {
+  const voteBase = resolveLeadershipVoteBase(
+    input.votosReais,
+    input.potencialVotosEstimado
+  );
+  const custoPorVoto = calculateCostPerVote(
+    input.custoTotal,
+    input.votosReais,
+    input.potencialVotosEstimado
+  );
 
   return {
-    nome: input.nome.trim(),
-    telefone: input.telefone.trim(),
-    email: optionalText(input.email),
-    cpf: optionalText(input.cpf),
-    fotoPerfilUrl: optionalText(input.fotoPerfilUrl),
-    cidade: city.nome,
-    estado: city.estado,
-    cidadeId: city.id,
-    bairro: optionalText(input.bairro),
-    endereco: optionalText(input.endereco),
-    observacoes: optionalText(input.observacoes),
-    potencialVotosEstimado: input.potencialVotosEstimado,
-    custoTotal: input.custoTotal ?? null,
-    faixaPotencial,
-    status,
-    cadastradoPorId: userId
+    whatsapp: buildWhatsAppNumber(input.telefone),
+    faixaPotencial: classifyPotentialLevel(input.potencialVotosEstimado),
+    custoPorVoto,
+    scoreLideranca: calculateLeadershipScore({
+      voteBase,
+      quantidadeIndicacoes: input.quantidadeIndicacoes,
+      custoPorVoto,
+      totalCidadesResponsaveis: input.totalCidadesResponsaveis,
+      status: input.status,
+      recentGrowthRate: input.recentGrowthRate
+    }),
+    progressoMetaIndividual: calculateGoalProgress(
+      input.metaVotosIndividual,
+      voteBase
+    ),
+    faltanteMetaIndividual: calculateGoalRemaining(
+      input.metaVotosIndividual,
+      voteBase
+    ),
+    voteBase
   };
+}
+
+async function registerPerformanceSnapshot(
+  leadership: {
+    id: string;
+    potencialVotosEstimado: number;
+    votosReais?: number | null;
+    quantidadeIndicacoes: number;
+    custoTotal?: number | null;
+    scoreLideranca: number;
+  },
+  tx?: Parameters<typeof createPerformanceSnapshot>[1]
+) {
+  await createPerformanceSnapshot(
+    {
+      leadershipId: leadership.id,
+      dataReferencia: new Date(),
+      votosEstimados: leadership.potencialVotosEstimado,
+      votosReais: leadership.votosReais ?? null,
+      quantidadeIndicacoes: leadership.quantidadeIndicacoes,
+      custoTotal: leadership.custoTotal ?? null,
+      score: leadership.scoreLideranca
+    },
+    tx
+  );
+}
+
+async function refreshLeadershipDerivedMetrics(
+  leadershipId: string,
+  tx: Parameters<typeof createPerformanceSnapshot>[1]
+) {
+  const leadership = await findLeadershipDetailsById(leadershipId, tx);
+
+  if (!leadership) {
+    return null;
+  }
+
+  const recentGrowthRate = calculateRecentGrowthRate(
+    resolveLeadershipVoteBase(
+      leadership.votosReais,
+      leadership.potencialVotosEstimado
+    ),
+    leadership.performanceHistory[0]
+  );
+  const derived = buildDerivedLeadershipData({
+    nome: leadership.nome,
+    telefone: leadership.telefone,
+    potencialVotosEstimado: leadership.potencialVotosEstimado,
+    votosReais: leadership.votosReais,
+    custoTotal: leadership.custoTotal,
+    metaVotosIndividual: leadership.metaVotosIndividual,
+    quantidadeIndicacoes: leadership.quantidadeIndicacoes,
+    totalCidadesResponsaveis: leadership.cidadesResponsaveis.length,
+    status: leadership.status,
+    recentGrowthRate
+  });
+  const updated = await updateLeadership(
+    leadershipId,
+    {
+      whatsapp: derived.whatsapp,
+      custoPorVoto: derived.custoPorVoto,
+      scoreLideranca: derived.scoreLideranca
+    },
+    tx
+  );
+
+  await registerPerformanceSnapshot(updated, tx);
+
+  return updated;
 }
 
 function parseDateRange(startDate?: string, endDate?: string) {
@@ -142,10 +282,7 @@ function parseDateRange(startDate?: string, endDate?: string) {
   };
 }
 
-export async function getLeadershipFilters(
-  role?: Role | null,
-  userId?: string
-) {
+export async function getLeadershipFilters(role?: Role | null, userId?: string) {
   const { enforcedState } = await resolveLeadershipScope(userId, role);
   await ensureStateCityBase(enforcedState ?? "SP");
   const [cities, states] = await Promise.all([
@@ -184,6 +321,9 @@ export async function getLeadershipList(
     faixaPotencial: rawQuery.faixaPotencial,
     status: rawQuery.status,
     responsavelId: rawQuery.responsavelId,
+    minIndicacoes: rawQuery.minIndicacoes,
+    minScore: rawQuery.minScore,
+    maxCostPerVote: rawQuery.maxCostPerVote,
     startDate: rawQuery.startDate,
     endDate: rawQuery.endDate
   });
@@ -196,6 +336,9 @@ export async function getLeadershipList(
     status: query.status,
     responsavelId: query.responsavelId,
     responsavelIds,
+    minIndicacoes: query.minIndicacoes,
+    minScore: query.minScore,
+    maxCostPerVote: query.maxCostPerVote,
     ...parseDateRange(query.startDate, query.endDate)
   };
 
@@ -233,8 +376,8 @@ export async function getLeadershipById(
   });
 }
 
-export async function getReferralLeadership(id: string) {
-  return findLeadershipSummaryById(id);
+export async function getReferralLeadership(reference: string) {
+  return findLeadershipSummaryByReference(reference);
 }
 
 export async function createLeadershipRecord(
@@ -245,31 +388,56 @@ export async function createLeadershipRecord(
   const input = leadershipCreateSchema.parse(rawInput);
   const enforcedState = await resolveScopedState(role);
   const city = await resolveCity(input.cidadeId, enforcedState);
-  const payload = buildCreatePayload(
-    {
-      ...input,
-      estado: enforcedState ?? city.estado
-    },
-    city,
-    userId,
-    input.status ?? LeadershipStatus.ACTIVE
-  );
   const coordinates = await resolveCoordinates(city.nome, city.estado, city);
   const responsibleCityIds = buildResponsibleCityIds(
     city.id,
     input.cidadesResponsaveisIds
   );
+  const derived = buildDerivedLeadershipData({
+    nome: input.nome,
+    telefone: input.telefone,
+    potencialVotosEstimado: input.potencialVotosEstimado,
+    votosReais: input.votosReais,
+    custoTotal: input.custoTotal ?? null,
+    metaVotosIndividual: input.metaVotosIndividual ?? null,
+    quantidadeIndicacoes: 0,
+    totalCidadesResponsaveis: responsibleCityIds.length,
+    status: input.status ?? LeadershipStatus.ACTIVE
+  });
+  const referralCode = await ensureUniqueReferralCode(input.nome, crypto.randomUUID());
 
   const leadership = await prisma.$transaction(async (tx) => {
     const created = await createLeadership(
       {
-        ...payload,
+        nome: input.nome.trim(),
+        telefone: input.telefone.trim(),
+        whatsapp: derived.whatsapp,
+        email: optionalText(input.email),
+        cpf: optionalText(input.cpf),
+        fotoPerfilUrl: optionalText(input.fotoPerfilUrl),
+        cidade: city.nome,
+        estado: city.estado,
+        cidadeId: city.id,
+        bairro: optionalText(input.bairro),
+        endereco: optionalText(input.endereco),
+        observacoes: optionalText(input.observacoes),
+        potencialVotosEstimado: input.potencialVotosEstimado,
+        votosReais: input.votosReais ?? null,
+        custoTotal: input.custoTotal ?? null,
+        custoPorVoto: derived.custoPorVoto,
+        metaVotosIndividual: input.metaVotosIndividual ?? null,
+        faixaPotencial: derived.faixaPotencial,
+        scoreLideranca: derived.scoreLideranca,
+        status: input.status ?? LeadershipStatus.ACTIVE,
+        referralCode,
+        cadastradoPorId: userId,
         ...coordinates
       },
       tx
     );
 
     await replaceLeadershipResponsibleCities(created.id, responsibleCityIds, tx);
+    await registerPerformanceSnapshot(created, tx);
 
     return findLeadershipDetailsById(created.id, tx);
   });
@@ -283,7 +451,7 @@ export async function createLeadershipRecord(
     entidadeId: leadership.id,
     acao: "CREATE",
     usuarioId: userId,
-    descricao: `Lideranca ${leadership.nome} criada`
+    descricao: `Liderança ${leadership.nome} criada`
   });
 
   return leadership;
@@ -294,47 +462,79 @@ export async function createPublicLeadershipRecord(rawInput: unknown) {
   const [city, owner, referrer] = await Promise.all([
     resolveCity(input.cidadeId, "SP"),
     findDefaultLeadershipOwner(),
-    input.indicadoPorId ? findLeadershipSummaryById(input.indicadoPorId) : null
+    input.origemRef ? findLeadershipSummaryByReference(input.origemRef) : null
   ]);
 
   if (!owner) {
     throw new Error("Nenhum usuário administrativo disponível para o cadastro");
   }
 
-  if (input.indicadoPorId && !referrer) {
+  if (input.origemRef && !referrer) {
     throw new Error("Link de indicação inválido");
   }
 
-  const payload = buildCreatePayload(
-    {
-      ...input,
-      estado: city.estado
-    },
-    city,
-    owner.id,
-    LeadershipStatus.PENDING
-  );
+  const responsibleCityIds = buildResponsibleCityIds(city.id, []);
+  const derived = buildDerivedLeadershipData({
+    nome: input.nome,
+    telefone: input.telefone,
+    potencialVotosEstimado: input.potencialVotosEstimado ?? 0,
+    votosReais: input.votosReais,
+    custoTotal: null,
+    metaVotosIndividual: null,
+    quantidadeIndicacoes: 0,
+    totalCidadesResponsaveis: responsibleCityIds.length,
+    status: LeadershipStatus.PENDING
+  });
+  const referralCode = await ensureUniqueReferralCode(input.nome, crypto.randomUUID());
   const coordinates = await resolveCoordinates(city.nome, city.estado, city);
-  const responsibleCityIds = buildResponsibleCityIds(
-    city.id,
-    input.cidadesResponsaveisIds
-  );
 
   const leadership = await prisma.$transaction(async (tx) => {
     const created = await createLeadership(
       {
-        ...payload,
-        ...coordinates,
-        indicadoPorId: referrer?.id ?? null
+        nome: input.nome.trim(),
+        telefone: input.telefone.trim(),
+        whatsapp: derived.whatsapp,
+        email: optionalText(input.email),
+        cidade: city.nome,
+        estado: city.estado,
+        cidadeId: city.id,
+        observacoes: optionalText(input.observacoes),
+        potencialVotosEstimado: input.potencialVotosEstimado ?? 0,
+        votosReais: input.votosReais ?? null,
+        custoPorVoto: null,
+        metaVotosIndividual: null,
+        faixaPotencial: derived.faixaPotencial,
+        scoreLideranca: derived.scoreLideranca,
+        status: LeadershipStatus.PENDING,
+        referralCode,
+        indicadoPorId: referrer?.id ?? null,
+        cadastradoPorId: owner.id,
+        ...coordinates
       },
       tx
     );
 
     await replaceLeadershipResponsibleCities(created.id, responsibleCityIds, tx);
+    await createReferralSignup(
+      {
+        nome: input.nome.trim(),
+        telefone: input.telefone.trim(),
+        email: optionalText(input.email),
+        cidade: city.nome,
+        estado: city.estado,
+        observacoes: optionalText(input.observacoes),
+        origemRef: input.origemRef ?? referrer?.referralCode ?? null,
+        leadershipId: referrer?.id ?? null
+      },
+      tx
+    );
 
     if (referrer) {
       await incrementLeadershipIndications(referrer.id, tx);
+      await refreshLeadershipDerivedMetrics(referrer.id, tx);
     }
+
+    await registerPerformanceSnapshot(created, tx);
 
     return findLeadershipDetailsById(created.id, tx);
   });
@@ -344,13 +544,13 @@ export async function createPublicLeadershipRecord(rawInput: unknown) {
   }
 
   await recordAuditLog({
-    entidade: "Leadership",
+    entidade: "ReferralSignup",
     entidadeId: leadership.id,
-    acao: "CREATE",
+    acao: "PUBLIC_SIGNUP",
     usuarioId: owner.id,
     descricao: referrer
-      ? `Liderança ${leadership.nome} criada via indicação de ${referrer.nome}`
-      : `Liderança ${leadership.nome} criada via cadastro público`
+      ? `Cadastro público de ${leadership.nome} vinculado a ${referrer.nome}`
+      : `Cadastro público de ${leadership.nome} sem vínculo de indicação`
   });
 
   return leadership;
@@ -384,6 +584,11 @@ export async function updateLeadershipRecord(
     throw new Error("Cidade base não encontrada");
   }
 
+  const responsibleCityIds = buildResponsibleCityIds(
+    city.id,
+    input.cidadesResponsaveisIds ??
+      existing.cidadesResponsaveis.map((item) => item.cityId)
+  );
   const shouldRefreshCoordinates = city.id !== existing.cidadeId;
   const coordinates = shouldRefreshCoordinates
     ? await resolveCoordinates(city.nome, city.estado, city)
@@ -395,18 +600,43 @@ export async function updateLeadershipRecord(
 
   const potentialValue =
     input.potencialVotosEstimado ?? existing.potencialVotosEstimado;
-  const responsibleCityIds = buildResponsibleCityIds(
-    city.id,
-    input.cidadesResponsaveisIds ??
-      existing.cidadesResponsaveis.map((item) => item.cityId)
+  const realVotesValue =
+    input.votosReais === undefined ? existing.votosReais : input.votosReais ?? null;
+  const costValue =
+    input.custoTotal === undefined ? existing.custoTotal : input.custoTotal ?? null;
+  const goalValue =
+    input.metaVotosIndividual === undefined
+      ? existing.metaVotosIndividual
+      : input.metaVotosIndividual ?? null;
+  const statusValue = input.status ?? existing.status;
+  const currentVoteBase = resolveLeadershipVoteBase(realVotesValue, potentialValue);
+  const recentGrowthRate = calculateRecentGrowthRate(
+    currentVoteBase,
+    existing.performanceHistory[0]
   );
+  const derived = buildDerivedLeadershipData({
+    nome: input.nome ?? existing.nome,
+    telefone: input.telefone ?? existing.telefone,
+    potencialVotosEstimado: potentialValue,
+    votosReais: realVotesValue,
+    custoTotal: costValue,
+    metaVotosIndividual: goalValue,
+    quantidadeIndicacoes: existing.quantidadeIndicacoes,
+    totalCidadesResponsaveis: responsibleCityIds.length,
+    status: statusValue,
+    recentGrowthRate
+  });
 
   const leadership = await prisma.$transaction(async (tx) => {
-    await updateLeadership(
+    const updated = await updateLeadership(
       id,
       {
         nome: input.nome?.trim(),
         telefone: input.telefone?.trim(),
+        whatsapp:
+          input.telefone === undefined
+            ? undefined
+            : buildWhatsAppNumber(input.telefone?.trim()),
         email: input.email === undefined ? undefined : optionalText(input.email),
         cpf: input.cpf === undefined ? undefined : optionalText(input.cpf),
         fotoPerfilUrl:
@@ -425,9 +655,13 @@ export async function updateLeadershipRecord(
             ? undefined
             : optionalText(input.observacoes),
         potencialVotosEstimado: potentialValue,
-        custoTotal:
-          input.custoTotal === undefined ? undefined : input.custoTotal ?? null,
-        faixaPotencial: classifyPotentialLevel(potentialValue),
+        votosReais: input.votosReais === undefined ? undefined : realVotesValue,
+        custoTotal: input.custoTotal === undefined ? undefined : costValue,
+        custoPorVoto: derived.custoPorVoto,
+        metaVotosIndividual:
+          input.metaVotosIndividual === undefined ? undefined : goalValue,
+        faixaPotencial: derived.faixaPotencial,
+        scoreLideranca: derived.scoreLideranca,
         status: input.status,
         ...coordinates
       },
@@ -435,6 +669,7 @@ export async function updateLeadershipRecord(
     );
 
     await replaceLeadershipResponsibleCities(id, responsibleCityIds, tx);
+    await registerPerformanceSnapshot(updated, tx);
 
     return findLeadershipDetailsById(id, tx);
   });
@@ -448,7 +683,7 @@ export async function updateLeadershipRecord(
     entidadeId: leadership.id,
     acao: "UPDATE",
     usuarioId: userId,
-    descricao: `Lideranca ${leadership.nome} atualizada`
+    descricao: `Liderança ${leadership.nome} atualizada`
   });
 
   return leadership;
@@ -473,8 +708,31 @@ export async function setLeadershipStatus(
     throw new Error("Liderança não encontrada");
   }
 
-  const leadership = await updateLeadership(id, {
+  const derived = buildDerivedLeadershipData({
+    nome: existing.nome,
+    telefone: existing.telefone,
+    potencialVotosEstimado: existing.potencialVotosEstimado,
+    votosReais: existing.votosReais,
+    custoTotal: existing.custoTotal,
+    metaVotosIndividual: existing.metaVotosIndividual,
+    quantidadeIndicacoes: existing.quantidadeIndicacoes,
+    totalCidadesResponsaveis: existing.cidadesResponsaveis.length,
     status
+  });
+
+  const leadership = await prisma.$transaction(async (tx) => {
+    const updated = await updateLeadership(
+      id,
+      {
+        status,
+        scoreLideranca: derived.scoreLideranca
+      },
+      tx
+    );
+
+    await registerPerformanceSnapshot(updated, tx);
+
+    return updated;
   });
 
   await recordAuditLog({
@@ -484,8 +742,8 @@ export async function setLeadershipStatus(
     usuarioId: userId,
     descricao:
       status === LeadershipStatus.ACTIVE
-        ? `Lideranca ${leadership.nome} reativada`
-        : `Lideranca ${leadership.nome} inativada`
+        ? `Liderança ${leadership.nome} reativada`
+        : `Liderança ${leadership.nome} inativada`
   });
 
   return leadership;
@@ -512,6 +770,7 @@ export async function deleteLeadershipRecord(
   await prisma.$transaction(async (tx) => {
     if (existing.indicadoPorId) {
       await decrementLeadershipIndications(existing.indicadoPorId, tx);
+      await refreshLeadershipDerivedMetrics(existing.indicadoPorId, tx);
     }
 
     await deleteLeadership(id, tx);
@@ -522,21 +781,44 @@ export async function deleteLeadershipRecord(
     entidadeId: id,
     acao: "DELETE",
     usuarioId: userId,
-    descricao: `Lideranca ${existing.nome} excluida`
+    descricao: `Liderança ${existing.nome} excluída`
   });
 }
 
 export function getLeadershipPerformanceSnapshot(leadership: {
   quantidadeIndicacoes: number;
+  custoPorVoto?: number | null;
   custoTotal?: number | null;
   potencialVotosEstimado: number;
+  votosReais?: number | null;
+  metaVotosIndividual?: number | null;
+  scoreLideranca?: number | null;
 }) {
+  const voteBase = resolveLeadershipVoteBase(
+    leadership.votosReais,
+    leadership.potencialVotosEstimado
+  );
+
   return {
     quantidadeIndicacoes: leadership.quantidadeIndicacoes,
-    custoPorVoto: calculateCostPerVote(
-      leadership.custoTotal,
-      leadership.potencialVotosEstimado
+    custoPorVoto:
+      leadership.custoPorVoto ??
+      calculateCostPerVote(
+        leadership.custoTotal,
+        leadership.votosReais,
+        leadership.potencialVotosEstimado
+      ),
+    potencialVotosEstimado: leadership.potencialVotosEstimado,
+    votosReais: leadership.votosReais ?? null,
+    voteBase,
+    progressoMetaIndividual: calculateGoalProgress(
+      leadership.metaVotosIndividual,
+      voteBase
     ),
-    potencialVotosEstimado: leadership.potencialVotosEstimado
+    faltanteMetaIndividual: calculateGoalRemaining(
+      leadership.metaVotosIndividual,
+      voteBase
+    ),
+    scoreLideranca: leadership.scoreLideranca ?? 0
   };
 }

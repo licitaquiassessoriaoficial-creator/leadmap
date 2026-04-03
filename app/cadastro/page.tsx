@@ -1,8 +1,11 @@
 import Link from "next/link";
 
-import { LeadershipForm } from "@/components/liderancas/leadership-form";
+import { PublicSignupForm } from "@/components/public/public-signup-form";
 import { Card } from "@/components/ui/card";
-import { getLeadershipFilters, getReferralLeadership } from "@/services/leadership-service";
+import {
+  getLeadershipFilters,
+  getReferralLeadership
+} from "@/services/leadership-service";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -12,11 +15,13 @@ export default async function PublicRegistrationPage({
   searchParams: SearchParams;
 }) {
   const resolvedSearchParams = await searchParams;
-  const referralId =
+  const referralReference =
     typeof resolvedSearchParams.ref === "string" ? resolvedSearchParams.ref : undefined;
   const [filterOptions, referralLeadership] = await Promise.all([
     getLeadershipFilters(),
-    referralId ? getReferralLeadership(referralId) : Promise.resolve(null)
+    referralReference
+      ? getReferralLeadership(referralReference)
+      : Promise.resolve(null)
   ]);
 
   return (
@@ -24,15 +29,14 @@ export default async function PublicRegistrationPage({
       <div className="grid gap-8 lg:grid-cols-[360px,1fr]">
         <Card className="bg-slate-950 text-white shadow-2xl">
           <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
-            LeadMap CRM
+            Radar de Lideranças
           </p>
           <h1 className="mt-4 text-3xl font-semibold leading-tight">
-            Cadastro de lideranças para a operação em SP
+            Cadastro público de lideranças para a operação em SP
           </h1>
           <p className="mt-4 text-sm text-slate-300">
-            Preencha os dados principais, informe sua cidade e registre as
-            cidades sob responsabilidade. Se este cadastro vier por indicação,
-            o vínculo será feito automaticamente.
+            Preencha os dados básicos para registrar uma nova indicação. O time
+            interno valida o cadastro e transforma isso em cobertura territorial.
           </p>
           <div className="mt-8 space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200">
             <p>
@@ -46,31 +50,32 @@ export default async function PublicRegistrationPage({
             </p>
           </div>
           <div className="mt-8 text-sm text-slate-400">
-            Já possui acesso interno? <Link href="/login" className="font-semibold text-white">Entrar</Link>
+            Já possui acesso interno?{" "}
+            <Link href="/login" className="font-semibold text-white">
+              Entrar
+            </Link>
           </div>
         </Card>
+
         <div className="space-y-6">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">
               Novo cadastro
             </h2>
             <p className="mt-2 text-sm text-slate-500">
-              Os dados enviados entram em validação e já podem alimentar a
-              malha territorial quando aprovados.
+              O formulário público registra a origem da indicação, cria um
+              histórico do contato e disponibiliza o cadastro para análise da equipe.
             </p>
           </div>
-          {referralId && !referralLeadership ? (
+          {referralReference && !referralLeadership ? (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
               O link de indicação informado não foi encontrado. Você ainda pode
               concluir o cadastro sem vínculo.
             </div>
           ) : null}
-          <LeadershipForm
-            mode="create"
-            variant="public"
+          <PublicSignupForm
             cityOptions={filterOptions.cityOptions}
-            lockedState="SP"
-            referralId={referralLeadership?.id}
+            referralCode={referralLeadership?.referralCode}
             referralName={referralLeadership?.nome}
           />
         </div>

@@ -1,6 +1,13 @@
 import { Role } from "@prisma/client";
 
-import { calculateVotesProgress, calculateVotesRemaining } from "@/lib/domain/city";
+import {
+  calculateCityPriority,
+  calculateCoveragePercentage,
+  calculateVotesProgress,
+  calculateVotesRemaining,
+  resolveCityVoteTarget
+} from "@/lib/domain/city";
+import { resolveLeadershipVoteBase } from "@/lib/domain/leadership";
 import {
   findCityWithCoverageById,
   listCitiesWithCoverage
@@ -18,6 +25,9 @@ type CityCoverageFilters = {
   faixaPotencial?: string;
   status?: string;
   responsavelId?: string;
+  minIndicacoes?: number;
+  minScore?: number;
+  maxCostPerVote?: number;
   startDate?: Date;
   endDate?: Date;
 };
@@ -83,6 +93,25 @@ function filterResponsibilities(
       return false;
     }
 
+    if (
+      filters.minIndicacoes != null &&
+      leadership.quantidadeIndicacoes < filters.minIndicacoes
+    ) {
+      return false;
+    }
+
+    if (filters.minScore != null && leadership.scoreLideranca < filters.minScore) {
+      return false;
+    }
+
+    if (
+      filters.maxCostPerVote != null &&
+      (leadership.custoPorVoto == null ||
+        leadership.custoPorVoto > filters.maxCostPerVote)
+    ) {
+      return false;
+    }
+
     if (filters.startDate && leadership.createdAt < filters.startDate) {
       return false;
     }
@@ -95,6 +124,7 @@ function filterResponsibilities(
       const haystack = [
         leadership.nome,
         leadership.telefone,
+        leadership.whatsapp,
         leadership.email,
         leadership.cidade,
         leadership.bairro
@@ -118,27 +148,60 @@ function buildCitySummary(
   filters: CityCoverageFilters = {}
 ) {
   const responsaveis = filterResponsibilities(city, responsavelIds, filters);
-  const votosCaptados = responsaveis.reduce(
-    (total, item) => total + item.leadership.potencialVotosEstimado,
-    0
-  );
+  const votosCaptados = responsaveis.reduce((total, item) => {
+    return (
+      total +
+      (resolveLeadershipVoteBase(
+        item.leadership.votosReais,
+        item.leadership.potencialVotosEstimado
+      ) ?? 0)
+    );
+  }, 0);
   const indicacoes = responsaveis.reduce(
     (total, item) => total + item.leadership.quantidadeIndicacoes,
     0
   );
+  const responsaveisComCusto = responsaveis.filter(
+    (item) => item.leadership.custoPorVoto != null
+  );
+  const custoPorVotoMedio = responsaveisComCusto.length
+    ? responsaveisComCusto.reduce(
+        (total, item) => total + (item.leadership.custoPorVoto ?? 0),
+        0
+      ) / responsaveisComCusto.length
+    : null;
+  const targetVotes = resolveCityVoteTarget(
+    city.totalEleitores,
+    city.metaVotosCidade
+  );
+  const priority = calculateCityPriority({
+    totalEleitores: city.totalEleitores,
+    votosCaptados,
+    targetVotes,
+    totalResponsaveis: responsaveis.length
+  });
 
   return {
     id: city.id,
     nome: city.nome,
     estado: city.estado,
+    codigoIbge: city.codigoIbge,
     totalEleitores: city.totalEleitores,
+    metaVotosCidade: city.metaVotosCidade,
+    targetVotes,
     latitude: city.latitude,
     longitude: city.longitude,
     totalResponsaveis: responsaveis.length,
     votosCaptados,
-    votosRestantes: calculateVotesRemaining(city.totalEleitores, votosCaptados),
-    progresso: calculateVotesProgress(city.totalEleitores, votosCaptados),
+    votosRestantes: calculateVotesRemaining(targetVotes, votosCaptados),
+    progresso: calculateVotesProgress(targetVotes, votosCaptados),
     indicacoes,
+    custoPorVotoMedio:
+      custoPorVotoMedio == null || Number.isNaN(custoPorVotoMedio)
+        ? null
+        : Math.round((custoPorVotoMedio + Number.EPSILON) * 100) / 100,
+    priorityScore: priority.score,
+    priorityReason: priority.reason,
     liderancas: responsaveis.map((item) => item.leadership)
   };
 }
@@ -164,6 +227,14 @@ export async function getCitiesCoverageSnapshot(
 
   const coveredCities = summaries.filter((city) => city.totalResponsaveis > 0);
   const missingCities = summaries.filter((city) => city.totalResponsaveis === 0);
+  const totalEleitoresCobertos = coveredCities.reduce(
+    (total, city) => total + city.totalEleitores,
+    0
+  );
+  const totalEleitoresMonitorados = summaries.reduce(
+    (total, city) => total + city.totalEleitores,
+    0
+  );
 
   const leadershipCoverageMap = new Map<
     string,
@@ -174,6 +245,7 @@ export async function getCitiesCoverageSnapshot(
       estado: string;
       fotoPerfilUrl: string | null;
       totalCidades: number;
+      scoreLideranca: number;
     }
   >();
 
@@ -187,7 +259,8 @@ export async function getCitiesCoverageSnapshot(
         cidade: leadership.cidade,
         estado: leadership.estado,
         fotoPerfilUrl: leadership.fotoPerfilUrl,
-        totalCidades: (current?.totalCidades ?? 0) + 1
+        totalCidades: (current?.totalCidades ?? 0) + 1,
+        scoreLideranca: leadership.scoreLideranca
       });
     }
   }
@@ -197,16 +270,29 @@ export async function getCitiesCoverageSnapshot(
     totalCities: summaries.length,
     coveredCities: coveredCities.length,
     missingCities: missingCities.length,
+    coveragePercent: calculateCoveragePercentage(
+      summaries.length,
+      coveredCities.length
+    ),
+    totalEleitoresCobertos,
+    totalEleitoresMonitorados,
+    percentualEleitoresCobertos: calculateCoveragePercentage(
+      totalEleitoresMonitorados,
+      totalEleitoresCobertos
+    ),
     votosCaptados: summaries.reduce((total, city) => total + city.votosCaptados, 0),
-    metaVotos: summaries.reduce((total, city) => total + city.totalEleitores, 0),
+    metaVotos: summaries.reduce((total, city) => total + city.targetVotes, 0),
     votosRestantes: summaries.reduce(
       (total, city) => total + city.votosRestantes,
       0
     ),
     plantedCities: coveredCities,
     missingCityList: missingCities,
+    priorityCities: [...summaries]
+      .sort((a, b) => b.priorityScore - a.priorityScore || b.totalEleitores - a.totalEleitores)
+      .slice(0, 10),
     leadershipCoverage: Array.from(leadershipCoverageMap.values()).sort(
-      (a, b) => b.totalCidades - a.totalCidades || a.nome.localeCompare(b.nome)
+      (a, b) => b.totalCidades - a.totalCidades || b.scoreLideranca - a.scoreLideranca
     )
   };
 }

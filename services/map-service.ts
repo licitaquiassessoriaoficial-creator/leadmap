@@ -31,6 +31,9 @@ export async function getMapData(
     status: rawQuery.status,
     search: rawQuery.search,
     responsavelId: rawQuery.responsavelId,
+    minIndicacoes: rawQuery.minIndicacoes,
+    minScore: rawQuery.minScore,
+    maxCostPerVote: rawQuery.maxCostPerVote,
     startDate: rawQuery.startDate,
     endDate: rawQuery.endDate
   });
@@ -43,6 +46,9 @@ export async function getMapData(
     status: query.status,
     responsavelId: query.responsavelId,
     responsavelIds,
+    minIndicacoes: query.minIndicacoes,
+    minScore: query.minScore,
+    maxCostPerVote: query.maxCostPerVote,
     ...parseDateRange(query.startDate, query.endDate)
   };
 

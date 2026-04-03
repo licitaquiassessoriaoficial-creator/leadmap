@@ -12,12 +12,14 @@ import {
   TileLayer
 } from "react-leaflet";
 
-import { ProfileAvatar } from "@/components/shared/profile-avatar";
+import { CostEfficiencyBadge } from "@/components/shared/cost-efficiency-badge";
 import { PotentialBadge } from "@/components/shared/potential-badge";
+import { ProfileAvatar } from "@/components/shared/profile-avatar";
+import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { POTENTIAL_METADATA } from "@/lib/constants/potential";
 import { buildWhatsAppLink } from "@/lib/domain/leadership";
-import { formatInteger, formatPercent } from "@/lib/utils";
+import { formatCurrency, formatInteger, formatPercent } from "@/lib/utils";
 import type { LeadershipWithRelations } from "@/types/app";
 
 const SP_CENTER: [number, number] = [-22.55, -48.64];
@@ -30,7 +32,10 @@ type CityPoint = {
   id: string;
   nome: string;
   estado: string;
+  codigoIbge?: string | null;
   totalEleitores: number;
+  metaVotosCidade?: number | null;
+  targetVotes: number;
   latitude: number | null;
   longitude: number | null;
   totalResponsaveis: number;
@@ -38,6 +43,8 @@ type CityPoint = {
   votosRestantes: number;
   progresso: number;
   indicacoes: number;
+  custoPorVotoMedio?: number | null;
+  priorityReason: string;
   liderancas: LeadershipWithRelations[];
 };
 
@@ -48,6 +55,7 @@ type CoverageRow = {
   estado: string;
   fotoPerfilUrl: string | null;
   totalCidades: number;
+  scoreLideranca: number;
 };
 
 const markerIcons = Object.values(PotentialLevel).reduce(
@@ -79,12 +87,13 @@ export function LeadershipMap({
   const selectedCity = cityPoints.find((city) => city.id === selectedCityId) ?? null;
   const plantedCities = cityPoints.filter((city) => city.totalResponsaveis > 0).length;
   const missingCities = cityPoints.length - plantedCities;
+  const totalEleitoresMonitorados = cityPoints.reduce(
+    (total, city) => total + city.totalEleitores,
+    0
+  );
 
   const visibleCityPoints = useMemo(
-    () =>
-      cityPoints.filter(
-        (city) => city.latitude != null && city.longitude != null
-      ),
+    () => cityPoints.filter((city) => city.latitude != null && city.longitude != null),
     [cityPoints]
   );
 
@@ -102,8 +111,8 @@ export function LeadershipMap({
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1fr,340px]">
-      <div className="h-[640px] overflow-hidden rounded-2xl bg-white shadow-panel">
+    <div className="grid gap-6 xl:grid-cols-[1fr,360px]">
+      <div className="h-[680px] overflow-hidden rounded-2xl bg-white shadow-panel">
         <MapContainer
           center={SP_CENTER}
           zoom={7}
@@ -117,6 +126,7 @@ export function LeadershipMap({
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+
           {visibleCityPoints.map((city) => (
             <CircleMarker
               key={`city-${city.id}`}
@@ -133,17 +143,20 @@ export function LeadershipMap({
               }}
             >
               <Popup>
-                <div className="min-w-[220px] space-y-2">
+                <div className="min-w-[240px] space-y-2">
                   <strong>{city.nome}</strong>
                   <p className="text-sm text-slate-600">
                     {city.totalResponsaveis} lideranças responsáveis
                   </p>
                   <p className="text-sm text-slate-600">
                     Captado: {formatInteger(city.votosCaptados)} /{" "}
-                    {formatInteger(city.totalEleitores)}
+                    {formatInteger(city.targetVotes)}
                   </p>
                   <p className="text-sm text-slate-600">
-                    Progresso: {formatPercent(city.progresso)}
+                    Restante: {formatInteger(city.votosRestantes)}
+                  </p>
+                  <p className="text-sm text-slate-600">
+                    Prioridade: {city.priorityReason}
                   </p>
                   <Link
                     href={`/cidades/${city.id}`}
@@ -155,13 +168,14 @@ export function LeadershipMap({
               </Popup>
             </CircleMarker>
           ))}
+
           {points.map((point) => {
             if (point.latitude == null || point.longitude == null) {
               return null;
             }
 
             const whatsAppLink = buildWhatsAppLink(
-              point.telefone,
+              point.whatsapp ?? point.telefone,
               `Olá, ${point.nome}! Vamos falar sobre a operação em ${point.cidade}?`
             );
 
@@ -172,7 +186,7 @@ export function LeadershipMap({
                 icon={markerIcons[point.faixaPotencial as PotentialLevel]}
               >
                 <Popup>
-                  <div className="min-w-[240px] space-y-3">
+                  <div className="min-w-[260px] space-y-3">
                     <div className="flex items-center gap-3">
                       <ProfileAvatar
                         name={point.nome}
@@ -186,15 +200,35 @@ export function LeadershipMap({
                         </div>
                       </div>
                     </div>
-                    <div className="space-y-1 text-sm text-slate-600">
-                      <div>Votos: {formatInteger(point.potencialVotosEstimado)}</div>
-                      <div>Indicações: {formatInteger(point.quantidadeIndicacoes)}</div>
-                    </div>
-                    <div>
+
+                    <div className="flex flex-wrap gap-2">
                       <PotentialBadge level={point.faixaPotencial} />
+                      <LeadershipStatusBadge status={point.status} />
+                      <CostEfficiencyBadge value={point.custoPorVoto} />
                     </div>
+
+                    <div className="space-y-1 text-sm text-slate-600">
+                      <div>
+                        Potencial: {formatInteger(point.potencialVotosEstimado)}
+                      </div>
+                      <div>Votos reais: {formatInteger(point.votosReais ?? 0)}</div>
+                      <div>
+                        Indicações: {formatInteger(point.quantidadeIndicacoes)}
+                      </div>
+                      <div>
+                        Custo por voto:{" "}
+                        {point.custoPorVoto == null
+                          ? "Aguardando votos"
+                          : formatCurrency(point.custoPorVoto)}
+                      </div>
+                      <div>Score: {point.scoreLideranca.toFixed(2)}</div>
+                    </div>
+
                     <div className="flex gap-3 text-sm">
-                      <Link href={`/liderancas/${point.id}`} className="font-semibold text-brand-700">
+                      <Link
+                        href={`/liderancas/${point.id}`}
+                        className="font-semibold text-brand-700"
+                      >
                         Detalhe
                       </Link>
                       <a
@@ -213,12 +247,15 @@ export function LeadershipMap({
           })}
         </MapContainer>
       </div>
+
       <div className="space-y-6">
         <Card className="space-y-4">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Cobertura de SP</h3>
             <p className="text-sm text-slate-500">
-              {points.length} pins visíveis e {cityPoints.length} cidades monitoradas.
+              {points.length} pins visíveis, {formatInteger(cityPoints.length)} cidades
+              monitoradas e {formatInteger(totalEleitoresMonitorados)} eleitores no
+              recorte atual.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -262,13 +299,19 @@ export function LeadershipMap({
                     </p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold text-slate-900">
-                  {item.totalCidades}
-                </span>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-slate-900">
+                    {formatInteger(item.totalCidades)}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Score {item.scoreLideranca.toFixed(2)}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
         </Card>
+
         <Card className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -288,6 +331,7 @@ export function LeadershipMap({
               </Link>
             ) : null}
           </div>
+
           {selectedCity ? (
             <>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -301,13 +345,32 @@ export function LeadershipMap({
                 </div>
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                    Meta da cidade
+                  </p>
+                  <p className="mt-2 text-xl font-semibold text-slate-900">
+                    {formatInteger(selectedCity.targetVotes)}
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
                     Faltante
                   </p>
                   <p className="mt-2 text-xl font-semibold text-slate-900">
                     {formatInteger(selectedCity.votosRestantes)}
                   </p>
                 </div>
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                    Custo/voto médio
+                  </p>
+                  <p className="mt-2 text-xl font-semibold text-slate-900">
+                    {selectedCity.custoPorVotoMedio == null
+                      ? "Aguardando votos"
+                      : formatCurrency(selectedCity.custoPorVotoMedio)}
+                  </p>
+                </div>
               </div>
+
               <div className="rounded-2xl bg-slate-50 p-4">
                 <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
                   Progresso da meta
@@ -321,7 +384,11 @@ export function LeadershipMap({
                     style={{ width: `${Math.min(selectedCity.progresso, 100)}%` }}
                   />
                 </div>
+                <p className="mt-3 text-sm text-slate-500">
+                  {selectedCity.priorityReason}
+                </p>
               </div>
+
               <div className="space-y-3">
                 {selectedCity.liderancas.length ? (
                   selectedCity.liderancas.map((leadership) => (
@@ -341,14 +408,22 @@ export function LeadershipMap({
                             {leadership.nome}
                           </p>
                           <p className="text-xs text-slate-500">
-                            {formatInteger(leadership.potencialVotosEstimado)} votos ·{" "}
-                            {formatInteger(leadership.quantidadeIndicacoes)} indicações
+                            {formatInteger(
+                              leadership.votosReais ??
+                                leadership.potencialVotosEstimado
+                            )}{" "}
+                            votos • {formatInteger(leadership.quantidadeIndicacoes)}{" "}
+                            indicações
                           </p>
                         </div>
                       </div>
-                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">
-                        Abrir
-                      </span>
+                      <div className="text-right text-xs text-slate-500">
+                        <p>Score {leadership.scoreLideranca.toFixed(2)}</p>
+                        <p>
+                          {formatInteger(leadership.cidadesResponsaveis.length)}{" "}
+                          cidades
+                        </p>
+                      </div>
                     </Link>
                   ))
                 ) : (
@@ -360,7 +435,8 @@ export function LeadershipMap({
             </>
           ) : (
             <p className="text-sm text-slate-500">
-              Selecione uma cidade para ver lideranças, votos captados, indicações e faltante.
+              Selecione uma cidade para ver lideranças, votos captados, indicações
+              e faltante.
             </p>
           )}
         </Card>

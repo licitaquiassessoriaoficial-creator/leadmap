@@ -61,7 +61,9 @@ model City {
   id              String           @id @default(cuid())
   nome            String
   estado          String           @default("SP")
+  codigoIbge      String?
   totalEleitores  Int
+  metaVotosCidade Int?
   latitude        Float?
   longitude       Float?
   leaderships     Leadership[]     @relation("LeadershipBaseCity")
@@ -71,12 +73,14 @@ model City {
 
   @@unique([nome, estado])
   @@index([estado, nome])
+  @@index([codigoIbge])
 }
 
 model Leadership {
   id                     String           @id @default(cuid())
   nome                   String
   telefone               String
+  whatsapp               String?
   email                  String?
   cpf                    String?
   fotoPerfilUrl          String?
@@ -90,14 +94,21 @@ model Leadership {
   longitude              Float?
   locationStatus         LocationStatus   @default(PENDING)
   potencialVotosEstimado Int
+  votosReais             Int?
   custoTotal             Float?
+  custoPorVoto           Float?
+  metaVotosIndividual    Int?
   faixaPotencial         PotentialLevel
+  scoreLideranca         Float            @default(0)
   status                 LeadershipStatus @default(ACTIVE)
   observacoes            String?
   quantidadeIndicacoes   Int              @default(0)
+  referralCode           String           @unique
   indicadoPorId          String?
   indicadoPor            Leadership?      @relation("LeadershipReferral", fields: [indicadoPorId], references: [id], onDelete: SetNull)
   indicados              Leadership[]     @relation("LeadershipReferral")
+  referralSignups        ReferralSignup[]
+  performanceHistory     PerformanceHistory[]
   cidadesResponsaveis    LeadershipCity[]
   cadastradoPorId        String
   cadastradoPor          User             @relation("LeadershipCreatedBy", fields: [cadastradoPorId], references: [id], onDelete: Restrict)
@@ -125,6 +136,40 @@ model LeadershipCity {
 
   @@id([leadershipId, cityId])
   @@index([cityId])
+}
+
+model ReferralSignup {
+  id         String      @id @default(cuid())
+  nome       String
+  telefone   String
+  email      String?
+  cidade     String
+  estado     String      @default("SP")
+  observacoes String?
+  origemRef  String?
+  leadershipId String?
+  leadership Leadership? @relation(fields: [leadershipId], references: [id], onDelete: SetNull)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([leadershipId])
+  @@index([origemRef])
+  @@index([createdAt])
+}
+
+model PerformanceHistory {
+  id                  String     @id @default(cuid())
+  leadershipId        String
+  leadership          Leadership @relation(fields: [leadershipId], references: [id], onDelete: Cascade)
+  dataReferencia      DateTime
+  votosEstimados      Int
+  votosReais          Int?
+  quantidadeIndicacoes Int
+  custoTotal          Float?
+  score               Float
+  createdAt           DateTime   @default(now())
+
+  @@index([leadershipId, dataReferencia])
 }
 
 model AuditLog {

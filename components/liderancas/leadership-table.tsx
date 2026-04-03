@@ -9,12 +9,12 @@ import {
 import Link from "next/link";
 import { useMemo } from "react";
 
+import { CostEfficiencyBadge } from "@/components/shared/cost-efficiency-badge";
 import { PotentialBadge } from "@/components/shared/potential-badge";
 import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge, RoleBadge } from "@/components/shared/status-badge";
-import type { LeadershipWithRelations } from "@/types/app";
-import { calculateCostPerVote } from "@/lib/domain/leadership";
 import { formatCurrency, formatInteger } from "@/lib/utils";
+import type { LeadershipWithRelations } from "@/types/app";
 
 export function LeadershipTable({
   data
@@ -53,11 +53,14 @@ export function LeadershipTable({
         )
       },
       {
-        header: "Potencial",
+        header: "Votos",
         cell: ({ row }) => (
-          <div className="space-y-2">
+          <div className="space-y-1">
             <p className="text-sm font-medium text-slate-900">
-              {formatInteger(row.original.potencialVotosEstimado)}
+              Potencial: {formatInteger(row.original.potencialVotosEstimado)}
+            </p>
+            <p className="text-xs text-slate-500">
+              Reais: {formatInteger(row.original.votosReais ?? 0)}
             </p>
             <PotentialBadge level={row.original.faixaPotencial} />
           </div>
@@ -68,18 +71,41 @@ export function LeadershipTable({
         cell: ({ row }) => formatInteger(row.original.quantidadeIndicacoes)
       },
       {
-        header: "Custo por voto",
-        cell: ({ row }) =>
-          formatCurrency(
-            calculateCostPerVote(
-              row.original.custoTotal,
-              row.original.potencialVotosEstimado
-            )
-          )
+        header: "Custo",
+        cell: ({ row }) => (
+          <div className="space-y-1">
+            <p className="font-medium text-slate-900">
+              {formatCurrency(row.original.custoTotal)}
+            </p>
+            <p className="text-xs text-slate-500">
+              Meta: {formatInteger(row.original.metaVotosIndividual ?? 0)}
+            </p>
+          </div>
+        )
       },
       {
-        header: "Status",
-        cell: ({ row }) => <LeadershipStatusBadge status={row.original.status} />
+        header: "Custo por voto",
+        cell: ({ row }) => (
+          <div className="space-y-2">
+            <p className="font-medium text-slate-900">
+              {row.original.custoPorVoto == null
+                ? "Aguardando votos"
+                : formatCurrency(row.original.custoPorVoto)}
+            </p>
+            <CostEfficiencyBadge value={row.original.custoPorVoto} />
+          </div>
+        )
+      },
+      {
+        header: "Score",
+        cell: ({ row }) => (
+          <div className="space-y-1">
+            <p className="font-medium text-slate-900">
+              {row.original.scoreLideranca.toFixed(2)}
+            </p>
+            <LeadershipStatusBadge status={row.original.status} />
+          </div>
+        )
       },
       {
         header: "Responsável",

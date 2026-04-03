@@ -12,6 +12,8 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { calculateCostPerVote } from "@/lib/domain/leadership";
+import { formatCurrency } from "@/lib/utils";
 import type { LeadershipWithDetails } from "@/types/app";
 import {
   leadershipCreateSchema,
@@ -26,12 +28,9 @@ type CityOption = {
 
 type LeadershipFormProps = {
   mode: "create" | "edit";
-  variant?: "internal" | "public";
   initialData?: LeadershipWithDetails | null;
   cityOptions: CityOption[];
   lockedState?: string;
-  referralId?: string;
-  referralName?: string;
 };
 
 function normalizeCityName(value: string) {
@@ -44,18 +43,14 @@ function normalizeCityName(value: string) {
 
 export function LeadershipForm({
   mode,
-  variant = "internal",
   initialData,
   cityOptions,
-  lockedState,
-  referralId,
-  referralName
+  lockedState
 }: LeadershipFormProps) {
   const router = useRouter();
   const cityListId = useId();
   const initialCity = cityOptions.find((item) => item.id === initialData?.cidadeId);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [citySearch, setCitySearch] = useState(initialCity?.nome ?? "");
   const form = useForm<LeadershipCreateInput>({
     resolver: zodResolver(leadershipCreateSchema),
@@ -71,7 +66,9 @@ export function LeadershipForm({
       observacoes: initialData?.observacoes ?? "",
       fotoPerfilUrl: initialData?.fotoPerfilUrl ?? "",
       potencialVotosEstimado: initialData?.potencialVotosEstimado ?? 0,
+      votosReais: initialData?.votosReais ?? undefined,
       custoTotal: initialData?.custoTotal ?? undefined,
+      metaVotosIndividual: initialData?.metaVotosIndividual ?? undefined,
       cidadesResponsaveisIds:
         initialData?.cidadesResponsaveis.map((item) => item.cityId) ?? [],
       status: initialData?.status ?? LeadershipStatus.ACTIVE
@@ -79,8 +76,16 @@ export function LeadershipForm({
   });
 
   const watchedCityId = form.watch("cidadeId");
+  const watchedPotentialVotes = form.watch("potencialVotosEstimado");
+  const watchedRealVotes = form.watch("votosReais");
+  const watchedCostTotal = form.watch("custoTotal");
   const selectedCity = cityOptions.find((item) => item.id === watchedCityId);
   const selectedState = selectedCity?.estado ?? lockedState ?? "SP";
+  const costPerVotePreview = calculateCostPerVote(
+    watchedCostTotal,
+    watchedRealVotes,
+    watchedPotentialVotes
+  );
 
   function handleCityChange(value: string) {
     setCitySearch(value);
@@ -97,23 +102,17 @@ export function LeadershipForm({
 
   async function handleSubmit(values: LeadershipCreateInput) {
     setServerError(null);
-    setSuccessMessage(null);
 
     const requestPayload = {
       ...values,
-      estado: selectedState,
-      indicadoPorId: referralId
+      estado: selectedState
     };
 
     const endpoint =
-      variant === "public"
-        ? "/api/cadastro"
-        : mode === "create"
-          ? "/api/liderancas"
-          : `/api/liderancas/${initialData?.id}`;
+      mode === "create" ? "/api/liderancas" : `/api/liderancas/${initialData?.id}`;
 
     const response = await fetch(endpoint, {
-      method: variant === "public" || mode === "create" ? "POST" : "PUT",
+      method: mode === "create" ? "POST" : "PUT",
       headers: {
         "Content-Type": "application/json"
       },
@@ -132,37 +131,13 @@ export function LeadershipForm({
       return;
     }
 
-    if (variant === "public") {
-      setSuccessMessage("Cadastro recebido com sucesso. Nossa equipe fará a validação.");
-      form.reset({
-        nome: "",
-        telefone: "",
-        email: "",
-        cpf: "",
-        cidadeId: "",
-        estado: lockedState ?? "SP",
-        bairro: "",
-        endereco: "",
-        observacoes: "",
-        fotoPerfilUrl: "",
-        potencialVotosEstimado: 0,
-        custoTotal: undefined,
-        cidadesResponsaveisIds: [],
-        status: LeadershipStatus.ACTIVE
-      });
-      setCitySearch("");
-      return;
-    }
-
     const targetId = responsePayload.data?.id ?? initialData?.id;
     const feedback =
       mode === "create"
         ? "Liderança criada com sucesso."
         : "Liderança atualizada com sucesso.";
 
-    router.push(
-      `/liderancas/${targetId}?feedback=${encodeURIComponent(feedback)}`
-    );
+    router.push(`/liderancas/${targetId}?feedback=${encodeURIComponent(feedback)}`);
     router.refresh();
   }
 
@@ -171,11 +146,6 @@ export function LeadershipForm({
       className="space-y-6 rounded-2xl bg-white p-6 shadow-panel"
       onSubmit={form.handleSubmit(handleSubmit)}
     >
-      {variant === "public" && referralName ? (
-        <div className="rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
-          Cadastro vinculado à indicação de <strong>{referralName}</strong>.
-        </div>
-      ) : null}
       <ProfilePhotoUpload
         value={form.watch("fotoPerfilUrl")}
         onChange={(value) =>
@@ -185,7 +155,8 @@ export function LeadershipForm({
           })
         }
       />
-      <div className="grid gap-4 md:grid-cols-2">
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <Field label="Nome" error={form.formState.errors.nome?.message}>
           <Input {...form.register("nome")} placeholder="Nome completo" />
         </Field>
@@ -236,23 +207,49 @@ export function LeadershipForm({
             {...form.register("potencialVotosEstimado")}
           />
         </Field>
+        <Field label="Votos reais" error={form.formState.errors.votosReais?.message}>
+          <Input type="number" min={0} {...form.register("votosReais")} />
+        </Field>
         <Field label="Custo total" error={form.formState.errors.custoTotal?.message}>
           <Input type="number" min={0} step="0.01" {...form.register("custoTotal")} />
         </Field>
-        {variant === "internal" ? (
-          <Field label="Status" error={form.formState.errors.status?.message}>
-            <Select {...form.register("status")}>
-              <option value={LeadershipStatus.ACTIVE}>Ativa</option>
-              <option value={LeadershipStatus.INACTIVE}>Inativa</option>
-              <option value={LeadershipStatus.PENDING}>Pendente</option>
-            </Select>
-          </Field>
-        ) : null}
+        <Field
+          label="Meta individual"
+          error={form.formState.errors.metaVotosIndividual?.message}
+        >
+          <Input
+            type="number"
+            min={0}
+            {...form.register("metaVotosIndividual")}
+          />
+        </Field>
+        <Field
+          label="Custo por voto"
+          hint="Calculado automaticamente com prioridade para votos reais."
+        >
+          <Input
+            readOnly
+            value={
+              costPerVotePreview == null
+                ? "Aguardando base válida"
+                : formatCurrency(costPerVotePreview)
+            }
+          />
+        </Field>
+        <Field label="Status" error={form.formState.errors.status?.message}>
+          <Select {...form.register("status")}>
+            <option value={LeadershipStatus.ACTIVE}>Ativa</option>
+            <option value={LeadershipStatus.INACTIVE}>Inativa</option>
+            <option value={LeadershipStatus.PENDING}>Pendente</option>
+          </Select>
+        </Field>
         <Field
           label="Cidades sob responsabilidade"
           hint="A cidade base será incluída automaticamente"
-          error={form.formState.errors.cidadesResponsaveisIds?.message as string | undefined}
-          className="md:col-span-2"
+          error={form.formState.errors.cidadesResponsaveisIds?.message as
+            | string
+            | undefined}
+          className="md:col-span-2 xl:col-span-3"
         >
           <Select
             multiple
@@ -267,6 +264,7 @@ export function LeadershipForm({
           </Select>
         </Field>
       </div>
+
       <Field
         label="Observações"
         error={form.formState.errors.observacoes?.message}
@@ -276,35 +274,30 @@ export function LeadershipForm({
           placeholder="Observações adicionais"
         />
       </Field>
+
       {serverError ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {serverError}
         </div>
       ) : null}
-      {successMessage ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-          {successMessage}
-        </div>
-      ) : null}
+
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        O sistema não define valor de voto. Você informa custo, votos reais e
+        potencial, e o CRM calcula automaticamente o custo por voto para análise
+        de eficiência.
+      </div>
+
       <div className="flex flex-wrap gap-3">
         <Button type="submit" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting
             ? "Salvando..."
-            : variant === "public"
-              ? "Enviar cadastro"
-              : mode === "create"
-                ? "Cadastrar liderança"
-                : "Salvar alterações"}
+            : mode === "create"
+              ? "Cadastrar liderança"
+              : "Salvar alterações"}
         </Button>
-        {variant === "internal" ? (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => router.back()}
-          >
-            Cancelar
-          </Button>
-        ) : null}
+        <Button type="button" variant="secondary" onClick={() => router.back()}>
+          Cancelar
+        </Button>
       </div>
     </form>
   );

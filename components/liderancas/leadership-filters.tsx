@@ -4,11 +4,11 @@ import { LeadershipStatus, PotentialLevel } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useId, useMemo, useState } from "react";
 
-import { POTENTIAL_METADATA } from "@/lib/constants/potential";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { POTENTIAL_METADATA } from "@/lib/constants/potential";
 
 type FiltersProps = {
   cities: string[];
@@ -21,6 +21,9 @@ type FiltersProps = {
     faixaPotencial?: PotentialLevel;
     status?: LeadershipStatus;
     responsavelId?: string;
+    minIndicacoes?: number;
+    minScore?: number;
+    maxCostPerVote?: number;
     startDate?: string;
     endDate?: string;
   };
@@ -50,6 +53,9 @@ export function LeadershipFilters({
     faixaPotencial: initialValues.faixaPotencial ?? "",
     status: initialValues.status ?? "",
     responsavelId: initialValues.responsavelId ?? "",
+    minIndicacoes: initialValues.minIndicacoes?.toString() ?? "",
+    minScore: initialValues.minScore?.toString() ?? "",
+    maxCostPerVote: initialValues.maxCostPerVote?.toString() ?? "",
     startDate: initialValues.startDate ?? "",
     endDate: initialValues.endDate ?? ""
   });
@@ -84,6 +90,9 @@ export function LeadershipFilters({
       faixaPotencial: "",
       status: "",
       responsavelId: "",
+      minIndicacoes: "",
+      minScore: "",
+      maxCostPerVote: "",
       startDate: "",
       endDate: ""
     });
@@ -96,12 +105,13 @@ export function LeadershipFilters({
         {showSearch ? (
           <Field label="Busca textual">
             <Input
-              placeholder="Nome, telefone, email ou cidade"
+              placeholder="Nome, telefone, e-mail ou cidade"
               value={values.search}
               onChange={(event) => handleChange("search", event.target.value)}
             />
           </Field>
         ) : null}
+
         <Field
           label="Cidade"
           hint="Digite para buscar entre os municípios disponíveis"
@@ -118,9 +128,10 @@ export function LeadershipFilters({
             ))}
           </datalist>
         </Field>
+
         <Field
           label="Estado"
-          hint={lockedState ? "Definido pelo admin global" : undefined}
+          hint={lockedState ? "Definido pelo escopo atual" : undefined}
         >
           <Select
             value={values.estado}
@@ -135,12 +146,11 @@ export function LeadershipFilters({
             ))}
           </Select>
         </Field>
+
         <Field label="Faixa de potencial">
           <Select
             value={values.faixaPotencial}
-            onChange={(event) =>
-              handleChange("faixaPotencial", event.target.value)
-            }
+            onChange={(event) => handleChange("faixaPotencial", event.target.value)}
           >
             <option value="">Todas</option>
             {Object.entries(POTENTIAL_METADATA).map(([value, metadata]) => (
@@ -150,6 +160,7 @@ export function LeadershipFilters({
             ))}
           </Select>
         </Field>
+
         <Field label="Status">
           <Select
             value={values.status}
@@ -161,13 +172,12 @@ export function LeadershipFilters({
             <option value={LeadershipStatus.PENDING}>Pendente</option>
           </Select>
         </Field>
+
         {showResponsible ? (
           <Field label="Responsável">
             <Select
               value={values.responsavelId}
-              onChange={(event) =>
-                handleChange("responsavelId", event.target.value)
-              }
+              onChange={(event) => handleChange("responsavelId", event.target.value)}
             >
               <option value="">Todos</option>
               {users.map((user) => (
@@ -178,6 +188,36 @@ export function LeadershipFilters({
             </Select>
           </Field>
         ) : null}
+
+        <Field label="Mín. indicações">
+          <Input
+            type="number"
+            min={0}
+            value={values.minIndicacoes}
+            onChange={(event) => handleChange("minIndicacoes", event.target.value)}
+          />
+        </Field>
+
+        <Field label="Score mínimo">
+          <Input
+            type="number"
+            min={0}
+            step="0.01"
+            value={values.minScore}
+            onChange={(event) => handleChange("minScore", event.target.value)}
+          />
+        </Field>
+
+        <Field label="Custo/voto até">
+          <Input
+            type="number"
+            min={0}
+            step="0.01"
+            value={values.maxCostPerVote}
+            onChange={(event) => handleChange("maxCostPerVote", event.target.value)}
+          />
+        </Field>
+
         {showPeriod ? (
           <Field label="Cadastro de">
             <Input
@@ -187,6 +227,7 @@ export function LeadershipFilters({
             />
           </Field>
         ) : null}
+
         {showPeriod ? (
           <Field label="Cadastro até">
             <Input
@@ -197,6 +238,7 @@ export function LeadershipFilters({
           </Field>
         ) : null}
       </div>
+
       <div className="mt-4 flex flex-wrap gap-3">
         <Button onClick={applyFilters}>Aplicar filtros</Button>
         <Button variant="secondary" onClick={clearFilters}>

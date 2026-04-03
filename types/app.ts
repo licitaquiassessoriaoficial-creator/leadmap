@@ -30,11 +30,15 @@ export const leadershipDetailInclude = {
     select: {
       id: true,
       nome: true,
+      whatsapp: true,
       telefone: true,
       fotoPerfilUrl: true,
       cidade: true,
       estado: true,
       potencialVotosEstimado: true,
+      votosReais: true,
+      custoPorVoto: true,
+      scoreLideranca: true,
       quantidadeIndicacoes: true,
       status: true,
       createdAt: true
@@ -42,6 +46,17 @@ export const leadershipDetailInclude = {
     orderBy: {
       createdAt: "desc"
     }
+  },
+  referralSignups: {
+    orderBy: {
+      createdAt: "desc"
+    }
+  },
+  performanceHistory: {
+    orderBy: {
+      dataReferencia: "desc"
+    },
+    take: 12
   },
   cidadesResponsaveis: {
     include: {

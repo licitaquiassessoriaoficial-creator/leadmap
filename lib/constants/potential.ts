@@ -35,7 +35,7 @@ export const POTENTIAL_METADATA: Record<
     chartColor: "#f97316"
   },
   [PotentialLevel.MEDIUM]: {
-    label: "Medio",
+    label: "Médio",
     badgeClassName:
       "bg-sky-100 text-sky-700 ring-1 ring-inset ring-sky-200",
     markerClassName: "bg-sky-500",

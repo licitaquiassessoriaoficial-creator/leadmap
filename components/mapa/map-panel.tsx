@@ -9,7 +9,10 @@ type CityPoint = {
   id: string;
   nome: string;
   estado: string;
+  codigoIbge?: string | null;
   totalEleitores: number;
+  metaVotosCidade?: number | null;
+  targetVotes: number;
   latitude: number | null;
   longitude: number | null;
   totalResponsaveis: number;
@@ -17,6 +20,8 @@ type CityPoint = {
   votosRestantes: number;
   progresso: number;
   indicacoes: number;
+  custoPorVotoMedio?: number | null;
+  priorityReason: string;
   liderancas: LeadershipWithRelations[];
 };
 
@@ -27,6 +32,7 @@ type CoverageRow = {
   estado: string;
   fotoPerfilUrl: string | null;
   totalCidades: number;
+  scoreLideranca: number;
 };
 
 const LeadershipMap = dynamic(

@@ -1,6 +1,9 @@
 import { Role } from "@prisma/client";
 
-import { countLeaderships, listRanking } from "@/repositories/leadership-repository";
+import {
+  countLeaderships,
+  listRanking
+} from "@/repositories/leadership-repository";
 import { getCampaignScope } from "@/services/campaign-settings-service";
 import { getScopedLeadershipUserIds } from "@/services/user-service";
 import { rankingQuerySchema } from "@/validations/leadership";
@@ -23,12 +26,16 @@ export async function getRankingData(
   const query = rankingQuerySchema.parse({
     page: rawQuery.page,
     pageSize: rawQuery.pageSize,
+    sortBy: rawQuery.sortBy,
     search: rawQuery.search,
     cidade: rawQuery.cidade,
     estado: enforcedState ?? rawQuery.estado,
     faixaPotencial: rawQuery.faixaPotencial,
     status: rawQuery.status,
     responsavelId: rawQuery.responsavelId,
+    minIndicacoes: rawQuery.minIndicacoes,
+    minScore: rawQuery.minScore,
+    maxCostPerVote: rawQuery.maxCostPerVote,
     startDate: rawQuery.startDate,
     endDate: rawQuery.endDate
   });
@@ -41,11 +48,14 @@ export async function getRankingData(
     status: query.status,
     responsavelId: query.responsavelId,
     responsavelIds,
+    minIndicacoes: query.minIndicacoes,
+    minScore: query.minScore,
+    maxCostPerVote: query.maxCostPerVote,
     ...parseDateRange(query.startDate, query.endDate)
   };
 
   const [items, total] = await Promise.all([
-    listRanking(filters, query.page, query.pageSize),
+    listRanking(filters, query.page, query.pageSize, query.sortBy),
     countLeaderships(filters)
   ]);
 

@@ -9,11 +9,12 @@ import {
 import Link from "next/link";
 import { useMemo } from "react";
 
+import { CostEfficiencyBadge } from "@/components/shared/cost-efficiency-badge";
 import { PotentialBadge } from "@/components/shared/potential-badge";
 import { ProfileAvatar } from "@/components/shared/profile-avatar";
-import type { LeadershipWithRelations } from "@/types/app";
-import { calculateCostPerVote } from "@/lib/domain/leadership";
+import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { formatCurrency, formatInteger } from "@/lib/utils";
+import type { LeadershipWithRelations } from "@/types/app";
 
 export function RankingTable({
   data,
@@ -57,25 +58,50 @@ export function RankingTable({
         cell: ({ row }) => formatInteger(row.original.quantidadeIndicacoes)
       },
       {
-        header: "Votos estimados",
+        header: "Votos",
         cell: ({ row }) => (
-          <div className="space-y-2">
+          <div className="space-y-1">
             <p className="font-medium text-slate-900">
-              {formatInteger(row.original.potencialVotosEstimado)}
+              Potencial: {formatInteger(row.original.potencialVotosEstimado)}
+            </p>
+            <p className="text-xs text-slate-500">
+              Reais: {formatInteger(row.original.votosReais ?? 0)}
             </p>
             <PotentialBadge level={row.original.faixaPotencial} />
           </div>
         )
       },
       {
+        header: "Custo total",
+        cell: ({ row }) => formatCurrency(row.original.custoTotal)
+      },
+      {
         header: "Custo por voto",
-        cell: ({ row }) =>
-          formatCurrency(
-            calculateCostPerVote(
-              row.original.custoTotal,
-              row.original.potencialVotosEstimado
-            )
-          )
+        cell: ({ row }) => (
+          <div className="space-y-2">
+            <p className="font-medium text-slate-900">
+              {row.original.custoPorVoto == null
+                ? "Aguardando votos"
+                : formatCurrency(row.original.custoPorVoto)}
+            </p>
+            <CostEfficiencyBadge value={row.original.custoPorVoto} />
+          </div>
+        )
+      },
+      {
+        header: "Score",
+        cell: ({ row }) => (
+          <div className="space-y-1">
+            <p className="font-medium text-slate-900">
+              {row.original.scoreLideranca.toFixed(2)}
+            </p>
+            <LeadershipStatusBadge status={row.original.status} />
+          </div>
+        )
+      },
+      {
+        header: "Cidades",
+        cell: ({ row }) => formatInteger(row.original.cidadesResponsaveis.length)
       }
     ],
     [page, pageSize]

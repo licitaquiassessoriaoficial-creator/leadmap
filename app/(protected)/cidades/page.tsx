@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/lib/auth";
-import { formatInteger, formatPercent } from "@/lib/utils";
+import { buildQueryString, formatCurrency, formatInteger, formatPercent } from "@/lib/utils";
 import { getCitiesCoverageSnapshot } from "@/services/city-service";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -42,15 +42,17 @@ export default async function CitiesPage({
     ? coverage.missingCityList.filter((city) =>
         city.nome.toLowerCase().includes(cityQuery.toLowerCase())
       )
-    : [];
+    : coverage.priorityCities.filter((city) => city.totalResponsaveis === 0).slice(0, 8);
+  const exportHref = `/api/export/cidades?${buildQueryString(resolvedSearchParams)}`;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Cidades"
-        description="Cobertura territorial, metas de votos e distribuição de responsabilidades em SP."
+        description="Cobertura territorial, metas de votos, prioridade automática e distribuição de lideranças em SP."
       />
-      <div className="grid gap-4 md:grid-cols-4">
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <StatCard
           label="Total de cidades"
           value={formatInteger(coverage.totalCities)}
@@ -64,24 +66,40 @@ export default async function CitiesPage({
           value={formatInteger(coverage.missingCities)}
         />
         <StatCard
-          label="Meta de votos"
-          value={formatInteger(coverage.metaVotos)}
+          label="Cobertura territorial"
+          value={formatPercent(coverage.coveragePercent)}
+        />
+        <StatCard
+          label="Eleitores cobertos"
+          value={formatPercent(coverage.percentualEleitoresCobertos)}
         />
       </div>
+
       <Card className="space-y-4">
-        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">
-              Consulta por cidade
+              Consulta por município
             </h3>
             <p className="text-sm text-slate-500">
               {formatInteger(coverage.totalCities)} municípios disponíveis para
-              consulta em SP.
+              consulta em São Paulo.
             </p>
           </div>
-          <Link href="/mapa" className="text-sm font-semibold text-brand-700">
-            Abrir mapa
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/mapa"
+              className="inline-flex items-center justify-center rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+            >
+              Abrir mapa
+            </Link>
+            <a
+              href={exportHref}
+              className="inline-flex items-center justify-center rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+            >
+              Exportar CSV
+            </a>
+          </div>
         </div>
         <form className="grid gap-3 md:grid-cols-[1fr,auto,auto]" method="get">
           <div className="space-y-2">
@@ -110,20 +128,23 @@ export default async function CitiesPage({
         <p className="text-sm text-slate-500">
           {cityQuery
             ? `${formatInteger(visibleCities.length)} resultado(s) para "${cityQuery}".`
-            : "Digite o nome da cidade para consultar cobertura, meta de votos e responsáveis."}
+            : "Digite o nome da cidade para consultar cobertura, meta de votos, custo médio e responsáveis."}
         </p>
       </Card>
-      <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
+
+      <div className="grid gap-6 xl:grid-cols-[1.15fr,0.85fr]">
         <Card className="space-y-4">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">
-              Resultado da consulta
+              {cityQuery ? "Resultado da consulta" : "Cidades prioritárias"}
             </h3>
             <p className="text-sm text-slate-500">
-              Abra o detalhe da cidade para ver lideranças, votos captados e
-              faltantes.
+              {cityQuery
+                ? "Abra o detalhe da cidade para ver lideranças, meta, votos captados e faltantes."
+                : "Recorte automático das cidades com maior necessidade de atuação."}
             </p>
           </div>
+
           {cityQuery ? (
             visibleCities.length ? (
               <div className="space-y-3">
@@ -131,12 +152,21 @@ export default async function CitiesPage({
                   <Link
                     key={city.id}
                     href={`/cidades/${city.id}`}
-                    className="grid gap-3 rounded-2xl border border-slate-200 px-4 py-4 transition hover:border-brand-200 hover:bg-brand-50 md:grid-cols-[1fr,140px,120px,120px]"
+                    className="grid gap-3 rounded-2xl border border-slate-200 px-4 py-4 transition hover:border-brand-200 hover:bg-brand-50 md:grid-cols-[1.2fr,140px,140px,140px]"
                   >
                     <div>
                       <p className="font-medium text-slate-900">{city.nome}</p>
                       <p className="text-xs text-slate-500">
-                        {city.totalResponsaveis} lideranças responsáveis
+                        {city.totalResponsaveis} lideranças responsáveis •{" "}
+                        {city.priorityReason}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Meta
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {formatInteger(city.targetVotes)}
                       </p>
                     </div>
                     <div>
@@ -145,14 +175,6 @@ export default async function CitiesPage({
                       </p>
                       <p className="mt-1 text-sm font-semibold text-slate-900">
                         {formatInteger(city.votosCaptados)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
-                        Faltante
-                      </p>
-                      <p className="mt-1 text-sm font-semibold text-slate-900">
-                        {formatInteger(city.votosRestantes)}
                       </p>
                     </div>
                     <div>
@@ -172,12 +194,56 @@ export default async function CitiesPage({
               </p>
             )
           ) : (
-            <div className="rounded-2xl bg-slate-50 px-4 py-6 text-sm text-slate-600">
-              Digite o nome da cidade que deseja consultar. Isso evita navegar
-              por uma lista extensa dos 645 municípios.
+            <div className="space-y-3">
+              {coverage.priorityCities.map((city) => (
+                <Link
+                  key={city.id}
+                  href={`/cidades/${city.id}`}
+                  className="rounded-2xl border border-slate-200 px-4 py-4 transition hover:border-brand-200 hover:bg-brand-50"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-medium text-slate-900">{city.nome}</p>
+                      <p className="text-xs text-slate-500">{city.priorityReason}</p>
+                    </div>
+                    <span className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">
+                      {formatPercent(city.progresso)}
+                    </span>
+                  </div>
+                  <div className="mt-3 grid gap-3 md:grid-cols-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Eleitores
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {formatInteger(city.totalEleitores)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Captado
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {formatInteger(city.votosCaptados)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-slate-400">
+                        Custo/voto médio
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {city.custoPorVotoMedio == null
+                          ? "Aguardando votos"
+                          : formatCurrency(city.custoPorVotoMedio)}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           )}
         </Card>
+
         <div className="space-y-6">
           <Card className="space-y-4">
             <div>
@@ -187,18 +253,23 @@ export default async function CitiesPage({
               <p className="text-sm text-slate-500">
                 {cityQuery
                   ? "Municípios sem cobertura que combinam com a busca atual."
-                  : "Panorama das cidades ainda sem cobertura ativa."}
+                  : "Primeiras cidades sem liderança, priorizadas por impacto."}
               </p>
             </div>
             <div className="space-y-2">
               {missingCityResults.length ? (
                 missingCityResults.map((city) => (
-                  <div
+                  <Link
                     key={city.id}
-                    className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700"
+                    href={`/cidades/${city.id}`}
+                    className="block rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700 transition hover:bg-brand-50"
                   >
-                    {city.nome}
-                  </div>
+                    <p className="font-medium text-slate-900">{city.nome}</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {formatInteger(city.totalEleitores)} eleitores •{" "}
+                      {city.priorityReason}
+                    </p>
+                  </Link>
                 ))
               ) : (
                 <p className="text-sm text-slate-500">
@@ -209,6 +280,7 @@ export default async function CitiesPage({
               )}
             </div>
           </Card>
+
           <Card className="space-y-4">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">
@@ -231,9 +303,14 @@ export default async function CitiesPage({
                       {item.cidade} / {item.estado}
                     </p>
                   </div>
-                  <span className="text-sm font-semibold text-slate-900">
-                    {item.totalCidades}
-                  </span>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-slate-900">
+                      {item.totalCidades}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Score {item.scoreLideranca.toFixed(2)}
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>

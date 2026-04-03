@@ -1,16 +1,16 @@
+import { LeadershipFilters } from "@/components/liderancas/leadership-filters";
+import { LeadershipTable } from "@/components/liderancas/leadership-table";
 import { FeedbackBanner } from "@/components/shared/feedback-banner";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationControls } from "@/components/shared/pagination-controls";
-import { LeadershipFilters } from "@/components/liderancas/leadership-filters";
-import { LeadershipTable } from "@/components/liderancas/leadership-table";
 import { Card } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
-import { formatInteger } from "@/lib/utils";
-import { getVisibleUsersForLeadershipFilters } from "@/services/user-service";
+import { buildQueryString, formatInteger } from "@/lib/utils";
 import {
   getLeadershipFilters,
   getLeadershipList
 } from "@/services/leadership-service";
+import { getVisibleUsersForLeadershipFilters } from "@/services/user-service";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -36,16 +36,37 @@ export default async function LeadershipListPage({
     typeof resolvedSearchParams.feedback === "string"
       ? decodeURIComponent(resolvedSearchParams.feedback)
       : undefined;
+  const exportHref = `/api/export/liderancas?${buildQueryString(
+    resolvedSearchParams
+  )}`;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Lideranças"
-        description="Listagem com filtros, paginação e acesso rápido ao detalhe."
+        description="Listagem operacional com busca textual, filtros avançados, score e eficiência."
         action="Nova liderança"
         actionHref="/liderancas/nova"
       />
       <FeedbackBanner message={feedback} />
+
+      <Card className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-sm font-medium text-slate-900">
+            Filtre por território, score, custo por voto e indicações.
+          </p>
+          <p className="text-sm text-slate-500">
+            A exportação gera o mesmo recorte que você está vendo na tabela.
+          </p>
+        </div>
+        <a
+          href={exportHref}
+          className="inline-flex items-center justify-center rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+        >
+          Exportar CSV
+        </a>
+      </Card>
+
       <LeadershipFilters
         cities={filterOptions.cities}
         states={filterOptions.states}
@@ -57,12 +78,16 @@ export default async function LeadershipListPage({
           faixaPotencial: listData.filters.faixaPotencial,
           status: listData.filters.status,
           responsavelId: listData.filters.responsavelId,
+          minIndicacoes: listData.filters.minIndicacoes,
+          minScore: listData.filters.minScore,
+          maxCostPerVote: listData.filters.maxCostPerVote,
           startDate: listData.filters.startDate,
           endDate: listData.filters.endDate
         }}
         lockedState={filterOptions.enforcedState}
         showResponsible={session.user.role !== "OPERATOR"}
       />
+
       <Card className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-sm text-slate-500">Registros encontrados</p>
@@ -74,6 +99,7 @@ export default async function LeadershipListPage({
           Página atual com {formatInteger(listData.items.length)} lideranças.
         </p>
       </Card>
+
       <LeadershipTable data={listData.items} />
       <PaginationControls page={listData.page} totalPages={listData.totalPages} />
     </div>

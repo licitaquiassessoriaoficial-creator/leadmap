@@ -22,6 +22,10 @@ const optionalNumberField = z
     message: "Informe um valor maior ou igual a zero"
   });
 
+const optionalIntegerField = optionalNumberField.transform((value) =>
+  value === undefined ? undefined : Math.trunc(value)
+);
+
 const optionalImageUrlField = optionalStringField.refine(
   (value) =>
     !value ||
@@ -51,15 +55,28 @@ export const leadershipCreateSchema = z.object({
     .number()
     .int()
     .min(0, "Potencial deve ser maior ou igual a zero"),
+  votosReais: optionalIntegerField,
   custoTotal: optionalNumberField,
+  metaVotosIndividual: optionalIntegerField,
   cidadesResponsaveisIds: z.array(z.string().trim().min(1)).default([]),
   status: z.nativeEnum(LeadershipStatus).optional()
 });
 
 export const leadershipUpdateSchema = leadershipCreateSchema.partial();
 
-export const publicLeadershipCreateSchema = leadershipCreateSchema.extend({
-  indicadoPorId: optionalStringField
+export const publicLeadershipCreateSchema = z.object({
+  nome: z.string().trim().min(3, "Informe o nome"),
+  telefone: z.string().trim().min(8, "Informe um telefone válido"),
+  email: optionalStringField.refine(
+    (value) => !value || z.string().email().safeParse(value).success,
+    "Informe um e-mail válido"
+  ),
+  cidadeId: z.string().trim().min(1, "Selecione a cidade"),
+  estado: z.string().trim().min(2, "Informe o estado").default("SP"),
+  observacoes: optionalStringField,
+  potencialVotosEstimado: optionalIntegerField,
+  votosReais: optionalIntegerField,
+  origemRef: optionalStringField
 });
 
 export const leadershipQuerySchema = z.object({
@@ -71,12 +88,23 @@ export const leadershipQuerySchema = z.object({
   faixaPotencial: z.nativeEnum(PotentialLevel).optional(),
   status: z.nativeEnum(LeadershipStatus).optional(),
   responsavelId: optionalStringField,
+  minIndicacoes: optionalIntegerField,
+  minScore: optionalNumberField,
+  maxCostPerVote: optionalNumberField,
   startDate: optionalStringField,
   endDate: optionalStringField
 });
 
+export const rankingSortSchema = z.enum([
+  "INDICATIONS_DESC",
+  "POTENTIAL_DESC",
+  "COST_PER_VOTE_ASC",
+  "SCORE_DESC"
+]);
+
 export const rankingQuerySchema = leadershipQuerySchema.extend({
-  pageSize: z.coerce.number().int().min(1).max(50).default(15)
+  pageSize: z.coerce.number().int().min(1).max(50).default(15),
+  sortBy: rankingSortSchema.default("INDICATIONS_DESC")
 });
 
 export const usersQuerySchema = z.object({
@@ -92,3 +120,4 @@ export type PublicLeadershipCreateInput = z.infer<
 >;
 export type LeadershipQueryInput = z.infer<typeof leadershipQuerySchema>;
 export type RankingQueryInput = z.infer<typeof rankingQuerySchema>;
+export type RankingSortInput = z.infer<typeof rankingSortSchema>;

@@ -28,18 +28,21 @@ export default async function MapPage({
     <div className="space-y-6">
       <PageHeader
         title="Mapa de lideranças"
-        description="Visualização focada em São Paulo, com pins por potencial e cobertura por cidade."
+        description="Visualização focada em São Paulo, com pins por potencial, score e cobertura territorial."
       />
       <LeadershipFilters
         cities={filterOptions.cities}
         states={filterOptions.states}
         initialValues={{
+          search: mapData.filters.search,
           cidade: mapData.filters.cidade,
           estado: mapData.filters.estado,
           faixaPotencial: mapData.filters.faixaPotencial,
-          status: mapData.filters.status
+          status: mapData.filters.status,
+          minIndicacoes: mapData.filters.minIndicacoes,
+          minScore: mapData.filters.minScore,
+          maxCostPerVote: mapData.filters.maxCostPerVote
         }}
-        showSearch={false}
         showResponsible={false}
         showPeriod={false}
         lockedState={filterOptions.enforcedState ?? "SP"}
