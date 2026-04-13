@@ -12,6 +12,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { findCityOptionByName } from "@/lib/domain/cities";
 import { calculateCostPerVote } from "@/lib/domain/leadership";
 import { formatCurrency } from "@/lib/utils";
 import type { LeadershipWithDetails } from "@/types/app";
@@ -32,14 +33,6 @@ type LeadershipFormProps = {
   cityOptions: CityOption[];
   lockedState?: string;
 };
-
-function normalizeCityName(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-}
 
 export function LeadershipForm({
   mode,
@@ -90,9 +83,7 @@ export function LeadershipForm({
   function handleCityChange(value: string) {
     setCitySearch(value);
 
-    const matchedCity = cityOptions.find(
-      (item) => normalizeCityName(item.nome) === normalizeCityName(value)
-    );
+    const matchedCity = findCityOptionByName(cityOptions, value);
 
     form.setValue("cidadeId", matchedCity?.id ?? "", {
       shouldDirty: true,

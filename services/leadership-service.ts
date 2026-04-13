@@ -2,6 +2,10 @@ import { LeadershipStatus, LocationStatus, Role } from "@prisma/client";
 
 import { classifyPotentialLevel } from "@/lib/constants/potential";
 import {
+  isSupportedStateCityName,
+  sanitizeStateCityOptions
+} from "@/lib/domain/cities";
+import {
   buildWhatsAppNumber,
   calculateCostPerVote,
   calculateGoalProgress,
@@ -105,6 +109,10 @@ async function resolveCity(cidadeId: string, enforcedState?: string) {
 
   if (enforcedState && city.estado !== enforcedState) {
     throw new Error("Cidade fora do escopo configurado");
+  }
+
+  if (!isSupportedStateCityName(city.nome, city.estado)) {
+    throw new Error("Cidade fora da base oficial do estado configurado");
   }
 
   return city;
@@ -285,12 +293,13 @@ function parseDateRange(startDate?: string, endDate?: string) {
 export async function getLeadershipFilters(role?: Role | null, userId?: string) {
   const { enforcedState } = await resolveLeadershipScope(userId, role);
   await ensureStateCityBase(enforcedState ?? "SP");
-  const [cities, states] = await Promise.all([
+  const [registeredCities, states] = await Promise.all([
     listRegisteredCities({
       estado: enforcedState
     }),
     listRegisteredStates()
   ]);
+  const cities = sanitizeStateCityOptions(registeredCities);
 
   return {
     cities: cities.map((item) => item.nome),

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { findCityOptionByName } from "@/lib/domain/cities";
 import {
   publicLeadershipCreateSchema,
   type PublicLeadershipCreateInput
@@ -48,9 +49,7 @@ export function PublicSignupForm({
   function handleCityChange(value: string) {
     setCitySearch(value);
 
-    const match = cityOptions.find(
-      (option) => option.nome.toLowerCase() === value.trim().toLowerCase()
-    );
+    const match = findCityOptionByName(cityOptions, value);
 
     form.setValue("cidadeId", match?.id ?? "", {
       shouldDirty: true,
