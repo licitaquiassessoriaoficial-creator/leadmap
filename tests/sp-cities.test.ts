@@ -12,4 +12,17 @@ describe("SP city base", () => {
 
     expect(new Set(names).size).toBe(names.length);
   });
+
+  it("includes IBGE codes and coordinates for every municipality", () => {
+    const incompleteCities = SP_CITIES.filter(
+      (city) =>
+        !city.codigoIbge ||
+        city.latitude == null ||
+        city.longitude == null ||
+        Number.isNaN(city.latitude) ||
+        Number.isNaN(city.longitude)
+    );
+
+    expect(incompleteCities).toEqual([]);
+  });
 });

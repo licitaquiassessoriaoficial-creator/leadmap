@@ -363,12 +363,28 @@ export function listMapLeaderships(filters: LeadershipFilters) {
   return prisma.leadership.findMany({
     where: {
       ...buildWhere(filters),
-      latitude: {
-        not: null
-      },
-      longitude: {
-        not: null
-      }
+      OR: [
+        {
+          latitude: {
+            not: null
+          },
+          longitude: {
+            not: null
+          }
+        },
+        {
+          city: {
+            is: {
+              latitude: {
+                not: null
+              },
+              longitude: {
+                not: null
+              }
+            }
+          }
+        }
+      ]
     },
     include: leadershipListInclude,
     orderBy: [{ scoreLideranca: "desc" }, { cidade: "asc" }, { nome: "asc" }]

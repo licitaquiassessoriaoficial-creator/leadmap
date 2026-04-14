@@ -170,7 +170,10 @@ export function LeadershipMap({
           ))}
 
           {points.map((point) => {
-            if (point.latitude == null || point.longitude == null) {
+            const pointLatitude = point.latitude ?? point.city?.latitude ?? null;
+            const pointLongitude = point.longitude ?? point.city?.longitude ?? null;
+
+            if (pointLatitude == null || pointLongitude == null) {
               return null;
             }
 
@@ -182,7 +185,7 @@ export function LeadershipMap({
             return (
               <Marker
                 key={point.id}
-                position={[point.latitude, point.longitude]}
+                position={[pointLatitude, pointLongitude]}
                 icon={markerIcons[point.faixaPotencial as PotentialLevel]}
               >
                 <Popup>

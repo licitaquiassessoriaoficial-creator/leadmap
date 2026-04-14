@@ -5,6 +5,104 @@ import {
 } from "@/lib/domain/cities";
 
 const syncRegistry = new Map<string, Promise<void>>();
+type ExpectedCityRecord = (ReturnType<typeof getExpectedStateCities>)[number];
+type ExistingCitySnapshot = {
+  id: string;
+  nome: string;
+  estado: string;
+  totalEleitores: number;
+  codigoIbge: string | null;
+  latitude: number | null;
+  longitude: number | null;
+};
+
+function buildExactCityKey(nome: string, estado: string) {
+  return `${nome}:${estado}`;
+}
+
+function buildNormalizedCityKey(nome: string, estado: string) {
+  return `${normalizeCityLookupValue(nome)}:${estado}`;
+}
+
+function buildCityLookup(existingCities: ExistingCitySnapshot[]) {
+  const exactExistingByKey = new Map(
+    existingCities.map((city) => [buildExactCityKey(city.nome, city.estado), city])
+  );
+  const normalizedExistingByKey = new Map<string, ExistingCitySnapshot[]>();
+
+  for (const city of existingCities) {
+    const key = buildNormalizedCityKey(city.nome, city.estado);
+    const current = normalizedExistingByKey.get(key) ?? [];
+    current.push(city);
+    normalizedExistingByKey.set(key, current);
+  }
+
+  return {
+    exactExistingByKey,
+    normalizedExistingByKey
+  };
+}
+
+function findMatchingExistingCity(
+  city: ExpectedCityRecord,
+  lookup: ReturnType<typeof buildCityLookup>,
+  matchedExistingCityIds: Set<string>
+) {
+  const exactMatch = lookup.exactExistingByKey.get(buildExactCityKey(city.nome, city.estado));
+
+  if (exactMatch && !matchedExistingCityIds.has(exactMatch.id)) {
+    return exactMatch;
+  }
+
+  const normalizedMatches =
+    lookup.normalizedExistingByKey.get(buildNormalizedCityKey(city.nome, city.estado)) ?? [];
+
+  return normalizedMatches.find((item) => !matchedExistingCityIds.has(item.id));
+}
+
+function hasCitySnapshotDrift(city: ExpectedCityRecord, existing: ExistingCitySnapshot) {
+  return !(
+    existing.nome === city.nome &&
+    existing.totalEleitores === city.totalEleitores &&
+    existing.codigoIbge === city.codigoIbge &&
+    existing.latitude === city.latitude &&
+    existing.longitude === city.longitude
+  );
+}
+
+export function stateCityBaseNeedsSync(
+  expectedCities: ExpectedCityRecord[],
+  existingCities: ExistingCitySnapshot[]
+) {
+  if (expectedCities.length !== existingCities.length) {
+    return true;
+  }
+
+  const expectedCityNames = new Set(expectedCities.map((city) => city.nome));
+
+  if (existingCities.some((city) => !expectedCityNames.has(city.nome))) {
+    return true;
+  }
+
+  const lookup = buildCityLookup(existingCities);
+  const matchedExistingCityIds = new Set<string>();
+
+  for (const city of expectedCities) {
+    const existing = findMatchingExistingCity(city, lookup, matchedExistingCityIds);
+
+    if (!existing) {
+      return true;
+    }
+
+    matchedExistingCityIds.add(existing.id);
+
+    if (hasCitySnapshotDrift(city, existing)) {
+      return true;
+    }
+  }
+
+  return matchedExistingCityIds.size !== existingCities.length;
+}
 
 export function getExpectedCityBaseCount(state = "SP") {
   return getExpectedStateCities(state).length;
@@ -24,45 +122,24 @@ async function syncStateCityBase(state = "SP") {
       nome: true,
       estado: true,
       totalEleitores: true,
+      codigoIbge: true,
       latitude: true,
       longitude: true
     }
   });
-
-  const exactExistingByKey = new Map(
-    existingCities.map((city) => [`${city.nome}:${city.estado}`, city])
-  );
-  const normalizedExistingByKey = new Map<string, typeof existingCities>();
-
-  for (const city of existingCities) {
-    const key = `${normalizeCityLookupValue(city.nome)}:${city.estado}`;
-    const current = normalizedExistingByKey.get(key) ?? [];
-    current.push(city);
-    normalizedExistingByKey.set(key, current);
-  }
+  const lookup = buildCityLookup(existingCities);
 
   const matchedExistingCityIds = new Set<string>();
 
   const missingCities = cities.filter((city) => {
-    const exactKey = `${city.nome}:${city.estado}`;
-    const exactMatch = exactExistingByKey.get(exactKey);
+    const existing = findMatchingExistingCity(city, lookup, matchedExistingCityIds);
 
-    if (exactMatch) {
-      matchedExistingCityIds.add(exactMatch.id);
+    if (existing) {
+      matchedExistingCityIds.add(existing.id);
       return false;
     }
 
-    const normalizedKey = `${normalizeCityLookupValue(city.nome)}:${city.estado}`;
-    const normalizedMatches = normalizedExistingByKey.get(normalizedKey) ?? [];
-    const normalizedMatch = normalizedMatches.find(
-      (item) => !matchedExistingCityIds.has(item.id)
-    );
-
-    if (normalizedMatch) {
-      matchedExistingCityIds.add(normalizedMatch.id);
-    }
-
-    return !normalizedMatch;
+    return true;
   });
 
   if (missingCities.length) {
@@ -74,24 +151,13 @@ async function syncStateCityBase(state = "SP") {
 
   const updates = cities
     .map((city) => {
-      const exactKey = `${city.nome}:${city.estado}`;
-      const exactMatch = exactExistingByKey.get(exactKey);
-      const normalizedKey = `${normalizeCityLookupValue(city.nome)}:${city.estado}`;
-      const normalizedMatch = (normalizedExistingByKey.get(normalizedKey) ?? []).find(
-        (item) => matchedExistingCityIds.has(item.id)
-      );
-      const existing = exactMatch ?? normalizedMatch;
+      const existing = findMatchingExistingCity(city, lookup, new Set());
 
       if (!existing) {
         return null;
       }
 
-      if (
-        existing.nome === city.nome &&
-        existing.totalEleitores === city.totalEleitores &&
-        existing.latitude === city.latitude &&
-        existing.longitude === city.longitude
-      ) {
+      if (!hasCitySnapshotDrift(city, existing)) {
         return null;
       }
 
@@ -100,6 +166,7 @@ async function syncStateCityBase(state = "SP") {
         data: {
           nome: city.nome,
           totalEleitores: city.totalEleitores,
+          codigoIbge: city.codigoIbge,
           latitude: city.latitude,
           longitude: city.longitude
         }
@@ -164,32 +231,28 @@ async function syncStateCityBase(state = "SP") {
 }
 
 export async function ensureStateCityBase(state = "SP") {
-  const expectedCount = getExpectedCityBaseCount(state);
+  const expectedCities = getExpectedStateCities(state);
+  const expectedCount = expectedCities.length;
 
   if (!expectedCount) {
     return;
   }
 
-  const currentCount = await prisma.city.count({
-    where: { estado: state }
+  const currentCities = await prisma.city.findMany({
+    where: { estado: state },
+    select: {
+      id: true,
+      nome: true,
+      estado: true,
+      totalEleitores: true,
+      codigoIbge: true,
+      latitude: true,
+      longitude: true
+    }
   });
 
-  if (currentCount === expectedCount) {
-    const hasUnexpectedCity = await prisma.city.findFirst({
-      where: {
-        estado: state,
-        nome: {
-          notIn: getExpectedStateCities(state).map((city) => city.nome)
-        }
-      },
-      select: {
-        id: true
-      }
-    });
-
-    if (!hasUnexpectedCity) {
-      return;
-    }
+  if (!stateCityBaseNeedsSync(expectedCities, currentCities)) {
+    return;
   }
 
   const pendingSync = syncRegistry.get(state);
