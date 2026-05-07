@@ -74,7 +74,7 @@ const sections = [
     items: [
       {
         title: "Como funciona",
-        text: "O assistente entende português natural. Você pode descrever uma liderança como falaria normalmente: "Maria Silva, (19) 99999-0000, Campinas, estima uns 300 votos"."
+        text: "O assistente entende português natural. Você pode descrever uma liderança como falaria normalmente: \"Maria Silva, (19) 99999-0000, Campinas, estima uns 300 votos\"."
       },
       {
         title: "Pré-preencher o formulário",
@@ -214,7 +214,7 @@ const sections = [
     items: [
       {
         title: "Use o chat para agilizar o cadastro",
-        text: "Em campo, anote nome, telefone, cidade e votos estimados. Depois, abra o chat, descreva tudo de uma vez e clique em "Pré-preencher formulário"."
+        text: "Em campo, anote nome, telefone, cidade e votos estimados. Depois, abra o chat, descreva tudo de uma vez e clique em \"Pré-preencher formulário\"."
       },
       {
         title: "Mantenha o status atualizado",
