@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LeadershipStatus } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ProfilePhotoUpload } from "@/components/liderancas/profile-photo-upload";
@@ -42,6 +42,7 @@ export function LeadershipForm({
   lockedState
 }: LeadershipFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const cityListId = useId();
   const initialCity = cityOptions.find((item) => item.id === initialData?.cidadeId);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -70,6 +71,31 @@ export function LeadershipForm({
       status: initialData?.status ?? LeadershipStatus.ACTIVE
     }
   });
+
+  // Pre-fill from URL query params (chat → form flow)
+  useEffect(() => {
+    if (mode !== "create" || initialData) return;
+    const nome = searchParams.get("nome");
+    const telefone = searchParams.get("telefone");
+    const cidadeNome = searchParams.get("cidadeNome");
+    const potencial = searchParams.get("potencial");
+    const email = searchParams.get("email");
+    const bairro = searchParams.get("bairro");
+    const observacoes = searchParams.get("observacoes");
+    if (!nome && !telefone) return;
+    if (nome) form.setValue("nome", nome);
+    if (telefone) form.setValue("telefone", telefone);
+    if (email) form.setValue("email", email);
+    if (bairro) form.setValue("bairro", bairro);
+    if (observacoes) form.setValue("observacoes", observacoes);
+    if (potencial) form.setValue("potencialVotosEstimado", Number(potencial));
+    if (cidadeNome) {
+      setCitySearch(cidadeNome);
+      const matched = findCityOptionByName(cityOptions, cidadeNome);
+      if (matched) form.setValue("cidadeId", matched.id, { shouldValidate: true });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const watchedCityId = form.watch("cidadeId");
   const watchedPotentialVotes = form.watch("potencialVotosEstimado");

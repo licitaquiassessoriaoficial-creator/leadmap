@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ChatRole = "user" | "assistant";
 
@@ -26,11 +27,41 @@ const systemPrompt =
   "Você é o assistente do LeadMap CRM, especializado em ajudar coordenadores a cadastrar novas lideranças políticas no sistema. " +
   "Ao cadastrar uma liderança, os campos obrigatórios são: Nome completo, Telefone (com DDD), Cidade (SP) e Votos estimados. " +
   "Campos opcionais: WhatsApp, E-mail, CPF, Bairro, Endereço, Foto de perfil (URL), Foto de capa (URL), Biografia, Custo total, Meta de votos individual, Status (Ativo/Pendente/Inativo), Observações e Cidades sob responsabilidade. " +
-  "Quando o usuário informar dados de uma liderança em linguagem natural (ex: nome, telefone, cidade), organize essas informações e liste os campos que ainda faltam. " +
+  "Quando o usuário informar dados de uma liderança em linguagem natural, organize-os e liste o que ainda falta. " +
+  "Quando você tiver nome completo, telefone, cidade e votos estimados, inclua ao final da sua resposta exatamente o bloco: " +
+  '[CADASTRO]{"nome":"...","telefone":"...","cidade":"...","potencialVotosEstimado":0,"email":"","bairro":"","observacoes":""}[/CADASTRO] ' +
+  "com os dados reais que o usuário forneceu (telefone: apenas dígitos com DDD, sem +55 e sem hífen). " +
   "Responda sempre em português, de forma objetiva e prática.";
 
+export type LeadershipDraft = {
+  nome: string;
+  telefone: string;
+  cidade: string;
+  potencialVotosEstimado: number;
+  email?: string;
+  bairro?: string;
+  observacoes?: string;
+};
+
+const DRAFT_RE = /\[CADASTRO\]([\s\S]*?)\[\/CADASTRO\]/;
+
+function parseDraft(content: string): { draft: LeadershipDraft | null; display: string } {
+  const match = DRAFT_RE.exec(content);
+  if (!match) return { draft: null, display: content };
+  try {
+    const draft = JSON.parse(match[1]) as LeadershipDraft;
+    const display = content.replace(match[0], "").trim();
+    return { draft, display };
+  } catch {
+    return { draft: null, display: content };
+  }
+}
+
+type StoredMessage = ChatMessage & { draft?: LeadershipDraft | null };
+
 export function ChatAssistant({ compact = false }: { compact?: boolean }) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const router = useRouter();
+  const [messages, setMessages] = useState<StoredMessage[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,11 +112,15 @@ export function ChatAssistant({ compact = false }: { compact?: boolean }) {
         return;
       }
 
+      const rawContent = payload.data?.content ?? "";
+      const { draft, display } = parseDraft(rawContent);
+
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: payload.data?.content ?? ""
+          content: display,
+          draft
         }
       ]);
     } catch {
@@ -96,6 +131,19 @@ export function ChatAssistant({ compact = false }: { compact?: boolean }) {
   }
 
   const prompts = compact ? compactQuickPrompts : quickPrompts;
+
+  function goToForm(draft: LeadershipDraft) {
+    const params = new URLSearchParams({
+      nome: draft.nome,
+      telefone: draft.telefone,
+      cidadeNome: draft.cidade,
+      potencial: String(draft.potencialVotosEstimado)
+    });
+    if (draft.email) params.set("email", draft.email);
+    if (draft.bairro) params.set("bairro", draft.bairro);
+    if (draft.observacoes) params.set("observacoes", draft.observacoes);
+    router.push(`/liderancas/nova?${params.toString()}`);
+  }
 
   if (compact) {
     return (
@@ -130,6 +178,15 @@ export function ChatAssistant({ compact = false }: { compact?: boolean }) {
               }
             >
               <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+              {message.draft ? (
+                <button
+                  type="button"
+                  onClick={() => goToForm(message.draft!)}
+                  className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-700"
+                >
+                  ✅ Pré-preencher formulário
+                </button>
+              ) : null}
             </div>
           ))}
           {isSending ? (
@@ -218,6 +275,15 @@ export function ChatAssistant({ compact = false }: { compact?: boolean }) {
                 {message.role === "user" ? "Voce" : "Assistente"}
               </p>
               <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+              {message.draft ? (
+                <button
+                  type="button"
+                  onClick={() => goToForm(message.draft!)}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
+                >
+                  ✅ Pré-preencher formulário de cadastro
+                </button>
+              ) : null}
             </div>
           ))}
 

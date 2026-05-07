@@ -22,21 +22,21 @@ export default function OsvaldoQuadroPage() {
       />
 
       <Card className="overflow-hidden p-0">
-        <div className="relative h-56 w-full md:h-72">
+        <div className="relative w-full">
           <Image
             src="/osvaldo-quadro-capa.jpg"
             alt="Osvaldo Quadro"
-            fill
-            className="object-cover"
+            width={1200}
+            height={500}
+            className="w-full object-contain"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-              Liderança em destaque
+          <div className="border-t border-slate-100 bg-white px-6 py-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+              Pré-candidato a Deputado Federal
             </p>
-            <h2 className="mt-2 text-3xl font-semibold">Osvaldo Quadro</h2>
-            <p className="mt-2 max-w-3xl text-sm text-white/85">
+            <h2 className="mt-1 text-2xl font-semibold text-slate-900">Osvaldo Quadro</h2>
+            <p className="mt-1 max-w-3xl text-sm text-slate-500">
               Empresário, cristão e nome que irá concorrer como deputado, com base política e história de vida ligadas a Campinas e ao empreendedorismo.
             </p>
           </div>

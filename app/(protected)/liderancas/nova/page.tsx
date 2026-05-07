@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { LeadershipForm } from "@/components/liderancas/leadership-form";
 import { PageHeader } from "@/components/shared/page-header";
 import { auth } from "@/lib/auth";
@@ -17,11 +19,13 @@ export default async function NewLeadershipPage() {
         title="Nova liderança"
         description="Cadastre uma nova liderança com geocodificação automática por cidade e estado."
       />
-      <LeadershipForm
-        mode="create"
-        lockedState={scope.enforcedState}
-        cityOptions={filterOptions.cityOptions}
-      />
+      <Suspense>
+        <LeadershipForm
+          mode="create"
+          lockedState={scope.enforcedState}
+          cityOptions={filterOptions.cityOptions}
+        />
+      </Suspense>
     </div>
   );
 }
