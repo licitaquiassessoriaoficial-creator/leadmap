@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Session } from "next-auth";
 
+import { FloatingChat } from "@/components/chat/floating-chat";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 
@@ -29,6 +30,7 @@ export function AppShell({
         <Header user={user} onMenuClick={() => setIsOpen((current) => !current)} />
         <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
       </div>
+      <FloatingChat />
     </div>
   );
 }

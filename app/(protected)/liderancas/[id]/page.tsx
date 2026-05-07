@@ -233,11 +233,15 @@ export default async function LeadershipDetailsPage({
               </div>
             </div>
 
-            <div>
-              <p className="text-sm text-slate-500">Biografia</p>
-              <p className="mt-2 text-sm text-slate-700">
-                {leadership.biografia ?? "Biografia nao informada."}
-              </p>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="mb-2 text-sm font-semibold text-slate-700">Biografia</p>
+              {leadership.biografia ? (
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+                  {leadership.biografia}
+                </p>
+              ) : (
+                <p className="text-sm italic text-slate-400">Biografia não informada.</p>
+              )}
             </div>
 
             <div>

@@ -10,12 +10,26 @@ type ChatMessage = {
 };
 
 const quickPrompts = [
-  "Como cadastrar uma nova lideranca no sistema?",
-  "Crie um roteiro de treinamento para coordenadores em 5 passos.",
-  "Sugira um texto curto de biografia para uma lideranca municipal."
+  "Quero cadastrar uma nova liderança. O que preciso informar?",
+  "Quais campos são obrigatórios no formulário de liderança?",
+  "Como preencher foto de capa e biografia de uma liderança?",
+  "Sugira uma biografia curta para um coordenador municipal."
 ];
 
-export function ChatAssistant() {
+const compactQuickPrompts = [
+  "Quero cadastrar uma nova liderança.",
+  "Quais dados são obrigatórios?",
+  "Gere uma biografia para minha liderança."
+];
+
+const systemPrompt =
+  "Você é o assistente do LeadMap CRM, especializado em ajudar coordenadores a cadastrar novas lideranças políticas no sistema. " +
+  "Ao cadastrar uma liderança, os campos obrigatórios são: Nome completo, Telefone (com DDD), Cidade (SP) e Votos estimados. " +
+  "Campos opcionais: WhatsApp, E-mail, CPF, Bairro, Endereço, Foto de perfil (URL), Foto de capa (URL), Biografia, Custo total, Meta de votos individual, Status (Ativo/Pendente/Inativo), Observações e Cidades sob responsabilidade. " +
+  "Quando o usuário informar dados de uma liderança em linguagem natural (ex: nome, telefone, cidade), organize essas informações e liste os campos que ainda faltam. " +
+  "Responda sempre em português, de forma objetiva e prática.";
+
+export function ChatAssistant({ compact = false }: { compact?: boolean }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -50,8 +64,7 @@ export function ChatAssistant() {
           messages: [
             {
               role: "system",
-              content:
-                "Voce e um assistente de treinamento para cadastro de liderancas no LeadMap. Responda em portugues, de forma objetiva e pratica."
+              content: systemPrompt
             },
             ...nextMessages
           ]
@@ -82,6 +95,79 @@ export function ChatAssistant() {
     }
   }
 
+  const prompts = compact ? compactQuickPrompts : quickPrompts;
+
+  if (compact) {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap gap-2">
+          {prompts.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-left text-xs text-slate-700 transition hover:border-brand-200 hover:bg-brand-50"
+              onClick={() => sendMessage(prompt)}
+              disabled={isSending}
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex max-h-72 flex-col gap-2 overflow-y-auto">
+          {messages.length === 0 ? (
+            <p className="text-xs italic text-slate-400">
+              Pergunte como preencher o formulário, ou descreva a liderança em linguagem natural.
+            </p>
+          ) : null}
+          {messages.map((message, index) => (
+            <div
+              key={`${message.role}-${index}`}
+              className={
+                message.role === "user"
+                  ? "ml-auto max-w-[90%] rounded-xl bg-brand-600 px-3 py-2 text-xs text-white"
+                  : "mr-auto max-w-[90%] rounded-xl bg-slate-100 px-3 py-2 text-xs text-slate-800"
+              }
+            >
+              <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+            </div>
+          ))}
+          {isSending ? (
+            <div className="mr-auto rounded-xl bg-slate-100 px-3 py-2 text-xs text-slate-600">
+              Pensando...
+            </div>
+          ) : null}
+        </div>
+
+        <form
+          className="flex gap-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void sendMessage(input);
+          }}
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="Descreva a liderança ou faça uma pergunta..."
+            className="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-xs outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+          />
+          <button
+            type="submit"
+            disabled={!canSend}
+            className="rounded-xl bg-brand-600 px-3 py-2 text-xs font-medium text-white transition hover:bg-brand-700 disabled:opacity-60"
+          >
+            {isSending ? "..." : "Enviar"}
+          </button>
+        </form>
+        {error ? (
+          <p className="text-xs text-red-600">{error}</p>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-6 lg:grid-cols-[280px,1fr]">
       <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
@@ -90,7 +176,7 @@ export function ChatAssistant() {
           Use estes exemplos para testar o chat agora.
         </p>
         <div className="space-y-2">
-          {quickPrompts.map((prompt) => (
+          {prompts.map((prompt) => (
             <button
               key={prompt}
               type="button"
