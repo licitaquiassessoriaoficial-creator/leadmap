@@ -1,10 +1,24 @@
 ﻿import bcrypt from "bcryptjs";
-import { PrismaClient, Role } from "@prisma/client";
+import {
+  LeadershipStatus,
+  LocationStatus,
+  PrismaClient,
+  Role
+} from "@prisma/client";
 
+import { classifyPotentialLevel } from "../lib/constants/potential";
 import { SP_CITIES } from "../lib/data/sp-cities";
 import {
-  getCanonicalStateCityName
+  getCanonicalStateCityName,
+  normalizeCityLookupValue
 } from "../lib/domain/cities";
+import {
+  buildWhatsAppNumber,
+  calculateCostPerVote,
+  generateReferralCode,
+  resolveLeadershipVoteBase
+} from "../lib/domain/leadership";
+import { calculateLeadershipScore } from "../lib/domain/score";
 
 const prisma = new PrismaClient();
 
@@ -116,10 +130,80 @@ async function main() {
 
   const cityCount = await prisma.city.count();
 
+  const cityRecords = await prisma.city.findMany();
+  const cityMap = new Map(
+    cityRecords.map((city) => [normalizeCityLookupValue(city.nome), city])
+  );
+
+  const campinas = cityMap.get(normalizeCityLookupValue("Campinas"));
+
+  if (!campinas) {
+    throw new Error("Cidade Campinas não encontrada na seed.");
+  }
+
+  const osvaldoBiografia = `Osvaldo Quadro nasceu em Campinas, São Paulo, em 10 de março de 1974. Filho caçula, cresceu em família simples, com os pais e duas irmãs mais velhas. Formou-se técnico em Processamento de Dados, graduou-se em Direito e se especializou com pós-graduação em Direito Civil.
+
+Empreendedor por natureza, atuou por cerca de 20 anos no ramo de comunicação visual. Em 2005, sua mãe foi assassinada durante um assalto — tragédia que o levou a uma depressão profunda, chegando a pesar quase 290 quilos. Foi nesse fundo do poço que encontrou força na fé e decidiu recomeçar do zero.
+
+Em apenas 30 dias, ao lado de um amigo que acreditou em seu potencial, fundou uma empresa voltada para licitações públicas. Com trabalho, disciplina e visão de gestão, a empresa cresceu rapidamente, tornou-se referência no setor e passou a atender clientes como a Petrobras. Ao longo da carreira, já empregou mais de mil pessoas e mantém cerca de 270 colaboradores diretos.
+
+Cristão desde 1998, pastor por formação e vocação, seus valores de lealdade, caráter e compromisso com o próximo guiam cada decisão. Além dos negócios, sempre apoiou igrejas, ONGs e projetos sociais com patrocínios, doações e suporte a famílias vulneráveis.
+
+Candidato por propósito, não por carreira, Osvaldo quer levar para Brasília a mentalidade do empreendedor: eficiência, responsabilidade com o dinheiro público e foco em resultado. Suas bandeiras são fomento ao empreendedorismo, educação de qualidade, políticas sociais que gerem autonomia, modernização das relações de trabalho e redução da burocracia.`;
+
+  const osvaldoReferralCode = generateReferralCode("Osvaldo Quadro", "osvaldo-quadro");
+  const osvaldoPotencial = 50000;
+  const osvaldoCusto = 0;
+  const osvaldoCustoPorVoto = calculateCostPerVote(osvaldoCusto, null, osvaldoPotencial);
+  const osvaldoVoteBase = resolveLeadershipVoteBase(null, osvaldoPotencial);
+  const osvaldoScore = calculateLeadershipScore({
+    voteBase: osvaldoVoteBase,
+    quantidadeIndicacoes: 0,
+    custoPorVoto: osvaldoCustoPorVoto,
+    totalCidadesResponsaveis: 1,
+    status: LeadershipStatus.ACTIVE
+  });
+
+  const osvaldo = await prisma.leadership.create({
+    data: {
+      nome: "Osvaldo Quadro",
+      telefone: "5519900000000",
+      whatsapp: buildWhatsAppNumber("5519900000000"),
+      fotoCapaUrl: "/osvaldo-quadro-capa.jpg",
+      biografia: osvaldoBiografia,
+      observacoes: "Nome que irá concorrer como deputado, com base principal em Campinas.",
+      cidade: campinas.nome,
+      estado: campinas.estado,
+      cidadeId: campinas.id,
+      latitude: campinas.latitude,
+      longitude: campinas.longitude,
+      locationStatus:
+        campinas.latitude != null && campinas.longitude != null
+          ? LocationStatus.FOUND
+          : LocationStatus.PENDING,
+      potencialVotosEstimado: osvaldoPotencial,
+      custoTotal: osvaldoCusto,
+      custoPorVoto: osvaldoCustoPorVoto,
+      faixaPotencial: classifyPotentialLevel(osvaldoPotencial),
+      scoreLideranca: osvaldoScore,
+      status: LeadershipStatus.ACTIVE,
+      quantidadeIndicacoes: 0,
+      referralCode: osvaldoReferralCode,
+      cadastradoPorId: globalAdmin.id
+    }
+  });
+
+  await prisma.leadershipCity.create({
+    data: {
+      leadershipId: osvaldo.id,
+      cityId: campinas.id
+    }
+  });
+
   console.log("Seed concluído:");
   console.log("- Usuários: 3");
   console.log(`- Cidades de SP: ${cityCount}`);
-  console.log("- Lideranças: 0 (base limpa para uso real)");
+  console.log("- Lideranças: 1 (Osvaldo Quadro)");
 }
 
 main()

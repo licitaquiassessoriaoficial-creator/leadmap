@@ -19,6 +19,7 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const navigation = [
+    { href: "/osvaldo-quadro", label: "Quem é Osvaldo Quadro" },
     { href: "/dashboard", label: "Dashboard" },
     { href: "/chat", label: "Assistente" },
     { href: "/liderancas", label: "Lideranças" },
