@@ -8,6 +8,7 @@ import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { buildWhatsAppLink } from "@/lib/domain/leadership";
 import { formatCurrency, formatInteger, formatPercent } from "@/lib/utils";
 import { getCityDetail } from "@/services/city-service";
@@ -111,7 +112,8 @@ export default async function CityDetailPage({
                           {leadership.nome}
                         </Link>
                         <p className="text-xs text-slate-500">
-                          {leadership.cidade} / {leadership.estado}
+                          {formatStateCityName(leadership.cidade, leadership.estado)} /{" "}
+                          {leadership.estado}
                         </p>
                       </div>
                     </div>

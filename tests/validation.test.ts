@@ -18,6 +18,8 @@ describe("leadershipCreateSchema", () => {
       endereco: "Rua A, 123",
       observacoes: "Boa articulação local",
       fotoPerfilUrl: "/uploads/profiles/maria.jpg",
+      fotoCapaUrl: "/uploads/profiles/maria-capa.jpg",
+      biografia: "Atua em projetos sociais e mobilização comunitária.",
       potencialVotosEstimado: 250,
       votosReais: 180,
       custoTotal: 1500,
@@ -28,6 +30,7 @@ describe("leadershipCreateSchema", () => {
 
     expect(payload.nome).toBe("Maria da Silva");
     expect(payload.votosReais).toBe(180);
+    expect(payload.fotoCapaUrl).toBe("/uploads/profiles/maria-capa.jpg");
     expect(payload.metaVotosIndividual).toBe(220);
     expect(payload.cidadesResponsaveisIds).toHaveLength(2);
   });

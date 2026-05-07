@@ -7,6 +7,7 @@ import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ProfilePhotoUpload } from "@/components/liderancas/profile-photo-upload";
+import { LeadershipTrainingCard } from "@/components/liderancas/leadership-training-card";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,8 @@ export function LeadershipForm({
       endereco: initialData?.endereco ?? "",
       observacoes: initialData?.observacoes ?? "",
       fotoPerfilUrl: initialData?.fotoPerfilUrl ?? "",
+      fotoCapaUrl: initialData?.fotoCapaUrl ?? "",
+      biografia: initialData?.biografia ?? "",
       potencialVotosEstimado: initialData?.potencialVotosEstimado ?? 0,
       votosReais: initialData?.votosReais ?? undefined,
       custoTotal: initialData?.custoTotal ?? undefined,
@@ -137,10 +140,27 @@ export function LeadershipForm({
       className="space-y-6 rounded-2xl bg-white p-6 shadow-panel"
       onSubmit={form.handleSubmit(handleSubmit)}
     >
+      <LeadershipTrainingCard />
+
       <ProfilePhotoUpload
         value={form.watch("fotoPerfilUrl")}
         onChange={(value) =>
           form.setValue("fotoPerfilUrl", value ?? "", {
+            shouldDirty: true,
+            shouldValidate: true
+          })
+        }
+      />
+
+      <ProfilePhotoUpload
+        value={form.watch("fotoCapaUrl")}
+        title="Foto de capa"
+        alt="Foto de capa"
+        placeholder="Capa"
+        previewClassName="h-20 w-40 rounded-2xl object-cover shadow-sm"
+        placeholderClassName="h-20 w-40 rounded-2xl"
+        onChange={(value) =>
+          form.setValue("fotoCapaUrl", value ?? "", {
             shouldDirty: true,
             shouldValidate: true
           })
@@ -263,6 +283,14 @@ export function LeadershipForm({
         <Textarea
           {...form.register("observacoes")}
           placeholder="Observações adicionais"
+        />
+      </Field>
+
+      <Field label="Biografia" error={form.formState.errors.biografia?.message}>
+        <Textarea
+          {...form.register("biografia")}
+          placeholder="Resumo da trajetória, principais bandeiras e atuação da liderança"
+          rows={4}
         />
       </Field>
 

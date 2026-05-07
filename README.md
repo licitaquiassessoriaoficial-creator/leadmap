@@ -258,6 +258,33 @@ Crie um arquivo `.env` com base em `.env.example`.
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/leadmap"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="troque-por-uma-chave-segura-com-32-caracteres-ou-mais"
+GROQ_API_KEY="troque-pela-chave-gerada-no-console-da-groq"
+GROQ_MODEL="llama-3.1-8b-instant"
+```
+
+### Chat (Groq)
+
+- endpoint interno: `POST /api/chat`
+- autenticacao obrigatoria por sessao
+- payload esperado:
+
+```json
+{
+  "messages": [
+    { "role": "user", "content": "Como cadastrar uma nova lideranca?" }
+  ]
+}
+```
+
+- resposta:
+
+```json
+{
+  "data": {
+    "role": "assistant",
+    "content": "..."
+  }
+}
 ```
 
 ### 3. Subir PostgreSQL

@@ -1,5 +1,6 @@
 import { Role } from "@prisma/client";
 
+import { formatStateCityName } from "@/lib/domain/cities";
 import {
   listLeaderships,
   listRanking
@@ -90,11 +91,11 @@ export async function exportLeadershipsCsv(
       "Custo por Voto",
       "Score",
       "Status",
-      "Indicacoes"
+      "Indicações"
     ],
     items.map((item) => [
       item.nome,
-      item.cidade,
+      formatStateCityName(item.cidade, item.estado),
       item.estado,
       item.telefone,
       item.potencialVotosEstimado,
@@ -151,23 +152,23 @@ export async function exportRankingCsv(
 
   return buildCsv(
     [
-      "Posicao",
+      "Posição",
       "Nome",
       "Cidade",
       "Estado",
-      "Indicacoes",
+      "Indicações",
       "Votos Potenciais",
       "Votos Reais",
       "Custo Total",
       "Custo por Voto",
       "Score",
       "Status",
-      "Cidades Responsaveis"
+      "Cidades Responsáveis"
     ],
     items.map((item, index) => [
       index + 1,
       item.nome,
-      item.cidade,
+      formatStateCityName(item.cidade, item.estado),
       item.estado,
       item.quantidadeIndicacoes,
       item.potencialVotosEstimado,
@@ -222,8 +223,8 @@ export async function exportCitiesCsv(
       "Votos Captados",
       "Votos Restantes",
       "Progresso",
-      "Liderancas",
-      "Custo por Voto Medio",
+      "Lideranças",
+      "Custo por Voto Médio",
       "Prioridade"
     ],
     coverage.cities.map((city) => [

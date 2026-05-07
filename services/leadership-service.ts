@@ -424,6 +424,8 @@ export async function createLeadershipRecord(
         email: optionalText(input.email),
         cpf: optionalText(input.cpf),
         fotoPerfilUrl: optionalText(input.fotoPerfilUrl),
+        fotoCapaUrl: optionalText(input.fotoCapaUrl),
+        biografia: optionalText(input.biografia),
         cidade: city.nome,
         estado: city.estado,
         cidadeId: city.id,
@@ -652,6 +654,12 @@ export async function updateLeadershipRecord(
           input.fotoPerfilUrl === undefined
             ? undefined
             : optionalText(input.fotoPerfilUrl),
+        fotoCapaUrl:
+          input.fotoCapaUrl === undefined
+            ? undefined
+            : optionalText(input.fotoCapaUrl),
+        biografia:
+          input.biografia === undefined ? undefined : optionalText(input.biografia),
         cidade: city.nome,
         estado: city.estado,
         cidadeId: city.id,

@@ -6,10 +6,20 @@ import { Button } from "@/components/ui/button";
 
 export function ProfilePhotoUpload({
   value,
-  onChange
+  onChange,
+  title = "Foto de perfil",
+  placeholder = "Foto",
+  alt = "Foto de perfil",
+  previewClassName = "h-20 w-20 rounded-2xl object-cover shadow-sm",
+  placeholderClassName = "h-20 w-20 rounded-2xl"
 }: {
   value?: string;
   onChange: (value?: string) => void;
+  title?: string;
+  placeholder?: string;
+  alt?: string;
+  previewClassName?: string;
+  placeholderClassName?: string;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -60,16 +70,18 @@ export function ProfilePhotoUpload({
         {value ? (
           <img
             src={value}
-            alt="Foto de perfil"
-            className="h-20 w-20 rounded-2xl object-cover shadow-sm"
+            alt={alt}
+            className={previewClassName}
           />
         ) : (
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-200 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Foto
+          <div
+            className={`flex items-center justify-center bg-slate-200 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 ${placeholderClassName}`}
+          >
+            {placeholder}
           </div>
         )}
         <div className="space-y-2">
-          <p className="text-sm font-medium text-slate-800">Foto de perfil</p>
+          <p className="text-sm font-medium text-slate-800">{title}</p>
           <p className="text-xs text-slate-500">
             JPG, PNG ou WEBP com até 5 MB.
           </p>

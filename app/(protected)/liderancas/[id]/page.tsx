@@ -10,6 +10,7 @@ import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { buildReferralPath, buildWhatsAppLink } from "@/lib/domain/leadership";
 import { canDeleteLeadership } from "@/lib/permissions";
 import {
@@ -57,7 +58,10 @@ export default async function LeadershipDetailsPage({
   const referralPath = buildReferralPath(leadership.referralCode);
   const whatsAppLink = buildWhatsAppLink(
     leadership.whatsapp ?? leadership.telefone,
-    `Olá, ${leadership.nome}! Vamos falar sobre a operação em ${leadership.cidade}?`
+    `Olá, ${leadership.nome}! Vamos falar sobre a operação em ${formatStateCityName(
+      leadership.cidade,
+      leadership.estado
+    )}?`
   );
   const performance = getLeadershipPerformanceSnapshot(leadership);
 
@@ -65,13 +69,21 @@ export default async function LeadershipDetailsPage({
     <div className="space-y-6">
       <PageHeader
         title={leadership.nome}
-        description={`${leadership.cidade} / ${leadership.estado}`}
+        description={`${formatStateCityName(leadership.cidade, leadership.estado)} / ${leadership.estado}`}
       />
       <FeedbackBanner message={feedback} />
 
       <div className="grid gap-6 xl:grid-cols-[1fr,340px]">
         <div className="space-y-6">
           <Card className="space-y-6">
+            {leadership.fotoCapaUrl ? (
+              <img
+                src={leadership.fotoCapaUrl}
+                alt={`Capa de ${leadership.nome}`}
+                className="h-48 w-full rounded-2xl object-cover"
+              />
+            ) : null}
+
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="flex items-center gap-4">
                 <ProfileAvatar
@@ -89,7 +101,8 @@ export default async function LeadershipDetailsPage({
                     </span>
                   </div>
                   <p className="text-sm text-slate-500">
-                    Base em {leadership.cidade} / {leadership.estado} •{" "}
+                    Base em {formatStateCityName(leadership.cidade, leadership.estado)} /{" "}
+                    {leadership.estado} •{" "}
                     {formatInteger(leadership.cidadesResponsaveis.length)} cidades sob
                     responsabilidade
                   </p>
@@ -221,6 +234,13 @@ export default async function LeadershipDetailsPage({
             </div>
 
             <div>
+              <p className="text-sm text-slate-500">Biografia</p>
+              <p className="mt-2 text-sm text-slate-700">
+                {leadership.biografia ?? "Biografia nao informada."}
+              </p>
+            </div>
+
+            <div>
               <p className="text-sm text-slate-500">Observações</p>
               <p className="mt-2 text-sm text-slate-700">
                 {leadership.observacoes ?? "Sem observações."}
@@ -289,7 +309,8 @@ export default async function LeadershipDetailsPage({
                           {person.nome}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {person.cidade} / {person.estado}
+                          {formatStateCityName(person.cidade, person.estado)} /{" "}
+                          {person.estado}
                         </p>
                       </div>
                     </div>
@@ -339,7 +360,8 @@ export default async function LeadershipDetailsPage({
                           {signup.nome}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {signup.cidade} / {signup.estado}
+                          {formatStateCityName(signup.cidade, signup.estado)} /{" "}
+                          {signup.estado}
                         </p>
                       </div>
                       <p className="text-xs text-slate-400">

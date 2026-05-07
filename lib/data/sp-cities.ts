@@ -25,7 +25,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.6451
   },
   {
-    "nome": "Aguai",
+    "nome": "Aguaí",
     "estado": "SP",
     "totalEleitores": 24803,
     "codigoIbge": "3500303",
@@ -33,7 +33,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9735
   },
   {
-    "nome": "Aguas da Prata",
+    "nome": "Águas da Prata",
     "estado": "SP",
     "totalEleitores": 5934,
     "codigoIbge": "3500402",
@@ -41,7 +41,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.7176
   },
   {
-    "nome": "Aguas de Lindoia",
+    "nome": "Águas de Lindóia",
     "estado": "SP",
     "totalEleitores": 13854,
     "codigoIbge": "3500501",
@@ -49,7 +49,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.6314
   },
   {
-    "nome": "Aguas de Santa Barbara",
+    "nome": "Águas de Santa Bárbara",
     "estado": "SP",
     "totalEleitores": 5385,
     "codigoIbge": "3500550",
@@ -57,7 +57,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.2421
   },
   {
-    "nome": "Aguas de Sao Pedro",
+    "nome": "Águas de São Pedro",
     "estado": "SP",
     "totalEleitores": 4301,
     "codigoIbge": "3500600",
@@ -97,7 +97,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.0571
   },
   {
-    "nome": "Altinopolis",
+    "nome": "Altinópolis",
     "estado": "SP",
     "totalEleitores": 12810,
     "codigoIbge": "3501004",
@@ -113,7 +113,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.168
   },
   {
-    "nome": "Aluminio",
+    "nome": "Alumínio",
     "estado": "SP",
     "totalEleitores": 14158,
     "codigoIbge": "3501152",
@@ -121,7 +121,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.2546
   },
   {
-    "nome": "Alvares Florence",
+    "nome": "Álvares Florence",
     "estado": "SP",
     "totalEleitores": 3674,
     "codigoIbge": "3501202",
@@ -129,7 +129,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9141
   },
   {
-    "nome": "Alvares Machado",
+    "nome": "Álvares Machado",
     "estado": "SP",
     "totalEleitores": 17798,
     "codigoIbge": "3501301",
@@ -137,7 +137,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.4722
   },
   {
-    "nome": "Alvaro de Carvalho",
+    "nome": "Álvaro de Carvalho",
     "estado": "SP",
     "totalEleitores": 2835,
     "codigoIbge": "3501400",
@@ -145,7 +145,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.719
   },
   {
-    "nome": "Alvinlandia",
+    "nome": "Alvinlândia",
     "estado": "SP",
     "totalEleitores": 2689,
     "codigoIbge": "3501509",
@@ -161,7 +161,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.3331
   },
   {
-    "nome": "Americo Brasiliense",
+    "nome": "Américo Brasiliense",
     "estado": "SP",
     "totalEleitores": 27504,
     "codigoIbge": "3501707",
@@ -169,7 +169,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.1147
   },
   {
-    "nome": "Americo de Campos",
+    "nome": "Américo de Campos",
     "estado": "SP",
     "totalEleitores": 4804,
     "codigoIbge": "3501806",
@@ -185,7 +185,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.772
   },
   {
-    "nome": "Analandia",
+    "nome": "Analândia",
     "estado": "SP",
     "totalEleitores": 4971,
     "codigoIbge": "3502002",
@@ -233,7 +233,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.2325
   },
   {
-    "nome": "Aparecida D'Oeste",
+    "nome": "Aparecida d'Oeste",
     "estado": "SP",
     "totalEleitores": 3880,
     "codigoIbge": "3502606",
@@ -241,7 +241,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.8835
   },
   {
-    "nome": "Apiai",
+    "nome": "Apiaí",
     "estado": "SP",
     "totalEleitores": 18885,
     "codigoIbge": "3502705",
@@ -249,7 +249,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.8443
   },
   {
-    "nome": "Aracariguama",
+    "nome": "Araçariguama",
     "estado": "SP",
     "totalEleitores": 18021,
     "codigoIbge": "3502754",
@@ -257,7 +257,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.0608
   },
   {
-    "nome": "Aracatuba",
+    "nome": "Araçatuba",
     "estado": "SP",
     "totalEleitores": 145672,
     "codigoIbge": "3502804",
@@ -265,7 +265,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.4401
   },
   {
-    "nome": "Aracoiaba da Serra",
+    "nome": "Araçoiaba da Serra",
     "estado": "SP",
     "totalEleitores": 26388,
     "codigoIbge": "3502903",
@@ -289,7 +289,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.0487
   },
   {
-    "nome": "Arapei",
+    "nome": "Arapeí",
     "estado": "SP",
     "totalEleitores": 2570,
     "codigoIbge": "3503158",
@@ -313,7 +313,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.3842
   },
   {
-    "nome": "Arco-Iris",
+    "nome": "Arco-Íris",
     "estado": "SP",
     "totalEleitores": 2351,
     "codigoIbge": "3503356",
@@ -337,7 +337,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -44.6992
   },
   {
-    "nome": "Areiopolis",
+    "nome": "Areiópolis",
     "estado": "SP",
     "totalEleitores": 8274,
     "codigoIbge": "3503604",
@@ -361,7 +361,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.1727
   },
   {
-    "nome": "Aruja",
+    "nome": "Arujá",
     "estado": "SP",
     "totalEleitores": 69543,
     "codigoIbge": "3503901",
@@ -369,7 +369,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.32
   },
   {
-    "nome": "Aspasia",
+    "nome": "Aspásia",
     "estado": "SP",
     "totalEleitores": 1924,
     "codigoIbge": "3503950",
@@ -401,7 +401,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.5572
   },
   {
-    "nome": "Avai",
+    "nome": "Avaí",
     "estado": "SP",
     "totalEleitores": 4345,
     "codigoIbge": "3504305",
@@ -417,7 +417,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9509
   },
   {
-    "nome": "Avare",
+    "nome": "Avaré",
     "estado": "SP",
     "totalEleitores": 64309,
     "codigoIbge": "3504503",
@@ -441,7 +441,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3619
   },
   {
-    "nome": "Balsamo",
+    "nome": "Bálsamo",
     "estado": "SP",
     "totalEleitores": 7467,
     "codigoIbge": "3504800",
@@ -457,7 +457,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -44.3281
   },
   {
-    "nome": "Barao de Antonina",
+    "nome": "Barão de Antonina",
     "estado": "SP",
     "totalEleitores": 2953,
     "codigoIbge": "3505005",
@@ -489,7 +489,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.5583
   },
   {
-    "nome": "Barra do Chapeu",
+    "nome": "Barra do Chapéu",
     "estado": "SP",
     "totalEleitores": 4743,
     "codigoIbge": "3505351",
@@ -601,7 +601,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.3432
   },
   {
-    "nome": "Biritiba Mirim",
+    "nome": "Biritiba-Mirim",
     "estado": "SP",
     "totalEleitores": 24884,
     "codigoIbge": "3506607",
@@ -609,7 +609,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.0407
   },
   {
-    "nome": "Boa Esperanca do Sul",
+    "nome": "Boa Esperança do Sul",
     "estado": "SP",
     "totalEleitores": 9846,
     "codigoIbge": "3506706",
@@ -641,7 +641,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.6786
   },
   {
-    "nome": "Bom Jesus dos Perdoes",
+    "nome": "Bom Jesus dos Perdões",
     "estado": "SP",
     "totalEleitores": 18215,
     "codigoIbge": "3507100",
@@ -649,7 +649,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.4675
   },
   {
-    "nome": "Bom Sucesso de Itarare",
+    "nome": "Bom Sucesso de Itararé",
     "estado": "SP",
     "totalEleitores": 3396,
     "codigoIbge": "3507159",
@@ -657,7 +657,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.1451
   },
   {
-    "nome": "Bora",
+    "nome": "Borá",
     "estado": "SP",
     "totalEleitores": 1094,
     "codigoIbge": "3507209",
@@ -665,7 +665,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.5409
   },
   {
-    "nome": "Boraceia",
+    "nome": "Boracéia",
     "estado": "SP",
     "totalEleitores": 3915,
     "codigoIbge": "3507308",
@@ -697,7 +697,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.4437
   },
   {
-    "nome": "Braganca Paulista",
+    "nome": "Bragança Paulista",
     "estado": "SP",
     "totalEleitores": 129301,
     "codigoIbge": "3507605",
@@ -705,7 +705,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.5419
   },
   {
-    "nome": "Brauna",
+    "nome": "Braúna",
     "estado": "SP",
     "totalEleitores": 4231,
     "codigoIbge": "3507704",
@@ -761,7 +761,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7096
   },
   {
-    "nome": "Cabralia Paulista",
+    "nome": "Cabrália Paulista",
     "estado": "SP",
     "totalEleitores": 3821,
     "codigoIbge": "3508306",
@@ -769,7 +769,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3393
   },
   {
-    "nome": "Cabreuva",
+    "nome": "Cabreúva",
     "estado": "SP",
     "totalEleitores": 36598,
     "codigoIbge": "3508405",
@@ -777,7 +777,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.1362
   },
   {
-    "nome": "Cacapava",
+    "nome": "Caçapava",
     "estado": "SP",
     "totalEleitores": 72063,
     "codigoIbge": "3508504",
@@ -801,7 +801,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.6437
   },
   {
-    "nome": "Cafelandia",
+    "nome": "Cafelândia",
     "estado": "SP",
     "totalEleitores": 12394,
     "codigoIbge": "3508801",
@@ -825,7 +825,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.7397
   },
   {
-    "nome": "Caiua",
+    "nome": "Caiuá",
     "estado": "SP",
     "totalEleitores": 3925,
     "codigoIbge": "3509106",
@@ -889,7 +889,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.7889
   },
   {
-    "nome": "Campos do Jordao",
+    "nome": "Campos do Jordão",
     "estado": "SP",
     "totalEleitores": 37995,
     "codigoIbge": "3509700",
@@ -905,7 +905,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9987
   },
   {
-    "nome": "Cananeia",
+    "nome": "Cananéia",
     "estado": "SP",
     "totalEleitores": 10551,
     "codigoIbge": "3509908",
@@ -921,7 +921,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.0521
   },
   {
-    "nome": "Candido Mota",
+    "nome": "Cândido Mota",
     "estado": "SP",
     "totalEleitores": 23187,
     "codigoIbge": "3510005",
@@ -929,7 +929,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.3873
   },
   {
-    "nome": "Candido Rodrigues",
+    "nome": "Cândido Rodrigues",
     "estado": "SP",
     "totalEleitores": 2917,
     "codigoIbge": "3510104",
@@ -945,7 +945,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.7839
   },
   {
-    "nome": "Capao Bonito",
+    "nome": "Capão Bonito",
     "estado": "SP",
     "totalEleitores": 34195,
     "codigoIbge": "3510203",
@@ -977,7 +977,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.4125
   },
   {
-    "nome": "Carapicuiba",
+    "nome": "Carapicuíba",
     "estado": "SP",
     "totalEleitores": 300058,
     "codigoIbge": "3510609",
@@ -1001,7 +1001,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.0852
   },
   {
-    "nome": "Cassia dos Coqueiros",
+    "nome": "Cássia dos Coqueiros",
     "estado": "SP",
     "totalEleitores": 2743,
     "codigoIbge": "3510906",
@@ -1025,7 +1025,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.977
   },
   {
-    "nome": "Catigua",
+    "nome": "Catiguá",
     "estado": "SP",
     "totalEleitores": 5796,
     "codigoIbge": "3511201",
@@ -1041,7 +1041,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.2664
   },
   {
-    "nome": "Cerqueira Cesar",
+    "nome": "Cerqueira César",
     "estado": "SP",
     "totalEleitores": 15236,
     "codigoIbge": "3511409",
@@ -1057,7 +1057,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7459
   },
   {
-    "nome": "Cesario Lange",
+    "nome": "Cesário Lange",
     "estado": "SP",
     "totalEleitores": 13984,
     "codigoIbge": "3511607",
@@ -1097,7 +1097,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.5387
   },
   {
-    "nome": "Colombia",
+    "nome": "Colômbia",
     "estado": "SP",
     "totalEleitores": 5924,
     "codigoIbge": "3512100",
@@ -1121,7 +1121,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.0134
   },
   {
-    "nome": "Cordeiropolis",
+    "nome": "Cordeirópolis",
     "estado": "SP",
     "totalEleitores": 19593,
     "codigoIbge": "3512407",
@@ -1145,7 +1145,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.31
   },
   {
-    "nome": "Corumbatai",
+    "nome": "Corumbataí",
     "estado": "SP",
     "totalEleitores": 3634,
     "codigoIbge": "3512704",
@@ -1153,7 +1153,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.6215
   },
   {
-    "nome": "Cosmopolis",
+    "nome": "Cosmópolis",
     "estado": "SP",
     "totalEleitores": 44137,
     "codigoIbge": "3512803",
@@ -1193,7 +1193,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.4209
   },
   {
-    "nome": "Cruzalia",
+    "nome": "Cruzália",
     "estado": "SP",
     "totalEleitores": 1997,
     "codigoIbge": "3513306",
@@ -1209,7 +1209,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -44.969
   },
   {
-    "nome": "Cubatao",
+    "nome": "Cubatão",
     "estado": "SP",
     "totalEleitores": 90130,
     "codigoIbge": "3513504",
@@ -1249,7 +1249,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.6073
   },
   {
-    "nome": "Divinolandia",
+    "nome": "Divinolândia",
     "estado": "SP",
     "totalEleitores": 9562,
     "codigoIbge": "3513900",
@@ -1265,7 +1265,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3935
   },
   {
-    "nome": "Dois Corregos",
+    "nome": "Dois Córregos",
     "estado": "SP",
     "totalEleitores": 18880,
     "codigoIbge": "3514106",
@@ -1273,7 +1273,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3819
   },
   {
-    "nome": "Dolcinopolis",
+    "nome": "Dolcinópolis",
     "estado": "SP",
     "totalEleitores": 2426,
     "codigoIbge": "3514205",
@@ -1313,7 +1313,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.9756
   },
   {
-    "nome": "Echapora",
+    "nome": "Echaporã",
     "estado": "SP",
     "totalEleitores": 5117,
     "codigoIbge": "3514700",
@@ -1337,7 +1337,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.3682
   },
   {
-    "nome": "Elisiario",
+    "nome": "Elisiário",
     "estado": "SP",
     "totalEleitores": 2838,
     "codigoIbge": "3514924",
@@ -1345,7 +1345,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.1146
   },
   {
-    "nome": "Embauba",
+    "nome": "Embaúba",
     "estado": "SP",
     "totalEleitores": 2501,
     "codigoIbge": "3514957",
@@ -1361,7 +1361,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.8579
   },
   {
-    "nome": "Embu-Guacu",
+    "nome": "Embu-Guaçu",
     "estado": "SP",
     "totalEleitores": 54142,
     "codigoIbge": "3515103",
@@ -1369,7 +1369,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.8136
   },
   {
-    "nome": "Emilianopolis",
+    "nome": "Emilianópolis",
     "estado": "SP",
     "totalEleitores": 2753,
     "codigoIbge": "3515129",
@@ -1385,7 +1385,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.211
   },
   {
-    "nome": "Espirito Santo do Pinhal",
+    "nome": "Espírito Santo do Pinhal",
     "estado": "SP",
     "totalEleitores": 31312,
     "codigoIbge": "3515186",
@@ -1393,7 +1393,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.7477
   },
   {
-    "nome": "Espirito Santo do Turvo",
+    "nome": "Espírito Santo do Turvo",
     "estado": "SP",
     "totalEleitores": 3649,
     "codigoIbge": "3515194",
@@ -1409,7 +1409,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9481
   },
   {
-    "nome": "Estrela D'Oeste",
+    "nome": "Estrela d'Oeste",
     "estado": "SP",
     "totalEleitores": 7152,
     "codigoIbge": "3515202",
@@ -1449,7 +1449,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.6874
   },
   {
-    "nome": "Fernandopolis",
+    "nome": "Fernandópolis",
     "estado": "SP",
     "totalEleitores": 50691,
     "codigoIbge": "3515509",
@@ -1457,7 +1457,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.2471
   },
   {
-    "nome": "Fernao",
+    "nome": "Fernão",
     "estado": "SP",
     "totalEleitores": 1754,
     "codigoIbge": "3515657",
@@ -1489,7 +1489,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.1513
   },
   {
-    "nome": "Florida Paulista",
+    "nome": "Flórida Paulista",
     "estado": "SP",
     "totalEleitores": 7455,
     "codigoIbge": "3516002",
@@ -1497,7 +1497,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.1724
   },
   {
-    "nome": "Florinea",
+    "nome": "Florínia",
     "estado": "SP",
     "totalEleitores": 2736,
     "codigoIbge": "3516101",
@@ -1537,7 +1537,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.5573
   },
   {
-    "nome": "Galia",
+    "nome": "Gália",
     "estado": "SP",
     "totalEleitores": 4742,
     "codigoIbge": "3516606",
@@ -1545,7 +1545,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.5504
   },
   {
-    "nome": "Garca",
+    "nome": "Garça",
     "estado": "SP",
     "totalEleitores": 32862,
     "codigoIbge": "3516705",
@@ -1553,7 +1553,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.6546
   },
   {
-    "nome": "Gastao Vidigal",
+    "nome": "Gastão Vidigal",
     "estado": "SP",
     "totalEleitores": 2963,
     "codigoIbge": "3516804",
@@ -1561,7 +1561,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.1912
   },
   {
-    "nome": "Gaviao Peixoto",
+    "nome": "Gavião Peixoto",
     "estado": "SP",
     "totalEleitores": 4207,
     "codigoIbge": "3516853",
@@ -1585,7 +1585,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9312
   },
   {
-    "nome": "Glicerio",
+    "nome": "Glicério",
     "estado": "SP",
     "totalEleitores": 4137,
     "codigoIbge": "3517109",
@@ -1593,7 +1593,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.2123
   },
   {
-    "nome": "Guaicara",
+    "nome": "Guaiçara",
     "estado": "SP",
     "totalEleitores": 8219,
     "codigoIbge": "3517208",
@@ -1601,7 +1601,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.8013
   },
   {
-    "nome": "Guaimbe",
+    "nome": "Guaimbê",
     "estado": "SP",
     "totalEleitores": 4686,
     "codigoIbge": "3517307",
@@ -1609,7 +1609,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.8986
   },
   {
-    "nome": "Guaira",
+    "nome": "Guaíra",
     "estado": "SP",
     "totalEleitores": 28930,
     "codigoIbge": "3517406",
@@ -1617,7 +1617,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.312
   },
   {
-    "nome": "Guapiacu",
+    "nome": "Guapiaçu",
     "estado": "SP",
     "totalEleitores": 16107,
     "codigoIbge": "3517505",
@@ -1633,7 +1633,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.5295
   },
   {
-    "nome": "Guara",
+    "nome": "Guará",
     "estado": "SP",
     "totalEleitores": 14456,
     "codigoIbge": "3517703",
@@ -1641,7 +1641,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8236
   },
   {
-    "nome": "Guaracai",
+    "nome": "Guaraçaí",
     "estado": "SP",
     "totalEleitores": 6221,
     "codigoIbge": "3517802",
@@ -1657,7 +1657,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.9391
   },
   {
-    "nome": "Guarani D'Oeste",
+    "nome": "Guarani d'Oeste",
     "estado": "SP",
     "totalEleitores": 1867,
     "codigoIbge": "3518008",
@@ -1665,7 +1665,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.3411
   },
   {
-    "nome": "Guaranta",
+    "nome": "Guarantã",
     "estado": "SP",
     "totalEleitores": 4821,
     "codigoIbge": "3518107",
@@ -1689,7 +1689,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.0369
   },
   {
-    "nome": "Guaratingueta",
+    "nome": "Guaratinguetá",
     "estado": "SP",
     "totalEleitores": 90907,
     "codigoIbge": "3518404",
@@ -1697,7 +1697,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.1938
   },
   {
-    "nome": "Guarei",
+    "nome": "Guareí",
     "estado": "SP",
     "totalEleitores": 8947,
     "codigoIbge": "3518503",
@@ -1713,7 +1713,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.2316
   },
   {
-    "nome": "Guaruja",
+    "nome": "Guarujá",
     "estado": "SP",
     "totalEleitores": 241669,
     "codigoIbge": "3518701",
@@ -1729,7 +1729,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.5333
   },
   {
-    "nome": "Guatapara",
+    "nome": "Guatapará",
     "estado": "SP",
     "totalEleitores": 5966,
     "codigoIbge": "3518859",
@@ -1737,7 +1737,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.0356
   },
   {
-    "nome": "Guzolandia",
+    "nome": "Guzolândia",
     "estado": "SP",
     "totalEleitores": 3654,
     "codigoIbge": "3518909",
@@ -1745,7 +1745,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.6645
   },
   {
-    "nome": "Herculandia",
+    "nome": "Herculândia",
     "estado": "SP",
     "totalEleitores": 7087,
     "codigoIbge": "3519006",
@@ -1761,7 +1761,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.0487
   },
   {
-    "nome": "Hortolandia",
+    "nome": "Hortolândia",
     "estado": "SP",
     "totalEleitores": 160527,
     "codigoIbge": "3519071",
@@ -1793,7 +1793,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.1634
   },
   {
-    "nome": "Ibate",
+    "nome": "Ibaté",
     "estado": "SP",
     "totalEleitores": 26978,
     "codigoIbge": "3519303",
@@ -1801,7 +1801,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.9882
   },
   {
-    "nome": "Ibira",
+    "nome": "Ibirá",
     "estado": "SP",
     "totalEleitores": 9184,
     "codigoIbge": "3519402",
@@ -1825,7 +1825,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.8319
   },
   {
-    "nome": "Ibiuna",
+    "nome": "Ibiúna",
     "estado": "SP",
     "totalEleitores": 61517,
     "codigoIbge": "3519709",
@@ -1833,7 +1833,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.223
   },
   {
-    "nome": "Icem",
+    "nome": "Icém",
     "estado": "SP",
     "totalEleitores": 6248,
     "codigoIbge": "3519808",
@@ -1841,7 +1841,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.1915
   },
   {
-    "nome": "Iepe",
+    "nome": "Iepê",
     "estado": "SP",
     "totalEleitores": 6021,
     "codigoIbge": "3519907",
@@ -1849,7 +1849,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.0779
   },
   {
-    "nome": "Igaracu do Tiete",
+    "nome": "Igaraçu do Tietê",
     "estado": "SP",
     "totalEleitores": 17836,
     "codigoIbge": "3520004",
@@ -1865,7 +1865,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7466
   },
   {
-    "nome": "Igarata",
+    "nome": "Igaratá",
     "estado": "SP",
     "totalEleitores": 9442,
     "codigoIbge": "3520202",
@@ -1921,7 +1921,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.2555
   },
   {
-    "nome": "Indiapora",
+    "nome": "Indiaporã",
     "estado": "SP",
     "totalEleitores": 3253,
     "codigoIbge": "3520707",
@@ -1929,7 +1929,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.2909
   },
   {
-    "nome": "Inubia Paulista",
+    "nome": "Inúbia Paulista",
     "estado": "SP",
     "totalEleitores": 3198,
     "codigoIbge": "3520806",
@@ -1945,7 +1945,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.6279
   },
   {
-    "nome": "Ipero",
+    "nome": "Iperó",
     "estado": "SP",
     "totalEleitores": 21559,
     "codigoIbge": "3521002",
@@ -1953,7 +1953,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.6927
   },
   {
-    "nome": "Ipeuna",
+    "nome": "Ipeúna",
     "estado": "SP",
     "totalEleitores": 6009,
     "codigoIbge": "3521101",
@@ -1961,7 +1961,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7151
   },
   {
-    "nome": "Ipigua",
+    "nome": "Ipiguá",
     "estado": "SP",
     "totalEleitores": 4932,
     "codigoIbge": "3521150",
@@ -1977,7 +1977,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.5971
   },
   {
-    "nome": "Ipua",
+    "nome": "Ipuã",
     "estado": "SP",
     "totalEleitores": 11460,
     "codigoIbge": "3521309",
@@ -1985,7 +1985,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.0129
   },
   {
-    "nome": "Iracemapolis",
+    "nome": "Iracemápolis",
     "estado": "SP",
     "totalEleitores": 17604,
     "codigoIbge": "3521408",
@@ -1993,7 +1993,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.523
   },
   {
-    "nome": "Irapua",
+    "nome": "Irapuã",
     "estado": "SP",
     "totalEleitores": 5569,
     "codigoIbge": "3521507",
@@ -2009,7 +2009,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.3472
   },
   {
-    "nome": "Itabera",
+    "nome": "Itaberá",
     "estado": "SP",
     "totalEleitores": 13709,
     "codigoIbge": "3521705",
@@ -2017,7 +2017,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.14
   },
   {
-    "nome": "Itai",
+    "nome": "Itaí",
     "estado": "SP",
     "totalEleitores": 16712,
     "codigoIbge": "3521804",
@@ -2041,7 +2041,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.8116
   },
   {
-    "nome": "Itanhaem",
+    "nome": "Itanhaém",
     "estado": "SP",
     "totalEleitores": 82753,
     "codigoIbge": "3522109",
@@ -2049,7 +2049,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.788
   },
   {
-    "nome": "Itaoca",
+    "nome": "Itaóca",
     "estado": "SP",
     "totalEleitores": 3017,
     "codigoIbge": "3522158",
@@ -2097,7 +2097,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.8224
   },
   {
-    "nome": "Itapirapua Paulista",
+    "nome": "Itapirapuã Paulista",
     "estado": "SP",
     "totalEleitores": 3330,
     "codigoIbge": "3522653",
@@ -2105,7 +2105,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.1661
   },
   {
-    "nome": "Itapolis",
+    "nome": "Itápolis",
     "estado": "SP",
     "totalEleitores": 29164,
     "codigoIbge": "3522703",
@@ -2121,7 +2121,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.4819
   },
   {
-    "nome": "Itapui",
+    "nome": "Itapuí",
     "estado": "SP",
     "totalEleitores": 9692,
     "codigoIbge": "3522901",
@@ -2145,7 +2145,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.3457
   },
   {
-    "nome": "Itarare",
+    "nome": "Itararé",
     "estado": "SP",
     "totalEleitores": 34051,
     "codigoIbge": "3523206",
@@ -2185,7 +2185,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8166
   },
   {
-    "nome": "Itirapua",
+    "nome": "Itirapuã",
     "estado": "SP",
     "totalEleitores": 5439,
     "codigoIbge": "3523701",
@@ -2241,7 +2241,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3252
   },
   {
-    "nome": "Jacarei",
+    "nome": "Jacareí",
     "estado": "SP",
     "totalEleitores": 169286,
     "codigoIbge": "3524402",
@@ -2265,7 +2265,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.0064
   },
   {
-    "nome": "Jaguariuna",
+    "nome": "Jaguariúna",
     "estado": "SP",
     "totalEleitores": 44525,
     "codigoIbge": "3524709",
@@ -2297,7 +2297,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9023
   },
   {
-    "nome": "Jardinopolis",
+    "nome": "Jardinópolis",
     "estado": "SP",
     "totalEleitores": 29189,
     "codigoIbge": "3525102",
@@ -2313,7 +2313,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.728
   },
   {
-    "nome": "Jau",
+    "nome": "Jaú",
     "estado": "SP",
     "totalEleitores": 98570,
     "codigoIbge": "3525300",
@@ -2329,7 +2329,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.5918
   },
   {
-    "nome": "Joanopolis",
+    "nome": "Joanópolis",
     "estado": "SP",
     "totalEleitores": 9422,
     "codigoIbge": "3525508",
@@ -2337,7 +2337,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.2741
   },
   {
-    "nome": "Joao Ramalho",
+    "nome": "João Ramalho",
     "estado": "SP",
     "totalEleitores": 3610,
     "codigoIbge": "3525607",
@@ -2345,7 +2345,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.7694
   },
   {
-    "nome": "Jose Bonifacio",
+    "nome": "José Bonifácio",
     "estado": "SP",
     "totalEleitores": 27252,
     "codigoIbge": "3525706",
@@ -2353,7 +2353,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.6892
   },
   {
-    "nome": "Julio Mesquita",
+    "nome": "Júlio Mesquita",
     "estado": "SP",
     "totalEleitores": 3778,
     "codigoIbge": "3525805",
@@ -2369,7 +2369,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7868
   },
   {
-    "nome": "Jundiai",
+    "nome": "Jundiaí",
     "estado": "SP",
     "totalEleitores": 336406,
     "codigoIbge": "3525904",
@@ -2377,7 +2377,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.8974
   },
   {
-    "nome": "Junqueiropolis",
+    "nome": "Junqueirópolis",
     "estado": "SP",
     "totalEleitores": 14321,
     "codigoIbge": "3526001",
@@ -2385,7 +2385,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.4342
   },
   {
-    "nome": "Juquia",
+    "nome": "Juquiá",
     "estado": "SP",
     "totalEleitores": 15468,
     "codigoIbge": "3526100",
@@ -2417,7 +2417,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8375
   },
   {
-    "nome": "Lavinia",
+    "nome": "Lavínia",
     "estado": "SP",
     "totalEleitores": 3943,
     "codigoIbge": "3526506",
@@ -2441,7 +2441,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.3841
   },
   {
-    "nome": "Lencois Paulista",
+    "nome": "Lençóis Paulista",
     "estado": "SP",
     "totalEleitores": 50590,
     "codigoIbge": "3526803",
@@ -2457,7 +2457,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.397
   },
   {
-    "nome": "Lindoia",
+    "nome": "Lindóia",
     "estado": "SP",
     "totalEleitores": 5890,
     "codigoIbge": "3527009",
@@ -2497,7 +2497,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9484
   },
   {
-    "nome": "Lucelia",
+    "nome": "Lucélia",
     "estado": "SP",
     "totalEleitores": 13889,
     "codigoIbge": "3527405",
@@ -2505,7 +2505,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.0215
   },
   {
-    "nome": "Lucianopolis",
+    "nome": "Lucianópolis",
     "estado": "SP",
     "totalEleitores": 2173,
     "codigoIbge": "3527504",
@@ -2513,7 +2513,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.522
   },
   {
-    "nome": "Luis Antonio",
+    "nome": "Luís Antônio",
     "estado": "SP",
     "totalEleitores": 10293,
     "codigoIbge": "3527603",
@@ -2521,7 +2521,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7801
   },
   {
-    "nome": "Luiziania",
+    "nome": "Luiziânia",
     "estado": "SP",
     "totalEleitores": 3850,
     "codigoIbge": "3527702",
@@ -2529,7 +2529,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.3294
   },
   {
-    "nome": "Lupercio",
+    "nome": "Lupércio",
     "estado": "SP",
     "totalEleitores": 3413,
     "codigoIbge": "3527801",
@@ -2537,7 +2537,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.818
   },
   {
-    "nome": "Lutecia",
+    "nome": "Lutécia",
     "estado": "SP",
     "totalEleitores": 2420,
     "codigoIbge": "3527900",
@@ -2561,7 +2561,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9687
   },
   {
-    "nome": "Macedonia",
+    "nome": "Macedônia",
     "estado": "SP",
     "totalEleitores": 4267,
     "codigoIbge": "3528205",
@@ -2585,7 +2585,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.185
   },
   {
-    "nome": "Mairipora",
+    "nome": "Mairiporã",
     "estado": "SP",
     "totalEleitores": 64830,
     "codigoIbge": "3528502",
@@ -2601,7 +2601,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3202
   },
   {
-    "nome": "Maraba Paulista",
+    "nome": "Marabá Paulista",
     "estado": "SP",
     "totalEleitores": 3290,
     "codigoIbge": "3528700",
@@ -2609,7 +2609,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.9617
   },
   {
-    "nome": "Maracai",
+    "nome": "Maracaí",
     "estado": "SP",
     "totalEleitores": 10551,
     "codigoIbge": "3528809",
@@ -2625,7 +2625,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.13
   },
   {
-    "nome": "Mariapolis",
+    "nome": "Mariápolis",
     "estado": "SP",
     "totalEleitores": 2929,
     "codigoIbge": "3528908",
@@ -2633,7 +2633,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.1824
   },
   {
-    "nome": "Marilia",
+    "nome": "Marília",
     "estado": "SP",
     "totalEleitores": 172843,
     "codigoIbge": "3529005",
@@ -2641,7 +2641,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9501
   },
   {
-    "nome": "Marinopolis",
+    "nome": "Marinópolis",
     "estado": "SP",
     "totalEleitores": 1760,
     "codigoIbge": "3529104",
@@ -2649,7 +2649,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.8254
   },
   {
-    "nome": "Martinopolis",
+    "nome": "Martinópolis",
     "estado": "SP",
     "totalEleitores": 18410,
     "codigoIbge": "3529203",
@@ -2657,7 +2657,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.1709
   },
   {
-    "nome": "Matao",
+    "nome": "Matão",
     "estado": "SP",
     "totalEleitores": 64592,
     "codigoIbge": "3529302",
@@ -2665,7 +2665,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.364
   },
   {
-    "nome": "Maua",
+    "nome": "Mauá",
     "estado": "SP",
     "totalEleitores": 318437,
     "codigoIbge": "3529401",
@@ -2673,7 +2673,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.4613
   },
   {
-    "nome": "Mendonca",
+    "nome": "Mendonça",
     "estado": "SP",
     "totalEleitores": 5278,
     "codigoIbge": "3529500",
@@ -2689,7 +2689,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.1811
   },
   {
-    "nome": "Mesopolis",
+    "nome": "Mesópolis",
     "estado": "SP",
     "totalEleitores": 1945,
     "codigoIbge": "3529658",
@@ -2697,7 +2697,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.6326
   },
   {
-    "nome": "Miguelopolis",
+    "nome": "Miguelópolis",
     "estado": "SP",
     "totalEleitores": 15418,
     "codigoIbge": "3529708",
@@ -2705,7 +2705,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.031
   },
   {
-    "nome": "Mineiros do Tiete",
+    "nome": "Mineiros do Tietê",
     "estado": "SP",
     "totalEleitores": 8830,
     "codigoIbge": "3529807",
@@ -2729,7 +2729,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.4625
   },
   {
-    "nome": "Mirandopolis",
+    "nome": "Mirandópolis",
     "estado": "SP",
     "totalEleitores": 18184,
     "codigoIbge": "3530102",
@@ -2753,7 +2753,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.5206
   },
   {
-    "nome": "Mirassolandia",
+    "nome": "Mirassolândia",
     "estado": "SP",
     "totalEleitores": 4197,
     "codigoIbge": "3530409",
@@ -2777,7 +2777,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.1854
   },
   {
-    "nome": "Mogi Guacu",
+    "nome": "Mogi Guaçu",
     "estado": "SP",
     "totalEleitores": 113236,
     "codigoIbge": "3530706",
@@ -2801,7 +2801,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.559
   },
   {
-    "nome": "Moncoes",
+    "nome": "Monções",
     "estado": "SP",
     "totalEleitores": 2149,
     "codigoIbge": "3531001",
@@ -2809,7 +2809,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.0975
   },
   {
-    "nome": "Mongagua",
+    "nome": "Mongaguá",
     "estado": "SP",
     "totalEleitores": 50536,
     "codigoIbge": "3531100",
@@ -2833,7 +2833,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.4971
   },
   {
-    "nome": "Monte Aprazivel",
+    "nome": "Monte Aprazível",
     "estado": "SP",
     "totalEleitores": 17138,
     "codigoIbge": "3531407",
@@ -2929,7 +2929,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.4468
   },
   {
-    "nome": "Nazare Paulista",
+    "nome": "Nazaré Paulista",
     "estado": "SP",
     "totalEleitores": 14574,
     "codigoIbge": "3532405",
@@ -2953,7 +2953,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.0436
   },
   {
-    "nome": "Nipoa",
+    "nome": "Nipoã",
     "estado": "SP",
     "totalEleitores": 3985,
     "codigoIbge": "3532702",
@@ -2961,7 +2961,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.7833
   },
   {
-    "nome": "Nova Alianca",
+    "nome": "Nova Aliança",
     "estado": "SP",
     "totalEleitores": 5553,
     "codigoIbge": "3532801",
@@ -2977,7 +2977,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.9022
   },
   {
-    "nome": "Nova Canaa Paulista",
+    "nome": "Nova Canaã Paulista",
     "estado": "SP",
     "totalEleitores": 2354,
     "codigoIbge": "3532843",
@@ -3017,7 +3017,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.6447
   },
   {
-    "nome": "Nova Independencia",
+    "nome": "Nova Independência",
     "estado": "SP",
     "totalEleitores": 3581,
     "codigoIbge": "3533205",
@@ -3025,7 +3025,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.4905
   },
   {
-    "nome": "Nova Luzitania",
+    "nome": "Nova Luzitânia",
     "estado": "SP",
     "totalEleitores": 2748,
     "codigoIbge": "3533304",
@@ -3065,7 +3065,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.7429
   },
   {
-    "nome": "Ocaucu",
+    "nome": "Ocauçu",
     "estado": "SP",
     "totalEleitores": 3450,
     "codigoIbge": "3533700",
@@ -3073,7 +3073,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.922
   },
   {
-    "nome": "Oleo",
+    "nome": "Óleo",
     "estado": "SP",
     "totalEleitores": 2466,
     "codigoIbge": "3533809",
@@ -3081,7 +3081,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3419
   },
   {
-    "nome": "Olimpia",
+    "nome": "Olímpia",
     "estado": "SP",
     "totalEleitores": 41681,
     "codigoIbge": "3533908",
@@ -3105,7 +3105,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.0971
   },
   {
-    "nome": "Orindiuva",
+    "nome": "Orindiúva",
     "estado": "SP",
     "totalEleitores": 5055,
     "codigoIbge": "3534203",
@@ -3113,7 +3113,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3464
   },
   {
-    "nome": "Orlandia",
+    "nome": "Orlândia",
     "estado": "SP",
     "totalEleitores": 29663,
     "codigoIbge": "3534302",
@@ -3193,7 +3193,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.8037
   },
   {
-    "nome": "Palmeira D'Oeste",
+    "nome": "Palmeira d'Oeste",
     "estado": "SP",
     "totalEleitores": 7468,
     "codigoIbge": "3535200",
@@ -3217,7 +3217,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.8562
   },
   {
-    "nome": "Paraguacu Paulista",
+    "nome": "Paraguaçu Paulista",
     "estado": "SP",
     "totalEleitores": 30283,
     "codigoIbge": "3535507",
@@ -3233,7 +3233,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.6639
   },
   {
-    "nome": "Paraiso",
+    "nome": "Paraíso",
     "estado": "SP",
     "totalEleitores": 4591,
     "codigoIbge": "3535705",
@@ -3249,7 +3249,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.7214
   },
   {
-    "nome": "Paranapua",
+    "nome": "Paranapuã",
     "estado": "SP",
     "totalEleitores": 3458,
     "codigoIbge": "3535903",
@@ -3257,7 +3257,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.5886
   },
   {
-    "nome": "Parapua",
+    "nome": "Parapuã",
     "estado": "SP",
     "totalEleitores": 7665,
     "codigoIbge": "3536000",
@@ -3273,7 +3273,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3679
   },
   {
-    "nome": "Pariquera-Acu",
+    "nome": "Pariquera-Açu",
     "estado": "SP",
     "totalEleitores": 14442,
     "codigoIbge": "3536208",
@@ -3289,7 +3289,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.0163
   },
   {
-    "nome": "Patrocinio Paulista",
+    "nome": "Patrocínio Paulista",
     "estado": "SP",
     "totalEleitores": 10919,
     "codigoIbge": "3536307",
@@ -3297,7 +3297,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.2801
   },
   {
-    "nome": "Pauliceia",
+    "nome": "Paulicéia",
     "estado": "SP",
     "totalEleitores": 6039,
     "codigoIbge": "3536406",
@@ -3305,7 +3305,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.8321
   },
   {
-    "nome": "Paulinia",
+    "nome": "Paulínia",
     "estado": "SP",
     "totalEleitores": 86474,
     "codigoIbge": "3536505",
@@ -3313,7 +3313,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.1488
   },
   {
-    "nome": "Paulistania",
+    "nome": "Paulistânia",
     "estado": "SP",
     "totalEleitores": 2037,
     "codigoIbge": "3536570",
@@ -3345,7 +3345,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.4455
   },
   {
-    "nome": "Pedranopolis",
+    "nome": "Pedranópolis",
     "estado": "SP",
     "totalEleitores": 2688,
     "codigoIbge": "3536901",
@@ -3385,7 +3385,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.2354
   },
   {
-    "nome": "Penapolis",
+    "nome": "Penápolis",
     "estado": "SP",
     "totalEleitores": 43752,
     "codigoIbge": "3537305",
@@ -3409,7 +3409,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.972
   },
   {
-    "nome": "Peruibe",
+    "nome": "Peruíbe",
     "estado": "SP",
     "totalEleitores": 58859,
     "codigoIbge": "3537602",
@@ -3505,7 +3505,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3803
   },
   {
-    "nome": "Pirajui",
+    "nome": "Pirajuí",
     "estado": "SP",
     "totalEleitores": 14866,
     "codigoIbge": "3538907",
@@ -3577,7 +3577,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.2104
   },
   {
-    "nome": "Poa",
+    "nome": "Poá",
     "estado": "SP",
     "totalEleitores": 89126,
     "codigoIbge": "3539806",
@@ -3593,7 +3593,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.8258
   },
   {
-    "nome": "Pompeia",
+    "nome": "Pompéia",
     "estado": "SP",
     "totalEleitores": 16229,
     "codigoIbge": "3540002",
@@ -3601,7 +3601,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.176
   },
   {
-    "nome": "Pongai",
+    "nome": "Pongaí",
     "estado": "SP",
     "totalEleitores": 2974,
     "codigoIbge": "3540101",
@@ -3689,7 +3689,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.0868
   },
   {
-    "nome": "Pradopolis",
+    "nome": "Pradópolis",
     "estado": "SP",
     "totalEleitores": 13605,
     "codigoIbge": "3540903",
@@ -3705,7 +3705,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.4121
   },
   {
-    "nome": "Pratania",
+    "nome": "Pratânia",
     "estado": "SP",
     "totalEleitores": 4926,
     "codigoIbge": "3541059",
@@ -3729,7 +3729,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.5565
   },
   {
-    "nome": "Presidente Epitacio",
+    "nome": "Presidente Epitácio",
     "estado": "SP",
     "totalEleitores": 30042,
     "codigoIbge": "3541307",
@@ -3753,7 +3753,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.8447
   },
   {
-    "nome": "Promissao",
+    "nome": "Promissão",
     "estado": "SP",
     "totalEleitores": 26944,
     "codigoIbge": "3541604",
@@ -3769,7 +3769,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.0547
   },
   {
-    "nome": "Quata",
+    "nome": "Quatá",
     "estado": "SP",
     "totalEleitores": 10349,
     "codigoIbge": "3541703",
@@ -3817,7 +3817,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.893
   },
   {
-    "nome": "Redencao da Serra",
+    "nome": "Redenção da Serra",
     "estado": "SP",
     "totalEleitores": 4348,
     "codigoIbge": "3542305",
@@ -3825,7 +3825,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.5422
   },
   {
-    "nome": "Regente Feijo",
+    "nome": "Regente Feijó",
     "estado": "SP",
     "totalEleitores": 15728,
     "codigoIbge": "3542404",
@@ -3833,7 +3833,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.3055
   },
   {
-    "nome": "Reginopolis",
+    "nome": "Reginópolis",
     "estado": "SP",
     "totalEleitores": 4765,
     "codigoIbge": "3542503",
@@ -3865,7 +3865,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.0044
   },
   {
-    "nome": "Ribeirao Bonito",
+    "nome": "Ribeirão Bonito",
     "estado": "SP",
     "totalEleitores": 8744,
     "codigoIbge": "3542909",
@@ -3873,7 +3873,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.182
   },
   {
-    "nome": "Ribeirao Branco",
+    "nome": "Ribeirão Branco",
     "estado": "SP",
     "totalEleitores": 14626,
     "codigoIbge": "3543006",
@@ -3881,7 +3881,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.7635
   },
   {
-    "nome": "Ribeirao Corrente",
+    "nome": "Ribeirão Corrente",
     "estado": "SP",
     "totalEleitores": 4590,
     "codigoIbge": "3543105",
@@ -3889,7 +3889,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.5904
   },
   {
-    "nome": "Ribeirao do Sul",
+    "nome": "Ribeirão do Sul",
     "estado": "SP",
     "totalEleitores": 3975,
     "codigoIbge": "3543204",
@@ -3897,7 +3897,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.933
   },
   {
-    "nome": "Ribeirao dos Indios",
+    "nome": "Ribeirão dos Índios",
     "estado": "SP",
     "totalEleitores": 1960,
     "codigoIbge": "3543238",
@@ -3905,7 +3905,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.6103
   },
   {
-    "nome": "Ribeirao Grande",
+    "nome": "Ribeirão Grande",
     "estado": "SP",
     "totalEleitores": 6351,
     "codigoIbge": "3543253",
@@ -3913,7 +3913,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3679
   },
   {
-    "nome": "Ribeirao Pires",
+    "nome": "Ribeirão Pires",
     "estado": "SP",
     "totalEleitores": 85544,
     "codigoIbge": "3543303",
@@ -3921,7 +3921,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.4058
   },
   {
-    "nome": "Ribeirao Preto",
+    "nome": "Ribeirão Preto",
     "estado": "SP",
     "totalEleitores": 477595,
     "codigoIbge": "3543402",
@@ -3937,7 +3937,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.4291
   },
   {
-    "nome": "Rincao",
+    "nome": "Rincão",
     "estado": "SP",
     "totalEleitores": 7233,
     "codigoIbge": "3543709",
@@ -3945,7 +3945,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.0728
   },
   {
-    "nome": "Rinopolis",
+    "nome": "Rinópolis",
     "estado": "SP",
     "totalEleitores": 7528,
     "codigoIbge": "3543808",
@@ -3977,7 +3977,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.3971
   },
   {
-    "nome": "Riolandia",
+    "nome": "Riolândia",
     "estado": "SP",
     "totalEleitores": 7168,
     "codigoIbge": "3544202",
@@ -4009,7 +4009,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.307
   },
   {
-    "nome": "Rubiacea",
+    "nome": "Rubiácea",
     "estado": "SP",
     "totalEleitores": 2434,
     "codigoIbge": "3544400",
@@ -4017,7 +4017,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.7296
   },
   {
-    "nome": "Rubineia",
+    "nome": "Rubinéia",
     "estado": "SP",
     "totalEleitores": 3899,
     "codigoIbge": "3544509",
@@ -4057,7 +4057,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8369
   },
   {
-    "nome": "Salesopolis",
+    "nome": "Salesópolis",
     "estado": "SP",
     "totalEleitores": 14730,
     "codigoIbge": "3545001",
@@ -4065,7 +4065,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.8465
   },
   {
-    "nome": "Salmourao",
+    "nome": "Salmourão",
     "estado": "SP",
     "totalEleitores": 3976,
     "codigoIbge": "3545100",
@@ -4113,7 +4113,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.7648
   },
   {
-    "nome": "Santa Adelia",
+    "nome": "Santa Adélia",
     "estado": "SP",
     "totalEleitores": 10910,
     "codigoIbge": "3545605",
@@ -4129,7 +4129,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.7297
   },
   {
-    "nome": "Santa Barbara D'Oeste",
+    "nome": "Santa Bárbara d'Oeste",
     "estado": "SP",
     "totalEleitores": 137930,
     "codigoIbge": "3545803",
@@ -4145,7 +4145,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.8875
   },
   {
-    "nome": "Santa Clara D'Oeste",
+    "nome": "Santa Clara d'Oeste",
     "estado": "SP",
     "totalEleitores": 2520,
     "codigoIbge": "3546108",
@@ -4153,7 +4153,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.9491
   },
   {
-    "nome": "Santa Cruz da Conceicao",
+    "nome": "Santa Cruz da Conceição",
     "estado": "SP",
     "totalEleitores": 4169,
     "codigoIbge": "3546207",
@@ -4161,7 +4161,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.4512
   },
   {
-    "nome": "Santa Cruz da Esperanca",
+    "nome": "Santa Cruz da Esperança",
     "estado": "SP",
     "totalEleitores": 2372,
     "codigoIbge": "3546256",
@@ -4193,7 +4193,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3953
   },
   {
-    "nome": "Santa Fe do Sul",
+    "nome": "Santa Fé do Sul",
     "estado": "SP",
     "totalEleitores": 25329,
     "codigoIbge": "3546603",
@@ -4217,7 +4217,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.2237
   },
   {
-    "nome": "Santa Lucia",
+    "nome": "Santa Lúcia",
     "estado": "SP",
     "totalEleitores": 6488,
     "codigoIbge": "3546900",
@@ -4241,7 +4241,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.7564
   },
   {
-    "nome": "Santa Rita D'Oeste",
+    "nome": "Santa Rita d'Oeste",
     "estado": "SP",
     "totalEleitores": 2550,
     "codigoIbge": "3547403",
@@ -4281,7 +4281,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.8014
   },
   {
-    "nome": "Santana de Parnaiba",
+    "nome": "Santana de Parnaíba",
     "estado": "SP",
     "totalEleitores": 107880,
     "codigoIbge": "3547304",
@@ -4289,7 +4289,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9178
   },
   {
-    "nome": "Santo Anastacio",
+    "nome": "Santo Anastácio",
     "estado": "SP",
     "totalEleitores": 15329,
     "codigoIbge": "3547700",
@@ -4297,7 +4297,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.6527
   },
   {
-    "nome": "Santo Andre",
+    "nome": "Santo André",
     "estado": "SP",
     "totalEleitores": 583229,
     "codigoIbge": "3547809",
@@ -4305,7 +4305,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.5432
   },
   {
-    "nome": "Santo Antonio da Alegria",
+    "nome": "Santo Antônio da Alegria",
     "estado": "SP",
     "totalEleitores": 5826,
     "codigoIbge": "3547908",
@@ -4313,7 +4313,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.1464
   },
   {
-    "nome": "Santo Antonio de Posse",
+    "nome": "Santo Antônio de Posse",
     "estado": "SP",
     "totalEleitores": 16303,
     "codigoIbge": "3548005",
@@ -4321,7 +4321,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9192
   },
   {
-    "nome": "Santo Antonio do Aracangua",
+    "nome": "Santo Antônio do Aracanguá",
     "estado": "SP",
     "totalEleitores": 7328,
     "codigoIbge": "3548054",
@@ -4329,7 +4329,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.498
   },
   {
-    "nome": "Santo Antonio do Jardim",
+    "nome": "Santo Antônio do Jardim",
     "estado": "SP",
     "totalEleitores": 5288,
     "codigoIbge": "3548104",
@@ -4337,7 +4337,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.6845
   },
   {
-    "nome": "Santo Antonio do Pinhal",
+    "nome": "Santo Antônio do Pinhal",
     "estado": "SP",
     "totalEleitores": 6020,
     "codigoIbge": "3548203",
@@ -4353,7 +4353,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.3929
   },
   {
-    "nome": "Santopolis do Aguapei",
+    "nome": "Santópolis do Aguapeí",
     "estado": "SP",
     "totalEleitores": 3222,
     "codigoIbge": "3548401",
@@ -4369,7 +4369,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.335
   },
   {
-    "nome": "Sao Bento do Sapucai",
+    "nome": "São Bento do Sapucaí",
     "estado": "SP",
     "totalEleitores": 9071,
     "codigoIbge": "3548609",
@@ -4377,7 +4377,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.7287
   },
   {
-    "nome": "Sao Bernardo do Campo",
+    "nome": "São Bernardo do Campo",
     "estado": "SP",
     "totalEleitores": 643023,
     "codigoIbge": "3548708",
@@ -4385,7 +4385,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.5646
   },
   {
-    "nome": "Sao Caetano do Sul",
+    "nome": "São Caetano do Sul",
     "estado": "SP",
     "totalEleitores": 144255,
     "codigoIbge": "3548807",
@@ -4393,7 +4393,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.5548
   },
   {
-    "nome": "Sao Carlos",
+    "nome": "São Carlos",
     "estado": "SP",
     "totalEleitores": 197316,
     "codigoIbge": "3548906",
@@ -4401,7 +4401,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.886
   },
   {
-    "nome": "Sao Francisco",
+    "nome": "São Francisco",
     "estado": "SP",
     "totalEleitores": 2528,
     "codigoIbge": "3549003",
@@ -4409,7 +4409,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.6952
   },
   {
-    "nome": "Sao Joao da Boa Vista",
+    "nome": "São João da Boa Vista",
     "estado": "SP",
     "totalEleitores": 67276,
     "codigoIbge": "3549102",
@@ -4417,7 +4417,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.7944
   },
   {
-    "nome": "Sao Joao das Duas Pontes",
+    "nome": "São João das Duas Pontes",
     "estado": "SP",
     "totalEleitores": 2215,
     "codigoIbge": "3549201",
@@ -4425,7 +4425,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.3792
   },
   {
-    "nome": "Sao Joao de Iracema",
+    "nome": "São João de Iracema",
     "estado": "SP",
     "totalEleitores": 1881,
     "codigoIbge": "3549250",
@@ -4433,7 +4433,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.3561
   },
   {
-    "nome": "Sao Joao do Pau D'Alho",
+    "nome": "São João do Pau d'Alho",
     "estado": "SP",
     "totalEleitores": 1950,
     "codigoIbge": "3549300",
@@ -4441,7 +4441,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.6672
   },
   {
-    "nome": "Sao Joaquim da Barra",
+    "nome": "São Joaquim da Barra",
     "estado": "SP",
     "totalEleitores": 36395,
     "codigoIbge": "3549409",
@@ -4449,7 +4449,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8593
   },
   {
-    "nome": "Sao Jose da Bela Vista",
+    "nome": "São José da Bela Vista",
     "estado": "SP",
     "totalEleitores": 7246,
     "codigoIbge": "3549508",
@@ -4457,7 +4457,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.6424
   },
   {
-    "nome": "Sao Jose do Barreiro",
+    "nome": "São José do Barreiro",
     "estado": "SP",
     "totalEleitores": 3685,
     "codigoIbge": "3549607",
@@ -4465,7 +4465,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -44.5774
   },
   {
-    "nome": "Sao Jose do Rio Pardo",
+    "nome": "São José do Rio Pardo",
     "estado": "SP",
     "totalEleitores": 39969,
     "codigoIbge": "3549706",
@@ -4473,7 +4473,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.8873
   },
   {
-    "nome": "Sao Jose do Rio Preto",
+    "nome": "São José do Rio Preto",
     "estado": "SP",
     "totalEleitores": 347916,
     "codigoIbge": "3549805",
@@ -4481,7 +4481,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.3758
   },
   {
-    "nome": "Sao Jose dos Campos",
+    "nome": "São José dos Campos",
     "estado": "SP",
     "totalEleitores": 536901,
     "codigoIbge": "3549904",
@@ -4489,7 +4489,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.8841
   },
   {
-    "nome": "Sao Lourenco da Serra",
+    "nome": "São Lourenço da Serra",
     "estado": "SP",
     "totalEleitores": 11993,
     "codigoIbge": "3549953",
@@ -4497,7 +4497,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9432
   },
   {
-    "nome": "Sao Luis do Paraitinga",
+    "nome": "São Luiz do Paraitinga",
     "estado": "SP",
     "totalEleitores": 10362,
     "codigoIbge": "3550001",
@@ -4505,7 +4505,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.3109
   },
   {
-    "nome": "Sao Manuel",
+    "nome": "São Manuel",
     "estado": "SP",
     "totalEleitores": 29424,
     "codigoIbge": "3550100",
@@ -4513,7 +4513,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.5723
   },
   {
-    "nome": "Sao Miguel Arcanjo",
+    "nome": "São Miguel Arcanjo",
     "estado": "SP",
     "totalEleitores": 24600,
     "codigoIbge": "3550209",
@@ -4521,7 +4521,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.9935
   },
   {
-    "nome": "Sao Paulo",
+    "nome": "São Paulo",
     "estado": "SP",
     "totalEleitores": 9322444,
     "codigoIbge": "3550308",
@@ -4529,7 +4529,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.6395
   },
   {
-    "nome": "Sao Pedro",
+    "nome": "São Pedro",
     "estado": "SP",
     "totalEleitores": 28760,
     "codigoIbge": "3550407",
@@ -4537,7 +4537,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.9096
   },
   {
-    "nome": "Sao Pedro do Turvo",
+    "nome": "São Pedro do Turvo",
     "estado": "SP",
     "totalEleitores": 5726,
     "codigoIbge": "3550506",
@@ -4545,7 +4545,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.7428
   },
   {
-    "nome": "Sao Roque",
+    "nome": "São Roque",
     "estado": "SP",
     "totalEleitores": 59866,
     "codigoIbge": "3550605",
@@ -4553,7 +4553,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.1357
   },
   {
-    "nome": "Sao Sebastiao",
+    "nome": "São Sebastião",
     "estado": "SP",
     "totalEleitores": 67077,
     "codigoIbge": "3550704",
@@ -4561,7 +4561,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.4143
   },
   {
-    "nome": "Sao Sebastiao da Grama",
+    "nome": "São Sebastião da Grama",
     "estado": "SP",
     "totalEleitores": 8670,
     "codigoIbge": "3550803",
@@ -4569,7 +4569,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.8208
   },
   {
-    "nome": "Sao Simao",
+    "nome": "São Simão",
     "estado": "SP",
     "totalEleitores": 11301,
     "codigoIbge": "3550902",
@@ -4577,7 +4577,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.5518
   },
   {
-    "nome": "Sao Vicente",
+    "nome": "São Vicente",
     "estado": "SP",
     "totalEleitores": 260347,
     "codigoIbge": "3551009",
@@ -4585,7 +4585,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.3883
   },
   {
-    "nome": "Sarapui",
+    "nome": "Sarapuí",
     "estado": "SP",
     "totalEleitores": 7470,
     "codigoIbge": "3551108",
@@ -4593,7 +4593,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8249
   },
   {
-    "nome": "Sarutaia",
+    "nome": "Sarutaiá",
     "estado": "SP",
     "totalEleitores": 3292,
     "codigoIbge": "3551207",
@@ -4601,7 +4601,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.4763
   },
   {
-    "nome": "Sebastianopolis do Sul",
+    "nome": "Sebastianópolis do Sul",
     "estado": "SP",
     "totalEleitores": 3068,
     "codigoIbge": "3551306",
@@ -4633,7 +4633,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.5952
   },
   {
-    "nome": "Sertaozinho",
+    "nome": "Sertãozinho",
     "estado": "SP",
     "totalEleitores": 92910,
     "codigoIbge": "3551702",
@@ -4649,7 +4649,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.9279
   },
   {
-    "nome": "Severinia",
+    "nome": "Severínia",
     "estado": "SP",
     "totalEleitores": 11543,
     "codigoIbge": "3551900",
@@ -4689,7 +4689,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.9238
   },
   {
-    "nome": "Sumare",
+    "nome": "Sumaré",
     "estado": "SP",
     "totalEleitores": 203032,
     "codigoIbge": "3552403",
@@ -4697,7 +4697,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.2728
   },
   {
-    "nome": "Suzanapolis",
+    "nome": "Suzanápolis",
     "estado": "SP",
     "totalEleitores": 3016,
     "codigoIbge": "3552551",
@@ -4713,7 +4713,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.3112
   },
   {
-    "nome": "Tabapua",
+    "nome": "Tabapuã",
     "estado": "SP",
     "totalEleitores": 8791,
     "codigoIbge": "3552601",
@@ -4729,7 +4729,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.6896
   },
   {
-    "nome": "Taboao da Serra",
+    "nome": "Taboão da Serra",
     "estado": "SP",
     "totalEleitores": 212345,
     "codigoIbge": "3552809",
@@ -4745,7 +4745,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.2882
   },
   {
-    "nome": "Taguai",
+    "nome": "Taguaí",
     "estado": "SP",
     "totalEleitores": 9152,
     "codigoIbge": "3553005",
@@ -4753,7 +4753,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.4024
   },
   {
-    "nome": "Taiacu",
+    "nome": "Taiaçu",
     "estado": "SP",
     "totalEleitores": 4612,
     "codigoIbge": "3553104",
@@ -4761,7 +4761,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.5112
   },
   {
-    "nome": "Taiuva",
+    "nome": "Taiúva",
     "estado": "SP",
     "totalEleitores": 4466,
     "codigoIbge": "3553203",
@@ -4769,7 +4769,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.4528
   },
   {
-    "nome": "Tambau",
+    "nome": "Tambaú",
     "estado": "SP",
     "totalEleitores": 16379,
     "codigoIbge": "3553302",
@@ -4785,7 +4785,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.6563
   },
   {
-    "nome": "Tapirai",
+    "nome": "Tapiraí",
     "estado": "SP",
     "totalEleitores": 6271,
     "codigoIbge": "3553500",
@@ -4825,7 +4825,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.241
   },
   {
-    "nome": "Taquarivai",
+    "nome": "Taquarivaí",
     "estado": "SP",
     "totalEleitores": 5120,
     "codigoIbge": "3553856",
@@ -4841,7 +4841,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.5621
   },
   {
-    "nome": "Taruma",
+    "nome": "Tarumã",
     "estado": "SP",
     "totalEleitores": 11511,
     "codigoIbge": "3553955",
@@ -4849,7 +4849,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -50.5786
   },
   {
-    "nome": "Tatui",
+    "nome": "Tatuí",
     "estado": "SP",
     "totalEleitores": 88771,
     "codigoIbge": "3554003",
@@ -4857,7 +4857,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.8461
   },
   {
-    "nome": "Taubate",
+    "nome": "Taubaté",
     "estado": "SP",
     "totalEleitores": 242885,
     "codigoIbge": "3554102",
@@ -4865,7 +4865,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.5593
   },
   {
-    "nome": "Tejupa",
+    "nome": "Tejupá",
     "estado": "SP",
     "totalEleitores": 3608,
     "codigoIbge": "3554201",
@@ -4889,7 +4889,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3314
   },
   {
-    "nome": "Tiete",
+    "nome": "Tietê",
     "estado": "SP",
     "totalEleitores": 29063,
     "codigoIbge": "3554508",
@@ -4929,7 +4929,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.3342
   },
   {
-    "nome": "Tremembe",
+    "nome": "Tremembé",
     "estado": "SP",
     "totalEleitores": 29562,
     "codigoIbge": "3554805",
@@ -4937,7 +4937,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -45.5475
   },
   {
-    "nome": "Tres Fronteiras",
+    "nome": "Três Fronteiras",
     "estado": "SP",
     "totalEleitores": 5142,
     "codigoIbge": "3554904",
@@ -4953,7 +4953,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.6937
   },
   {
-    "nome": "Tupa",
+    "nome": "Tupã",
     "estado": "SP",
     "totalEleitores": 47134,
     "codigoIbge": "3555000",
@@ -4969,7 +4969,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -51.575
   },
   {
-    "nome": "Turiuba",
+    "nome": "Turiúba",
     "estado": "SP",
     "totalEleitores": 1705,
     "codigoIbge": "3555208",
@@ -5017,7 +5017,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.1713
   },
   {
-    "nome": "Uniao Paulista",
+    "nome": "União Paulista",
     "estado": "SP",
     "totalEleitores": 1787,
     "codigoIbge": "3555703",
@@ -5025,7 +5025,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.9025
   },
   {
-    "nome": "Urania",
+    "nome": "Urânia",
     "estado": "SP",
     "totalEleitores": 6782,
     "codigoIbge": "3555802",
@@ -5041,7 +5041,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -49.2848
   },
   {
-    "nome": "Urupes",
+    "nome": "Urupês",
     "estado": "SP",
     "totalEleitores": 10554,
     "codigoIbge": "3556008",
@@ -5065,7 +5065,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -46.9974
   },
   {
-    "nome": "Valparaiso",
+    "nome": "Valparaíso",
     "estado": "SP",
     "totalEleitores": 16321,
     "codigoIbge": "3556305",
@@ -5097,7 +5097,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -47.022
   },
   {
-    "nome": "Varzea Paulista",
+    "nome": "Várzea Paulista",
     "estado": "SP",
     "totalEleitores": 85407,
     "codigoIbge": "3556503",
@@ -5137,7 +5137,7 @@ export const SP_CITIES: SeedCity[] = [
     "longitude": -48.6284
   },
   {
-    "nome": "Vitoria Brasil",
+    "nome": "Vitória Brasil",
     "estado": "SP",
     "totalEleitores": 1660,
     "codigoIbge": "3556958",

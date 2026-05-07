@@ -51,6 +51,8 @@ export const leadershipCreateSchema = z.object({
   endereco: optionalStringField,
   observacoes: optionalStringField,
   fotoPerfilUrl: optionalImageUrlField,
+  fotoCapaUrl: optionalImageUrlField,
+  biografia: optionalStringField,
   potencialVotosEstimado: z.coerce
     .number()
     .int()

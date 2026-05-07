@@ -84,6 +84,8 @@ model Leadership {
   email                  String?
   cpf                    String?
   fotoPerfilUrl          String?
+  fotoCapaUrl            String?
+  biografia              String?
   cidade                 String
   estado                 String           @default("SP")
   cidadeId               String

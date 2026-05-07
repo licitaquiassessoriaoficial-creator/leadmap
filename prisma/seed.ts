@@ -9,6 +9,10 @@ import {
 import { classifyPotentialLevel } from "../lib/constants/potential";
 import { SP_CITIES } from "../lib/data/sp-cities";
 import {
+  getCanonicalStateCityName,
+  normalizeCityLookupValue
+} from "../lib/domain/cities";
+import {
   buildWhatsAppNumber,
   calculateCostPerVote,
   generateReferralCode,
@@ -19,6 +23,10 @@ import { calculateLeadershipScore } from "../lib/domain/score";
 const prisma = new PrismaClient();
 const allCityNames = SP_CITIES.map((city) => city.nome);
 const cityNameSet = new Set(allCityNames);
+
+function resolveSeedCityName(value: string) {
+  return getCanonicalStateCityName(value, "SP") ?? value;
+}
 
 type SeedLeadership = {
   key: string;
@@ -50,10 +58,15 @@ type SeedReferralSignup = {
 };
 
 function buildCoverage(baseCity: string, preferredCities: string[], target = 5) {
+  const resolvedBaseCity = resolveSeedCityName(baseCity);
+  const resolvedPreferredCities = preferredCities
+    .map((city) => resolveSeedCityName(city))
+    .filter((city, index, values) => values.indexOf(city) === index);
+
   const unique = Array.from(
     new Set([
-      baseCity,
-      ...preferredCities.filter((city) => cityNameSet.has(city)),
+      resolvedBaseCity,
+      ...resolvedPreferredCities.filter((city) => cityNameSet.has(city)),
       ...allCityNames
     ])
   );
@@ -153,9 +166,11 @@ async function main() {
   ];
 
   for (const city of strategicCities) {
+    const cityName = resolveSeedCityName(city.nome);
+
     await prisma.city.updateMany({
       where: {
-        nome: city.nome,
+        nome: cityName,
         estado: "SP"
       },
       data: {
@@ -166,7 +181,9 @@ async function main() {
   }
 
   const cityRecords = await prisma.city.findMany();
-  const cityMap = new Map(cityRecords.map((city) => [city.nome, city]));
+  const cityMap = new Map(
+    cityRecords.map((city) => [normalizeCityLookupValue(city.nome), city])
+  );
 
   const leadershipSeeds: SeedLeadership[] = [
     {
@@ -218,7 +235,7 @@ async function main() {
     },
     {
       key: "joao",
-      nome: "Joao Henrique Costa",
+      nome: "João Henrique Costa",
       telefone: "5519988882002",
       email: "joao.henrique@leadmap.local",
       fotoPerfilUrl: "/avatars/leader-2.svg",
@@ -643,7 +660,7 @@ async function main() {
   const leadershipIds = new Map<string, string>();
 
   for (const item of leadershipSeeds) {
-    const city = cityMap.get(item.cidade);
+    const city = cityMap.get(normalizeCityLookupValue(resolveSeedCityName(item.cidade)));
 
     if (!city) {
       throw new Error(`Cidade não encontrada na seed: ${item.cidade}`);
@@ -713,7 +730,9 @@ async function main() {
 
     await prisma.leadershipCity.createMany({
       data: cidadesResponsaveis.map((cityName) => {
-        const relatedCity = cityMap.get(cityName);
+        const relatedCity = cityMap.get(
+          normalizeCityLookupValue(resolveSeedCityName(cityName))
+        );
 
         if (!relatedCity) {
           throw new Error(`Cidade de responsabilidade não encontrada: ${cityName}`);
@@ -770,7 +789,7 @@ async function main() {
         nome: signup.nome,
         telefone: signup.telefone,
         email: signup.email,
-        cidade: signup.cidade,
+        cidade: resolveSeedCityName(signup.cidade),
         estado: "SP",
         observacoes: signup.observacoes,
         origemRef: generateReferralCode(

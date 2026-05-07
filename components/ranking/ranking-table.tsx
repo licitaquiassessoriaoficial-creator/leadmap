@@ -13,6 +13,7 @@ import { CostEfficiencyBadge } from "@/components/shared/cost-efficiency-badge";
 import { PotentialBadge } from "@/components/shared/potential-badge";
 import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge } from "@/components/shared/status-badge";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { formatCurrency, formatInteger } from "@/lib/utils";
 import type { LeadershipWithRelations } from "@/types/app";
 
@@ -47,7 +48,8 @@ export function RankingTable({
             <div>
               <p className="font-medium text-slate-900">{row.original.nome}</p>
               <p className="text-xs text-slate-500">
-                {row.original.cidade} / {row.original.estado}
+                {formatStateCityName(row.original.cidade, row.original.estado)} /{" "}
+                {row.original.estado}
               </p>
             </div>
           </Link>

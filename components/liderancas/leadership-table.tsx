@@ -13,6 +13,7 @@ import { CostEfficiencyBadge } from "@/components/shared/cost-efficiency-badge";
 import { PotentialBadge } from "@/components/shared/potential-badge";
 import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge, RoleBadge } from "@/components/shared/status-badge";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { formatCurrency, formatInteger } from "@/lib/utils";
 import type { LeadershipWithRelations } from "@/types/app";
 
@@ -44,7 +45,8 @@ export function LeadershipTable({
         cell: ({ row }) => (
           <div>
             <p className="text-sm text-slate-700">
-              {row.original.cidade} / {row.original.estado}
+              {formatStateCityName(row.original.cidade, row.original.estado)} /{" "}
+              {row.original.estado}
             </p>
             <p className="text-xs text-slate-500">
               {row.original.cidadesResponsaveis.length} cidades sob responsabilidade

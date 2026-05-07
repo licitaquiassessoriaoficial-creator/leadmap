@@ -55,7 +55,7 @@ function main() {
     }
 
     return {
-      nome: city.nome,
+      nome: externalMatch.nome,
       estado: city.estado,
       totalEleitores: city.totalEleitores,
       codigoIbge: String(externalMatch.codigo_ibge),

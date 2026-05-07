@@ -8,6 +8,12 @@ type StateCityOption = {
 const STATE_CITY_BASES: Record<string, SeedCity[]> = {
   SP: SP_CITIES
 };
+const STATE_CITY_ALIASES: Record<string, Record<string, string>> = {
+  SP: {
+    florinea: "florinia",
+    "sao luis do paraitinga": "sao luiz do paraitinga"
+  }
+};
 
 const canonicalCityNameRegistry = new Map<string, Map<string, string>>();
 
@@ -17,6 +23,10 @@ function normalizeStateCode(value?: string) {
 
 function getSupportedStateCityBase(state?: string) {
   return STATE_CITY_BASES[normalizeStateCode(state)];
+}
+
+function getSupportedStateCityAliases(state?: string) {
+  return STATE_CITY_ALIASES[normalizeStateCode(state)] ?? {};
 }
 
 function getCanonicalCityNameRegistry(state?: string) {
@@ -32,6 +42,16 @@ function getCanonicalCityNameRegistry(state?: string) {
 
   for (const city of stateCities) {
     registry.set(normalizeCityLookupValue(city.nome), city.nome);
+  }
+
+  for (const [alias, canonicalKey] of Object.entries(
+    getSupportedStateCityAliases(normalizedState)
+  )) {
+    const canonicalName = registry.get(canonicalKey);
+
+    if (canonicalName) {
+      registry.set(alias, canonicalName);
+    }
   }
 
   canonicalCityNameRegistry.set(normalizedState, registry);
@@ -61,6 +81,22 @@ export function getCanonicalStateCityName(nome: string, estado: string) {
   }
 
   return getCanonicalCityNameRegistry(estado).get(normalizeCityLookupValue(nome));
+}
+
+export function formatStateCityName(nome: string, estado: string) {
+  return getCanonicalStateCityName(nome, estado) ?? nome.trim();
+}
+
+export function getStateCitySearchVariants(nome: string, estado: string) {
+  const trimmed = nome.trim();
+  const canonical = getCanonicalStateCityName(trimmed, estado);
+  const asciiCanonical = canonical
+    ?.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  return Array.from(
+    new Set([trimmed, canonical, asciiCanonical].filter(Boolean) as string[])
+  );
 }
 
 export function isSupportedStateCityName(nome: string, estado: string) {

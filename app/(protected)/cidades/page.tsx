@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/lib/auth";
+import { formatStateCityName, normalizeCityLookupValue } from "@/lib/domain/cities";
 import { buildQueryString, formatCurrency, formatInteger, formatPercent } from "@/lib/utils";
 import { getCitiesCoverageSnapshot } from "@/services/city-service";
 
@@ -40,7 +41,7 @@ export default async function CitiesPage({
   const visibleCities = filteredCoverage?.cities ?? [];
   const missingCityResults = cityQuery
     ? coverage.missingCityList.filter((city) =>
-        city.nome.toLowerCase().includes(cityQuery.toLowerCase())
+        normalizeCityLookupValue(city.nome).includes(normalizeCityLookupValue(cityQuery))
       )
     : coverage.priorityCities.filter((city) => city.totalResponsaveis === 0).slice(0, 8);
   const exportHref = `/api/export/cidades?${buildQueryString(resolvedSearchParams)}`;
@@ -300,7 +301,7 @@ export default async function CitiesPage({
                   <div>
                     <p className="text-sm font-medium text-slate-900">{item.nome}</p>
                     <p className="text-xs text-slate-500">
-                      {item.cidade} / {item.estado}
+                      {formatStateCityName(item.cidade, item.estado)} / {item.estado}
                     </p>
                   </div>
                   <div className="text-right">

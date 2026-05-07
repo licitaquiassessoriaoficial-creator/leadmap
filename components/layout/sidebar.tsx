@@ -20,6 +20,7 @@ export function Sidebar({
   const pathname = usePathname();
   const navigation = [
     { href: "/dashboard", label: "Dashboard" },
+    { href: "/chat", label: "Assistente" },
     { href: "/liderancas", label: "Lideranças" },
     { href: "/ranking", label: "Ranking" },
     { href: "/mapa", label: "Mapa" },

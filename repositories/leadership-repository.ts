@@ -7,6 +7,7 @@ import {
 } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
+import { getStateCitySearchVariants } from "@/lib/domain/cities";
 import { leadershipDetailInclude, leadershipListInclude } from "@/types/app";
 
 export type LeadershipFilters = {
@@ -50,11 +51,18 @@ function buildWhere(filters: LeadershipFilters): Prisma.LeadershipWhereInput {
   const conditions: Prisma.LeadershipWhereInput[] = [];
 
   if (filters.cidade) {
+    const cityVariants = getStateCitySearchVariants(
+      filters.cidade,
+      filters.estado ?? "SP"
+    );
+
     conditions.push({
-      cidade: {
-        contains: filters.cidade,
-        mode: "insensitive"
-      }
+      OR: cityVariants.map((cidade) => ({
+        cidade: {
+          contains: cidade,
+          mode: "insensitive"
+        }
+      }))
     });
   }
 

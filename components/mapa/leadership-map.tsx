@@ -18,6 +18,7 @@ import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { LeadershipStatusBadge } from "@/components/shared/status-badge";
 import { Card } from "@/components/ui/card";
 import { POTENTIAL_METADATA } from "@/lib/constants/potential";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { buildWhatsAppLink } from "@/lib/domain/leadership";
 import { formatCurrency, formatInteger, formatPercent } from "@/lib/utils";
 import type { LeadershipWithRelations } from "@/types/app";
@@ -179,7 +180,10 @@ export function LeadershipMap({
 
             const whatsAppLink = buildWhatsAppLink(
               point.whatsapp ?? point.telefone,
-              `Olá, ${point.nome}! Vamos falar sobre a operação em ${point.cidade}?`
+              `Olá, ${point.nome}! Vamos falar sobre a operação em ${formatStateCityName(
+                point.cidade,
+                point.estado
+              )}?`
             );
 
             return (
@@ -199,7 +203,7 @@ export function LeadershipMap({
                       <div>
                         <strong>{point.nome}</strong>
                         <div className="text-sm text-slate-500">
-                          {point.cidade} / {point.estado}
+                          {formatStateCityName(point.cidade, point.estado)} / {point.estado}
                         </div>
                       </div>
                     </div>
@@ -298,7 +302,7 @@ export function LeadershipMap({
                   <div>
                     <p className="text-sm font-medium text-slate-900">{item.nome}</p>
                     <p className="text-xs text-slate-500">
-                      {item.cidade} / {item.estado}
+                      {formatStateCityName(item.cidade, item.estado)} / {item.estado}
                     </p>
                   </div>
                 </div>

@@ -8,6 +8,7 @@ import { ProfileAvatar } from "@/components/shared/profile-avatar";
 import { StatCard } from "@/components/shared/stat-card";
 import { Card } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { formatCurrency, formatInteger, formatPercent } from "@/lib/utils";
 import { getDashboardData } from "@/services/dashboard-service";
 
@@ -150,7 +151,8 @@ export default async function DashboardPage() {
                   <div>
                     <p className="font-medium text-slate-900">{leadership.nome}</p>
                     <p className="text-sm text-slate-500">
-                      {leadership.cidade} / {leadership.estado}
+                      {formatStateCityName(leadership.cidade, leadership.estado)} /{" "}
+                      {leadership.estado}
                     </p>
                   </div>
                 </div>

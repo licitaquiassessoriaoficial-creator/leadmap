@@ -7,6 +7,7 @@ import {
   calculateVotesRemaining,
   resolveCityVoteTarget
 } from "@/lib/domain/city";
+import { normalizeCityLookupValue } from "@/lib/domain/cities";
 import { resolveLeadershipVoteBase } from "@/lib/domain/leadership";
 import {
   findCityWithCoverageById,
@@ -37,7 +38,10 @@ function matchesText(value?: string | null, query?: string) {
     return true;
   }
 
-  return value?.toLowerCase().includes(query.trim().toLowerCase()) ?? false;
+  return (
+    value != null &&
+    normalizeCityLookupValue(value).includes(normalizeCityLookupValue(query))
+  );
 }
 
 async function resolveScope(userId?: string, role?: Role | null) {
@@ -218,8 +222,7 @@ export async function getCitiesCoverageSnapshot(
   await ensureStateCityBase(targetState);
 
   const cities = await listCitiesWithCoverage({
-    estado: targetState,
-    search: citySearch
+    estado: targetState
   });
   const summaries = cities
     .filter((city) => matchesText(city.nome, citySearch))

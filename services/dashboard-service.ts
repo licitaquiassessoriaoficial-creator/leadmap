@@ -1,6 +1,7 @@
 import { LeadershipStatus, PotentialLevel, Role } from "@prisma/client";
 
 import { POTENTIAL_METADATA } from "@/lib/constants/potential";
+import { formatStateCityName } from "@/lib/domain/cities";
 import { getDashboardAggregates } from "@/repositories/leadership-repository";
 import { getStrategicAlerts } from "@/services/alert-service";
 import { getCampaignScope } from "@/services/campaign-settings-service";
@@ -51,7 +52,7 @@ export async function getDashboardData(role?: Role | null, userId?: string) {
       votosRestantes: coverage.votosRestantes
     },
     cityTotals: data.groupedByCity.map((item) => ({
-      name: item.cidade,
+      name: formatStateCityName(item.cidade, scope?.enforcedState ?? "SP"),
       total: item._count.cidade
     })),
     potentialTotals: Object.values(PotentialLevel).map((level) => ({
