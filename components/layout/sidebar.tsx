@@ -32,6 +32,7 @@ export function Sidebar({
     ...(canViewSettings(user.role)
       ? [{ href: "/configuracoes", label: "Configurações" }]
       : []),
+    { href: "/manual", label: "Manual de uso" },
     ...(user.role === Role.GLOBAL_ADMIN
       ? [{ href: "/admin-global", label: "Admin Global" }]
       : [])
