@@ -38,7 +38,7 @@ const sections = [
     items: [
       {
         title: "Cadastrar nova liderança",
-        text: "Clique em "Nova liderança". Os campos obrigatórios são: Nome completo, Telefone (com DDD), Cidade e Votos estimados. Todos os outros são opcionais."
+        text: "Clique em \"Nova liderança\". Os campos obrigatórios são: Nome completo, Telefone (com DDD), Cidade e Votos estimados. Todos os outros são opcionais."
       },
       {
         title: "Status da liderança",
@@ -62,7 +62,7 @@ const sections = [
       },
       {
         title: "Editar ou excluir",
-        text: "Abra a liderança e clique em "Editar". Para remover, clique em "Excluir" no rodapé do formulário de edição. Exclusões são permanentes."
+        text: "Abra a liderança e clique em \"Editar\". Para remover, clique em \"Excluir\" no rodapé do formulário de edição. Exclusões são permanentes."
       }
     ]
   },
@@ -78,7 +78,7 @@ const sections = [
       },
       {
         title: "Pré-preencher o formulário",
-        text: "Quando o assistente identificar nome, telefone, cidade e votos estimados, aparecerá um botão verde "✅ Pré-preencher formulário". Ao clicar, o formulário de nova liderança abre com os dados já preenchidos. Você só precisa conferir e salvar."
+        text: "Quando o assistente identificar nome, telefone, cidade e votos estimados, aparecerá um botão verde \"\u2705 Pré-preencher formulário\". Ao clicar, o formulário de nova liderança abre com os dados já preenchidos. Você só precisa conferir e salvar."
       },
       {
         title: "Campos reconhecidos pelo chat",
@@ -90,7 +90,7 @@ const sections = [
       },
       {
         title: "Dica de uso",
-        text: "Descreva os dados de uma vez só na mesma mensagem para o assistente reconhecer tudo de uma vez. Ex: "Cadastrar João Costa, 11987654321, São Paulo capital, 500 votos estimados"."
+        text: "Descreva os dados de uma vez só na mesma mensagem para o assistente reconhecer tudo de uma vez. Ex: \"Cadastrar João Costa, 11987654321, São Paulo capital, 500 votos estimados\"."
       }
     ]
   },
@@ -170,7 +170,7 @@ const sections = [
       },
       {
         title: "Criar usuário",
-        text: "Clique em "Novo usuário", informe nome, e-mail e senha inicial. O usuário deve trocar a senha no primeiro acesso."
+        text: "Clique em \"Novo usuário\", informe nome, e-mail e senha inicial. O usuário deve trocar a senha no primeiro acesso."
       },
       {
         title: "Desativar acesso",
